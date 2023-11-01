@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 	"time"
-	generate "gihthub.com/shion0625/FYP/backend/tokens"
+	generate "gihthub.com/shion0625/FYP/backend/utils"
 	"gihthub.com/shion0625/FYP/backend/database"
 	"gihthub.com/shion0625/FYP/backend/models"
 	"github.com/gin-gonic/gin"

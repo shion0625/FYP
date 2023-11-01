@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"net/http"
-	token "gihthub.com/shion0625/FYP/backend/tokens"
+	token "gihthub.com/shion0625/FYP/backend/utils"
 	"github.com/gin-gonic/gin"
 )
 

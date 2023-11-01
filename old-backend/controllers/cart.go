@@ -58,7 +58,7 @@ func (app *Application) AddToCart() gin.HandlerFunc {
 		if err != nil {
 			ctx.IndentedJSON(http.StatusInternalServerError, err)
 		}
-		ctx.IndentedJSON(200, "Succesfully added to the cart")
+		ctx.IndentedJSON(http.StatusOK, "Succesfully added to the cart")
 	}
 }
 func (app *Application) RemoveItem() gin.HandlerFunc {
@@ -196,49 +196,31 @@ func (app *Application) BuyFromCart() gin.HandlerFunc {
 	}
 }
 
-type Billboard struct {
-	id string
-	label string
-	imageUrl string
-}
-
-type Category struct {
-	id string
-	name string
-	billboard Billboard
-}
-var Categoryes []Category
 
 func (app *Application) GetCategory() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		// ビルボードデータの作成
-		billboard1 := Billboard{
-			id: "1",
-			label: "Billboard Hot 100",
-			imageUrl: "https://example.com/billboard/hot-100.png",
-		}
-		billboard2 := Billboard{
-			id: "2",
-			label: "Billboard 200",
-			imageUrl: "https://example.com/billboard/200.png",
-		}
-
-		// カテゴリデータの作成
-		category1 := Category{
-			id: "1",
-			name: "音楽",
-			billboard: billboard1,
-		}
-		category2 := Category{
-			id: "2",
-			name: "映画",
-			billboard: billboard2,
+		Categories := []models.Category{
+			{
+			Category_id: "1",
+			Name: "音楽",
+			Billboard: models.Billboard{
+				Billboard_id: "1",
+				Label:"music",
+				ImageURL: "https://example.com/billboard/200.png",
+				},
+			},
+			{
+			Category_id: "2",
+			Name: "映画",
+			Billboard: models.Billboard{
+				Billboard_id: "2",
+				Label:"movie",
+				ImageURL: "https://example.com/billboard/200.png",
+				},
+			},
 		}
 
-		// カテゴリデータを配列に追加
-		Categoryes = append(Categoryes, category1)
-		Categoryes = append(Categoryes, category2)
-
-		ctx.IndentedJSON(200, Categoryes)
+		log.Println(Categories)
+		ctx.IndentedJSON(http.StatusOK, Categories)
 	}
 }

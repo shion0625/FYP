@@ -28,7 +28,11 @@ type Product struct {
 	Product_Name *string            `json:"product_name"`
 	Price        uint64             `json:"price" bson:"price"`
 	Rating       *uint64            `json:"rating" bson:"rating"`
-	Image        *string            `json:"image" bson:"image"`
+	Category Category `json:"category"`
+	Image        *string            `json:"image" bson:"IsFeatured"`
+	IsFeatured bool `json:"isFeatured" bson:"is_featured"`
+	Size Size `json:"size" bson:"size"`
+	Color Color `json:"color" bson:"color"`
 }
 type ProductUser struct {
 	Product_ID   primitive.ObjectID `josn:"product_id" bson:"product_id"`
@@ -55,4 +59,27 @@ type Address struct {
 	Street     *string            `json:"street_name" bson:"street_name"`
 	City       *string            `json:"city_name" bson:"city_name"`
 	Pincode    *string            `json:"pin_code" bson:"pin_code"`
+}
+
+type Billboard struct {
+	Billboard_id string `json:"id" bson:"billboard_id"`
+	Label string `json:"label" bson:"label"`
+	ImageURL string `json:"imageUrl" bson:"image_url"`
+}
+
+type Category struct {
+	Category_id string `json:"id" bson:"address_id"`
+	Name string `json:"name" bson:"name"`
+	Billboard Billboard `json:"billboard" bson:"billboard"`
+}
+type Size struct {
+	Size_id string `json:"id" bson:"size_id"`
+	Name string `json:"name" bson:"name"`
+	Value string `json:"value" bson:"value"`
+}
+
+type Color struct {
+	Color_id string `json:"id" bson:"color_id"`
+	Name string `json:"name" bson:"name"`
+	Value string `json:"value" bson:"value"`
 }
