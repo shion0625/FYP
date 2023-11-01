@@ -14,7 +14,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: nikhil382/ecommerce-gin-clean-arch
+    # image: nikhil382/ecommerce-gin-clean-arch
     ports:
       - 8000:8000
     env_file:
