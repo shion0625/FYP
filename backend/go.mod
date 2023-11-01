@@ -1,4 +1,4 @@
-module gihtub.com/shion0625/FYP
+module gihthub.com/shion0625/FYP/backend
 
 go 1.18
 

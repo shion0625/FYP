@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"gihtub.com/shion0625/FYP/models"
+	"gihthub.com/shion0625/FYP/backend/models"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"

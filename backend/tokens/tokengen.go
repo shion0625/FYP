@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"gihtub.com/shion0625/FYP/database"
+	"gihthub.com/shion0625/FYP/backend/database"
 	jwt "github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"

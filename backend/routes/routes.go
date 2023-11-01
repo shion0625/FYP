@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"gihtub.com/shion0625/FYP/controllers"
+	"gihthub.com/shion0625/FYP/backend/controllers"
 	"github.com/gin-gonic/gin"
 )
 

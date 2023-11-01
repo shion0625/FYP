@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"time"
 
-	"gihtub.com/shion0625/FYP/database"
-	"gihtub.com/shion0625/FYP/models"
+	"gihthub.com/shion0625/FYP/backend/database"
+	"gihthub.com/shion0625/FYP/backend/models"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -193,5 +193,52 @@ func (app *Application) BuyFromCart() gin.HandlerFunc {
 			return
 		}
 		ctx.IndentedJSON(http.StatusOK, "successfully placed the order")
+	}
+}
+
+type Billboard struct {
+	id string
+	label string
+	imageUrl string
+}
+
+type Category struct {
+	id string
+	name string
+	billboard Billboard
+}
+var Categoryes []Category
+
+func (app *Application) GetCategory() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		// ビルボードデータの作成
+		billboard1 := Billboard{
+			id: "1",
+			label: "Billboard Hot 100",
+			imageUrl: "https://example.com/billboard/hot-100.png",
+		}
+		billboard2 := Billboard{
+			id: "2",
+			label: "Billboard 200",
+			imageUrl: "https://example.com/billboard/200.png",
+		}
+
+		// カテゴリデータの作成
+		category1 := Category{
+			id: "1",
+			name: "音楽",
+			billboard: billboard1,
+		}
+		category2 := Category{
+			id: "2",
+			name: "映画",
+			billboard: billboard2,
+		}
+
+		// カテゴリデータを配列に追加
+		Categoryes = append(Categoryes, category1)
+		Categoryes = append(Categoryes, category2)
+
+		ctx.IndentedJSON(200, Categoryes)
 	}
 }

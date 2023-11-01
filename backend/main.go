@@ -4,9 +4,10 @@ import (
 	"log"
 	"os"
 
-	"gihtub.com/shion0625/FYP/controllers"
-	"gihtub.com/shion0625/FYP/database"
-	"gihtub.com/shion0625/FYP/middleware"
+	"gihthub.com/shion0625/FYP/backend/controllers"
+	"gihthub.com/shion0625/FYP/backend/database"
+	"gihthub.com/shion0625/FYP/backend/middleware"
+	"gihthub.com/shion0625/FYP/backend/routes"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,14 +18,19 @@ func main() {
 	}
 	app := controllers.NewApplication(database.ProductData(database.Client, "Products"), database.UserData(database.Client, "Users"))
 
-	router := gin.New()
-	router.Use(gin.Logger())
-	router.Use(middleware.Authentication())
+	r := gin.New()
+	r.Use(gin.Logger())
+	router := r.Group("/v1")
+	router.GET("/categories", app.GetCategory())
 
-	router.GET("/addtocart", app.AddToCart())
-	router.GET("/removeitem", app.RemoveItem())
-	router.GET("/cartcheckout", app.BuyFromCart())
-	router.GET("/instantbuy", app.InstantBuy())
+	authentication := r.Group("/v1")
+	authentication.Use(middleware.Authentication())
+	authentication.GET("/addtocart", app.AddToCart())
+	authentication.GET("/removeitem", app.RemoveItem())
+	authentication.GET("/cartcheckout", app.BuyFromCart())
+	authentication.GET("/instantbuy", app.InstantBuy())
 
-	log.Fatal(router.Run(":8000"))
+	routes.UserRoutes(r)
+
+	log.Fatal(r.Run(":8000"))
 }
