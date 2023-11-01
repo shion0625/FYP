@@ -1,11 +1,11 @@
-include frontend/Makefile
-include backend/Makefile
 start:
 	cd "$(PWD)/backend" && make up
 	cd "$(PWD)/frontend" && yarn dev
 
-start-log:
+start-back:
 	cd "$(PWD)/backend" && make up-log
+
+start-front:
 	cd "$(PWD)/frontend" && yarn dev
 
 down:
