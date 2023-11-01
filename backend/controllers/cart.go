@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"time"
 
-	"gihtub.com/SherzodAbdullajonov/ecommerce-yt/database"
-	"gihtub.com/SherzodAbdullajonov/ecommerce-yt/models"
+	"gihtub.com/shion0625/FYP/database"
+	"gihtub.com/shion0625/FYP/models"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"

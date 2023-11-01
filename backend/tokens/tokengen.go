@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"gihtub.com/SherzodAbdullajonov/ecommerce-yt/database"
+	"gihtub.com/shion0625/FYP/database"
 	jwt "github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -76,7 +76,7 @@ func UpdateAllTokens(signedtoken string, signedrefreshtoken string, userid strin
 	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 
 	var updateobj primitive.D
-	
+
 	updateobj = append(updateobj, bson.E{Key: "token", Value: signedtoken})
 	updateobj = append(updateobj, bson.E{Key: "refresh_token", Value: signedrefreshtoken})
 	updated_at, _ := time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))

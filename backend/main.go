@@ -4,9 +4,9 @@ import (
 	"log"
 	"os"
 
-	"gihtub.com/SherzodAbdullajonov/ecommerce-yt/controllers"
-	"gihtub.com/SherzodAbdullajonov/ecommerce-yt/database"
-	"gihtub.com/SherzodAbdullajonov/ecommerce-yt/middleware"
+	"gihtub.com/shion0625/FYP/controllers"
+	"gihtub.com/shion0625/FYP/database"
+	"gihtub.com/shion0625/FYP/middleware"
 	"github.com/gin-gonic/gin"
 )
 

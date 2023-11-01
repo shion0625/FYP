@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"net/http"
-	token "gihtub.com/SherzodAbdullajonov/ecommerce-yt/tokens"
+	token "gihtub.com/shion0625/FYP/tokens"
 	"github.com/gin-gonic/gin"
 )
 

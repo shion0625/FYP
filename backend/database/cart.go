@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"gihtub.com/SherzodAbdullajonov/ecommerce-yt/models"
+	"gihtub.com/shion0625/FYP/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -163,5 +163,5 @@ func InstantBuyer(ctx context.Context, prodCollection, userCollection *mongo.Col
 	if err!= nil {
 		log.Println(err)
 	}
-	return nil 
+	return nil
 }

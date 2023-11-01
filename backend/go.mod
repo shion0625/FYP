@@ -1,4 +1,4 @@
-module gihtub.com/SherzodAbdullajonov/ecommerce-yt
+module gihtub.com/shion0625/FYP
 
 go 1.18
 
