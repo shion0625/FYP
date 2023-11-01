@@ -1,7 +1,6 @@
-version: '3.3'
+version: "3.3"
 
 services:
-
   mongo:
     image: mongo:5.0.3
     ports:
@@ -9,3 +8,16 @@ services:
     environment:
       MONGO_INTITD_ROOT_USERNAME: development
       MONGO_INTITD_ROOT_PASSWORD: testpassword
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: go-backend
+    tty: true
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
