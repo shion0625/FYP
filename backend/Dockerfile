@@ -20,7 +20,9 @@ COPY ./go.sum $APP_ROOT/go.sum
 COPY . $APP_ROOT
 
 RUN go mod download
+RUN curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh | sh -s
 
 EXPOSE 8080
 
-CMD ["go","run","main.go"]
+# CMD ["go","run","main.go"]
+CMD ["bin/air", "-c", ".air.toml"]
