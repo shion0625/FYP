@@ -1,15 +1,22 @@
-version: '3'
+version: "3"
 services:
-# database container
+  # database container
   postgresdb:
-    image: postgres
-    env_file:
-      - .env
+    image: postgres:latest
+    container_name: postgresql
+    environment:
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_DB: "${DB_NAME}"
+      TimeZone: Asia/Tokyo
+    ports:
+      - "5432:5432"
     volumes:
       - database:/var/lib/postgresql/data
     networks:
       - ecommerce-network
-# webapp container
+
+  # webapp container
   app:
     build:
       context: .
