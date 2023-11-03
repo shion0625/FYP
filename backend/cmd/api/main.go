@@ -8,18 +8,10 @@ import (
 
 func main() {
 
-	server, err := di.InitializeApi(cfg)
+	server, err := di.InitializeApi()
 	if err != nil {
 		log.Fatal("Failed to initialize the api: ", err)
 	}
-
-	d, _ := dig.BuildDigDependencies()
-	err := d.Invoke(func(r *resolver.Resolver) error {
-		e.GET("/", Playground())
-		g := e.Group("/api")
-		g.Use(echo.WrapMiddleware(auth.AuthMiddleware))
-		return nil
-	})
 
 	if server.Start(); err != nil {
 		log.Fatal("failed to start server: ", err)

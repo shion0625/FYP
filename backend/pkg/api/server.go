@@ -1,39 +1,32 @@
-package main
+package api
 
 import (
-	"errors"
-	"log"
 	"net/http"
 	"os"
 	"time"
 
-	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/shion0625/FYP/backend/config/auth"
-	"github.com/shion0625/FYP/backend/config/dig"
-	"github.com/shion0625/FYP/backend/graphql/directives"
-	"github.com/shion0625/FYP/backend/graphql/generated"
-	"github.com/shion0625/FYP/backend/graphql/resolver"
-	"github.com/shion0625/FYP/backend/util"
+	"github.com/shion0625/FYP/backend/pkg/config"
+	"github.com/shion0625/FYP/backend/pkg/api/router"
 )
 
 var timeout = 30 * time.Second
 
 type ServerHTTP struct {
-	Engine *echo.Engine
+	Engine *echo.Echo
 }
 
 func NewServerHTTP() *ServerHTTP {
-	util.LoadEnv()
+	config.LoadEnv()
 
-	e := echo.New()
+	engine := echo.New()
 
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
+	engine.Use(middleware.Logger())
+	engine.Use(middleware.Recover())
 	// cors設定
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	engine.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowCredentials: true,
 		AllowOrigins: []string{
 			os.Getenv("FRONTEND_URL"),
@@ -48,33 +41,15 @@ func NewServerHTTP() *ServerHTTP {
 		},
 	}))
 
-	d, _ := dig.BuildDigDependencies()
-	err := d.Invoke(func() error {
-		g := e.Group("/api")
-		g.Use(echo.WrapMiddleware(auth.AuthMiddleware))
-
-		return nil
-	})
-
-	if !errors.Is(err, nil) {
-		panic(err)
-	}
-
-	port := util.GetPort()
-	errPort := e.Start(":" + port)
-
-	if !errors.Is(errPort, nil) {
-		log.Fatalln(errPort)
-	}
-
-	engine := &http.Server{
-		Addr:              ":" + port,
-		ReadHeaderTimeout: timeout,
-	}
+	router.UserRoutes(engine.Group("/api"))
 
 	return &ServerHTTP{Engine: engine}
 }
 
 func (s *ServerHTTP) Start() error {
-	return engine.ListenAndServe()
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	return s.Engine.Start(":" + port)
 }
