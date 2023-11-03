@@ -1,5 +1,4 @@
 module github.com/shion0625/FYP/backend
-
 go 1.20
 
 require (

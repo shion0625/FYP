@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/shion0625/backend/pkg/config"
-	"github.com/shion0625/backend/pkg/domain"
+	"github.com/shion0625/FYP/backend/pkg/config"
+	// "github.com/shion0625/FYP/backend/pkg/domain"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -78,23 +78,5 @@ func ConnectDatabase(cfg config.Config) (*gorm.DB, error) {
 		log.Printf("failed to migrate database models")
 		return nil, err
 	}
-
-	// setup the triggers
-	if err := SetUpDBTriggers(db); err != nil {
-		log.Printf("failed to setup database triggers")
-		return nil, err
-	}
-
-	if err := saveAdmin(db, cfg.AdminEmail, cfg.AdminUserName, cfg.AdminPassword); err != nil {
-		return nil, err
-	}
-
-	if err := saveOrderStatuses(db); err != nil {
-		return nil, err
-	}
-	if err := savePaymentMethods(db); err != nil {
-		return nil, err
-	}
-
 	return db, err
 }

@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/shion0625/backend/pkg/config"
-	"github.com/shion0625/backend/pkg/di"
+	"github.com/shion0625/FYP/backend/pkg/config"
+	"github.com/shion0625/FYP/backend/pkg/di"
 )
 
 func main() {

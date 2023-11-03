@@ -5,15 +5,15 @@ package di
 
 import (
 	"github.com/google/wire"
-	http "github.com/shion0625/backend/pkg/api"
-	// "github.com/shion0625/backend/pkg/api/handler"
-	// "github.com/shion0625/backend/pkg/api/middleware"
-	"github.com/shion0625/backend/pkg/config"
-	"github.com/shion0625/backend/pkg/db"
-	// "github.com/shion0625/backend/pkg/repository"
-	// "github.com/shion0625/backend/pkg/service/otp"
-	// "github.com/shion0625/backend/pkg/service/token"
-	// "github.com/shion0625/backend/pkg/usecase"
+	http "github.com/shion0625/FYP/backend/pkg/api"
+	// "github.com/shion0625/FYP/backend/pkg/api/handler"
+	// "github.com/shion0625/FYP/backend/pkg/api/middleware"
+	"github.com/shion0625/FYP/backend/pkg/config"
+	"github.com/shion0625/FYP/backend/pkg/db"
+	// "github.com/shion0625/FYP/backend/pkg/repository"
+	// "github.com/shion0625/FYP/backend/pkg/service/otp"
+	// "github.com/shion0625/FYP/backend/pkg/service/token"
+	// "github.com/shion0625/FYP/backend/pkg/usecase"
 )
 
 func InitializeApi(cfg config.Config) (*http.ServerHTTP, error) {
