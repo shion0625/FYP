@@ -9,11 +9,11 @@ import (
 
 func main() {
 
-	cfg, err := config.LoadConfig()
+	// cfg, err := config.LoadConfig()
 
-	if err != nil {
-		log.Fatal("Error to load the config: ", err)
-	}
+	// if err != nil {
+	// 	log.Fatal("Error to load the config: ", err)
+	// }
 
 	server, err := di.InitializeApi(cfg)
 	if err != nil {
