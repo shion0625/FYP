@@ -1,8 +1,0 @@
-## profile.graphqls ===============================================
-
-type Profile {
-  id: ID!
-  birthday: Timestamp
-  comment: String
-  user: User!
-  }
