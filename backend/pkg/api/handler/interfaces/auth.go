@@ -1,10 +1,10 @@
 package interfaces
 
-import  "github.com/labstack/echo/v4"
+import "github.com/labstack/echo/v4"
 
 type AuthHandler interface {
 	//userSide
-	UserLogin(ctx *echo.Context)
+	UserLogin(ctx echo.Context) echo.HandlerFunc
 	// UserSignUp(ctx *echo.Context)
 	// UserSignUpVerify(ctx *echo.Context)
 

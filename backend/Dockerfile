@@ -1,5 +1,5 @@
 # goバージョン
-FROM golang:1.19.1-alpine
+FROM golang:1.20.0-alpine
 
 RUN apk update && apk add git && apk add alpine-sdk
 
@@ -23,9 +23,11 @@ RUN go mod download
 
 EXPOSE 8080
 
-# RUN go install github.com/cosmtrek/air@v1.29.0
+RUN go get -u github.com/cosmtrek/air && \
+  go build -o /go/bin/air github.com/cosmtrek/air
+
 # RUN go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.51.1
 # # air -c [tomlファイル名] // 設定ファイルを指定してair実行(WORKDIRに.air.tomlを配置しておくこと)
-CMD ["go", "run", "server.go"]
+# CMD ["go", "run", "server.go"]
 
-# CMD ["air", "-c", ".air.toml"]
+CMD ["/go/bin/air", "-c", ".air.toml"]

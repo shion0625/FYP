@@ -1,38 +1,35 @@
 package usecase
 
+import (
+	"time"
+
+	"github.com/labstack/echo/v4"
+	"github.com/shion0625/FYP/backend/pkg/api/handler/request"
+	"github.com/shion0625/FYP/backend/pkg/domain"
+	repoInterfaces "github.com/shion0625/FYP/backend/pkg/repository/interfaces"
+	"github.com/shion0625/FYP/backend/pkg/usecase/interfaces"
+	"github.com/shion0625/FYP/backend/pkg/utils"
+)
+
 const (
 	countryCode       = "+91"
 	otpExpireDuration = time.Minute * 2
 )
 
 type authUseCase struct {
-
-	userRepo     interfaces.UserRepository
-	// adminRepo    interfaces.AdminRepository
-	// tokenService token.TokenService
-	// authRepo interfaces.AuthRepository
-	// optAuth      otp.OtpAuth
+	userRepo repoInterfaces.UserRepository
 }
 
 func NewAuthUseCase(
-	userRepo interfaces.UserRepository,
-	// adminRepo interfaces.AdminRepository,
-	// tokenService token.TokenService,
-	// authRepo interfaces.AuthRepository,
-	// optAuth otp.OtpAut
-	) service.AuthUseCase {
+	userRepo repoInterfaces.UserRepository,
+) interfaces.AuthUseCase {
 
 	return &authUseCase{
-		userRepo:     userRepo,
-		// adminRepo:    adminRepo,
-		// tokenService: tokenService,
-		// authRepo:     authRepo,
-		// optAuth:      optAuth,
+		userRepo: userRepo,
 	}
 }
 
-
-func (c *authUseCase) UserLogin(ctx context.Context, loginInfo request.Login) (uint, error) {
+func (c *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (uint, error) {
 
 	var (
 		user domain.User

@@ -1,7 +1,16 @@
 package handler
 
 import (
+	"errors"
+	"github.com/shion0625/FYP/backend/pkg/api/handler/request"
+	"net/http"
+
 	"github.com/labstack/echo/v4"
+	handlerInterface "github.com/shion0625/FYP/backend/pkg/api/handler/interfaces"
+	"github.com/shion0625/FYP/backend/pkg/api/handler/response"
+	"github.com/shion0625/FYP/backend/pkg/config"
+	"github.com/shion0625/FYP/backend/pkg/usecase"
+	usecaseInterface "github.com/shion0625/FYP/backend/pkg/usecase/interfaces"
 )
 
 const (
@@ -11,26 +20,25 @@ const (
 
 type AuthHandler struct {
 	authUseCase usecaseInterface.AuthUseCase
-	config      config.Config
+	config      *config.Config
 }
 
-func NewAuthHandler(authUsecase usecaseInterface.AuthUseCase, config config.Config) interfaces.AuthHandler {
+func NewAuthHandler(authUsecase usecaseInterface.AuthUseCase, config *config.Config) handlerInterface.AuthHandler {
 	return &AuthHandler{
 		authUseCase: authUsecase,
 		config:      config,
 	}
 }
 
-func (c *AuthHandler) UserLogin(ctx *echo.Context) {
-
+func (a *AuthHandler) UserLogin(ctx echo.Context) echo.HandlerFunc {
 	var body request.Login
 
-	if err := ctx.ShouldBindJSON(&body); err != nil {
+	if err := ctx.Bind(&body); err != nil {
 		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, body)
-		return
+		return nil
 	}
 
-	userID, err := c.authUseCase.UserLogin(ctx, body)
+	_, err := a.authUseCase.UserLogin(ctx, body)
 
 	if err != nil {
 
@@ -52,16 +60,16 @@ func (c *AuthHandler) UserLogin(ctx *echo.Context) {
 		}
 
 		response.ErrorResponse(ctx, statusCode, "Failed to login", err, nil)
-		return
+		return nil
 	}
-
 	print("login")
+
+	return nil
 	// common functionality for admin and user
 	// c.setupTokenAndResponse(ctx, token.User, userID)
 }
 
-
-// func (c *AuthHandler) setupTokenAndResponse(ctx *gin.Context, tokenUser token.UserType, userID uint) {
+// func (c *AuthHandler) setupTokenAndResponse(ctx *echo.Context, tokenUser token.UserType, userID uint) {
 
 // 	tokenParams := usecaseInterface.GenerateTokenParams{
 // 		UserID:   userID,
