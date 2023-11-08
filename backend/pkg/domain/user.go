@@ -5,47 +5,47 @@ import (
 )
 
 type User struct {
-	ID          uint      `json:"id" gorm:"primaryKey;unique"`
-	Age         uint      `json:"age" binding:"required,numeric"`
+	ID          uint      `gorm:"primaryKey;unique"         json:"id"`
+	Age         uint      `binding:"required,numeric"       json:"age"`
 	GoogleImage string    `json:"google_profile_image"`
-	FirstName   string    `json:"first_name" gorm:"not null" binding:"required,min=2,max=50"`
-	LastName    string    `json:"last_name" gorm:"not null" binding:"required,min=1,max=50"`
-	UserName    string    `json:"user_name" gorm:"not null;unique" binding:"required,min=3,max=15"`
-	Email       string    `json:"email" gorm:"unique;not null" binding:"required,email"`
-	Phone       string    `json:"phone" gorm:"unique" binding:"required,min=10,max=10"`
-	Password    string    `json:"password" binding:"required"`
-	Verified    bool      `json:"verified" gorm:"default:false"`
-	BlockStatus bool      `json:"block_status" gorm:"not null;default:false"`
-	CreatedAt   time.Time `json:"created_at" gorm:"not null"`
+	FirstName   string    `binding:"required,min=2,max=50"  gorm:"not null"        json:"first_name"`
+	LastName    string    `binding:"required,min=1,max=50"  gorm:"not null"        json:"last_name"`
+	UserName    string    `binding:"required,min=3,max=15"  gorm:"not null;unique" json:"user_name"`
+	Email       string    `binding:"required,email"         gorm:"unique;not null" json:"email"`
+	Phone       string    `binding:"required,min=10,max=10" gorm:"unique"          json:"phone"`
+	Password    string    `binding:"required"               json:"password"`
+	Verified    bool      `gorm:"default:false"             json:"verified"`
+	BlockStatus bool      `gorm:"not null;default:false"    json:"block_status"`
+	CreatedAt   time.Time `gorm:"not null"                  json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
-// many to many join
+// many to many join.
 type UserAddress struct {
-	ID        uint `json:"id" gorm:"primaryKey;unique"`
-	UserID    uint `json:"user_id" gorm:"not null"`
+	ID        uint `gorm:"primaryKey;unique" json:"id"`
+	UserID    uint `gorm:"not null"          json:"user_id"`
 	User      User
-	AddressID uint `json:"address_id" gorm:"not null"`
+	AddressID uint `gorm:"not null" json:"address_id"`
 	Address   Address
 	IsDefault bool `json:"is_default"`
 }
 
 type Address struct {
-	ID          uint   `json:"id" gorm:"primaryKey;unique"`
-	Name        string `json:"name" gorm:"not null" binding:"required,min=2,max=50"`
-	PhoneNumber string `json:"phone_number" gorm:"not null" binding:"required,min=10,max=10"`
-	House       string `json:"house" gorm:"not null" binding:"required"`
-	Area        string `json:"area" gorm:"not null"`
-	LandMark    string `json:"land_mark" gorm:"not null" binding:"required"`
-	City        string `json:"city" gorm:"not null"`
-	Pincode     uint   `json:"pincode" gorm:"not null" binding:"required,numeric,min=6,max=6"`
-	CountryID   uint   `json:"country_id" gorm:"not null" binding:"required"`
+	ID          uint   `gorm:"primaryKey;unique"               json:"id"`
+	Name        string `binding:"required,min=2,max=50"        gorm:"not null" json:"name"`
+	PhoneNumber string `binding:"required,min=10,max=10"       gorm:"not null" json:"phone_number"`
+	House       string `binding:"required"                     gorm:"not null" json:"house"`
+	Area        string `gorm:"not null"                        json:"area"`
+	LandMark    string `binding:"required"                     gorm:"not null" json:"land_mark"`
+	City        string `gorm:"not null"                        json:"city"`
+	Pincode     uint   `binding:"required,numeric,min=6,max=6" gorm:"not null" json:"pincode"`
+	CountryID   uint   `binding:"required"                     gorm:"not null" json:"country_id"`
 	Country     Country
-	CreatedAt   time.Time `json:"created_at" gorm:"not null"`
+	CreatedAt   time.Time `gorm:"not null"   json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 type Country struct {
-	ID          uint   `json:"id" gorm:"primaryKey;unique;"`
-	CountryName string `json:"country_name" gorm:"unique;not null"`
+	ID          uint   `gorm:"primaryKey;unique;" json:"id"`
+	CountryName string `gorm:"unique;not null"    json:"country_name"`
 }

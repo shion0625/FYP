@@ -23,14 +23,12 @@ type authUseCase struct {
 func NewAuthUseCase(
 	userRepo repoInterfaces.UserRepository,
 ) interfaces.AuthUseCase {
-
 	return &authUseCase{
 		userRepo: userRepo,
 	}
 }
 
 func (c *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (uint, error) {
-
 	var (
 		user domain.User
 		err  error
@@ -68,4 +66,36 @@ func (c *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (uint
 	}
 
 	return user.ID, nil
+}
+
+func (c *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (string, error) {
+	existUser, err := c.userRepo.FindUserByUserNameEmailOrPhoneNotID(ctx, signUpDetails)
+	if err != nil {
+		return "", utils.PrependMessageToError(err, "failed to check user details already exist")
+	}
+
+	// if user credentials already exist and  verified then return it as errors
+	if existUser.ID != 0 && existUser.Verified {
+		err = utils.CompareUserExistingDetails(existUser, signUpDetails)
+		err = utils.AppendMessageToError(ErrUserAlreadyExit, err.Error())
+		return "", err
+	}
+
+	userID := existUser.ID
+
+	if userID == 0 { // if user not exist then save user on database
+		hashPass, err := utils.GenerateHashFromPassword(signUpDetails.Password)
+		if err != nil {
+			return "", utils.PrependMessageToError(err, "failed to hash the password")
+		}
+
+		signUpDetails.Password = string(hashPass)
+		userID, err = c.userRepo.SaveUser(ctx, signUpDetails)
+
+		if err != nil {
+			return "", utils.PrependMessageToError(err, "failed to save user details")
+		}
+	}
+
+	return "", nil
 }

@@ -3,11 +3,12 @@ package db
 import (
 	"errors"
 	"fmt"
+	"log"
+
 	"github.com/shion0625/FYP/backend/pkg/config"
 	"github.com/shion0625/FYP/backend/pkg/domain"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
 )
 
 func ConnectDatabase(cfg *config.Config) (*gorm.DB, error) {
@@ -32,7 +33,7 @@ func ConnectDatabase(cfg *config.Config) (*gorm.DB, error) {
 func autoMigrate(db *gorm.DB) error {
 	// migrate the database tables
 	err := db.AutoMigrate(
-		//user
+
 		domain.User{},
 		domain.Country{},
 		domain.Address{},

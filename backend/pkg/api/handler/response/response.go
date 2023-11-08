@@ -15,7 +15,6 @@ type Response struct {
 }
 
 func SuccessResponse(ctx echo.Context, statusCode int, message string, data ...interface{}) {
-
 	log.Printf("\033[0;32m%s\033[0m\n", message)
 
 	response := Response{
@@ -28,7 +27,6 @@ func SuccessResponse(ctx echo.Context, statusCode int, message string, data ...i
 }
 
 func ErrorResponse(ctx echo.Context, statusCode int, message string, err error, data interface{}) {
-
 	log.Printf("\033[0;31m%s\033[0m\n", err.Error())
 
 	errFields := strings.Split(err.Error(), "\n")

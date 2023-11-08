@@ -8,7 +8,6 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	handlerInterfaces "github.com/shion0625/FYP/backend/pkg/api/handler/interfaces"
 	apiMiddleware "github.com/shion0625/FYP/backend/pkg/api/middleware"
-
 	"github.com/shion0625/FYP/backend/pkg/api/router"
 	"github.com/shion0625/FYP/backend/pkg/config"
 )

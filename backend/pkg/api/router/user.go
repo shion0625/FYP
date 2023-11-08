@@ -8,14 +8,14 @@ import (
 func UserRoutes(api *echo.Group, authHandler handlerInterfaces.AuthHandler) {
 	auth := api.Group("/auth")
 
-	// signup := auth.Group("/sign-up")
-	// {
-	// 	signup.GET("/", func(c echo.Context) error {
-	// 		print("こんにちは")
-	// 		return nil
-	// 	})
-	// 	signup.POST("/verify", authHandler.UserSignUpVerify)
-	// }
+	signup := auth.Group("/sign-up")
+	{
+		signup.GET("/", func(c echo.Context) error {
+			print("こんにちは")
+			return nil
+		})
+		// signup.POST("/verify", authHandler.UserSignUpVerify)
+	}
 
 	login := auth.Group("/sign-in")
 	{

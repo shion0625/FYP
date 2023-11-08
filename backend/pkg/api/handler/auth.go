@@ -2,15 +2,18 @@ package handler
 
 import (
 	"errors"
-	"github.com/shion0625/FYP/backend/pkg/api/handler/request"
 	"net/http"
 
+	"github.com/jinzhu/copier"
 	"github.com/labstack/echo/v4"
 	handlerInterface "github.com/shion0625/FYP/backend/pkg/api/handler/interfaces"
+	"github.com/shion0625/FYP/backend/pkg/api/handler/request"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/response"
 	"github.com/shion0625/FYP/backend/pkg/config"
+	"github.com/shion0625/FYP/backend/pkg/domain"
 	"github.com/shion0625/FYP/backend/pkg/usecase"
 	usecaseInterface "github.com/shion0625/FYP/backend/pkg/usecase/interfaces"
+	"net/http"
 )
 
 const (
@@ -39,9 +42,7 @@ func (a *AuthHandler) UserLogin(ctx echo.Context) echo.HandlerFunc {
 	}
 
 	_, err := a.authUseCase.UserLogin(ctx, body)
-
 	if err != nil {
-
 		var statusCode int
 
 		switch {
@@ -67,6 +68,36 @@ func (a *AuthHandler) UserLogin(ctx echo.Context) echo.HandlerFunc {
 	return nil
 	// common functionality for admin and user
 	// c.setupTokenAndResponse(ctx, token.User, userID)
+}
+
+func (c *AuthHandler) UserSignUp(ctx echo.Context) echo.HandlerFunc {
+	var body request.SignUp
+
+	if err := ctx.Bind(&body); err != nil {
+		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, body)
+		return nil
+	}
+
+	var user domain.User
+	if err := copier.Copy(&user, body); err != nil {
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "failed to copy details", err, nil)
+		return nil
+	}
+
+	_, err := c.authUseCase.UserSignUp(ctx, user)
+	if err != nil {
+		statusCode := http.StatusInternalServerError
+		if errors.Is(err, usecase.ErrUserAlreadyExit) {
+			statusCode = http.StatusConflict
+		}
+
+		response.ErrorResponse(ctx, statusCode, "Failed to signup", err, nil)
+		return nil
+	}
+
+	response.SuccessResponse(ctx, http.StatusCreated,
+		"Successfully account created")
+	return nil
 }
 
 // func (c *AuthHandler) setupTokenAndResponse(ctx *echo.Context, tokenUser token.UserType, userID uint) {

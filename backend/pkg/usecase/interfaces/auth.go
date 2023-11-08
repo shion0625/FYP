@@ -3,11 +3,11 @@ package interfaces
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/request"
+	"github.com/shion0625/FYP/backend/pkg/domain"
 )
 
 type AuthUseCase interface {
-	//user
-	// UserSignUp(ctx echo.Context, signUpDetails domain.User) (otpID string, err error)
+	UserSignUp(ctx echo.Context, signUpDetails domain.User) (otpID string, err error)
 	// SingUpOtpVerify(ctx echo.Context, otpVerifyDetails request.OTPVerify) (userID uint, err error)
 	// GoogleLogin(ctx echo.Context, user domain.User) (userID uint, err error)
 	UserLogin(ctx echo.Context, loginInfo request.Login) (userID uint, err error)

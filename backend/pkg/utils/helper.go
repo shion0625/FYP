@@ -3,11 +3,12 @@ package utils
 import (
 	"encoding/hex"
 	"fmt"
-	"golang.org/x/crypto/bcrypt"
 	"math/rand"
 	"strconv"
 	"strings"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 func StringToUint(str string) (uint, error) {
@@ -15,9 +16,8 @@ func StringToUint(str string) (uint, error) {
 	return uint(val), err
 }
 
-// generate userName
+// generate userName.
 func GenerateRandomUserName(FirstName string) string {
-
 	suffix := make([]byte, 4)
 
 	numbers := "1234567890"
@@ -33,7 +33,7 @@ func GenerateRandomUserName(FirstName string) string {
 	return strings.ToLower(userName)
 }
 
-// generate unique string for sku
+// generate unique string for sku.
 func GenerateSKU() string {
 	sku := make([]byte, 10)
 
@@ -42,7 +42,7 @@ func GenerateSKU() string {
 	return hex.EncodeToString(sku)
 }
 
-// random coupons
+// random coupons.
 func GenerateCouponCode(couponCodeLength int) string {
 	// letter for coupons
 	letters := `ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`
@@ -60,7 +60,6 @@ func GenerateCouponCode(couponCodeLength int) string {
 }
 
 func StringToTime(timeString string) (timeValue time.Time, err error) {
-
 	// parse the string time to time
 	timeValue, err = time.Parse(time.RFC3339Nano, timeString)
 
@@ -85,7 +84,6 @@ func RandomInt(min, max int) int {
 }
 
 func GetHashedPassword(password string) (hashedPassword string, err error) {
-
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), 10)
 	if err != nil {
 		return hashedPassword, err

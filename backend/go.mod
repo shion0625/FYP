@@ -5,9 +5,10 @@ go 1.19
 require (
 	github.com/caarlos0/env/v6 v6.10.1
 	github.com/google/wire v0.5.0
+	github.com/jinzhu/copier v0.4.0
 	github.com/joho/godotenv v1.4.0
 	github.com/labstack/echo/v4 v4.9.0
-	golang.org/x/crypto v0.1.0
+	golang.org/x/crypto v0.3.0
 	gorm.io/driver/postgres v1.3.10
 	gorm.io/gorm v1.23.10
 )

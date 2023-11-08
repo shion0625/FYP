@@ -52,7 +52,7 @@ swag: ## Generate swagger docs
 	swag init -g pkg/api/server.go -o ./cmd/api/docs
 
 check: ## To check the code standard violations and errors
-	golangci-lint run
+	golangci-lint run --fix
 
 mockgen: # Generate mock files for the test
 	mockgen -source=pkg/repository/interfaces/auth.go -destination=pkg/mock/mockrepo/auth_mock.go -package=mockrepo

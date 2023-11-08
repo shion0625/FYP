@@ -3,9 +3,8 @@ package interfaces
 import "github.com/labstack/echo/v4"
 
 type AuthHandler interface {
-	//userSide
 	UserLogin(ctx echo.Context) echo.HandlerFunc
-	// UserSignUp(ctx *echo.Context)
+	UserSignUp(ctx echo.Context) echo.HandlerFunc
 	// UserSignUpVerify(ctx *echo.Context)
 
 	// UserGoogleAuthInitialize(ctx *echo.Context)
