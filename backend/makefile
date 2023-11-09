@@ -5,7 +5,7 @@ SHELL := /bin/bash
 GOCMD=go
 BUILD_DIR=build
 BINARY_DIR=$(BUILD_DIR)/bin
-CODE_COVERAGE=code-coverage
+CODE_COVERAGE=test/code-coverage
 
 all: test build
 
@@ -28,7 +28,8 @@ test: ## Run tests
 
 test-coverage: ## Run tests and generate coverage file
 	$(GOCMD) test ./... -coverprofile=$(CODE_COVERAGE).out
-	$(GOCMD) tool cover -html=$(CODE_COVERAGE).out
+	$(GOCMD) tool cover -html=$(CODE_COVERAGE).out -o $(CODE_COVERAGE).html
+	open $(CODE_COVERAGE).html
 
 deps: ## Install dependencies
 #	# go get $(go list -f '{{if not (or .Main .Indirect)}}{{.Path}}{{end}}' -m all)
