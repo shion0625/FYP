@@ -13,8 +13,8 @@ type userDatabase struct {
 	DB *gorm.DB
 }
 
-func NewUserRepository(DB *gorm.DB) interfaces.UserRepository {
-	return &userDatabase{DB: DB}
+func NewUserRepository(db *gorm.DB) interfaces.UserRepository {
+	return &userDatabase{DB: db}
 }
 
 func (c *userDatabase) FindUserByUserID(ctx echo.Context, userID uint) (user domain.User, err error) {
@@ -35,6 +35,7 @@ func (c *userDatabase) FindUserByEmail(ctx echo.Context, email string) (user dom
 
 func (c *userDatabase) FindUserByPhoneNumber(ctx echo.Context, phoneNumber string) (user domain.User, err error) {
 	err = c.DB.Where("phone = ?", phoneNumber).First(&user).Error
+
 	return user, err
 }
 
@@ -43,7 +44,8 @@ func (c *userDatabase) FindUserByUserNameEmailOrPhoneNotID(ctx echo.Context,
 ) (user domain.User, err error) {
 	err = c.DB.Where("(user_name = ? OR email = ? OR phone = ?) AND id != ?",
 		userDetails.UserName, userDetails.Email, userDetails.Phone, userDetails.ID).First(&user).Error
-	return
+
+	return user, err
 }
 
 func (c *userDatabase) SaveUser(ctx echo.Context, user domain.User) (userID uint, err error) {

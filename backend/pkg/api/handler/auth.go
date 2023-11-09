@@ -13,7 +13,6 @@ import (
 	"github.com/shion0625/FYP/backend/pkg/domain"
 	"github.com/shion0625/FYP/backend/pkg/usecase"
 	usecaseInterface "github.com/shion0625/FYP/backend/pkg/usecase/interfaces"
-	"net/http"
 )
 
 const (
@@ -38,6 +37,7 @@ func (a *AuthHandler) UserLogin(ctx echo.Context) echo.HandlerFunc {
 
 	if err := ctx.Bind(&body); err != nil {
 		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, body)
+
 		return nil
 	}
 
@@ -61,13 +61,15 @@ func (a *AuthHandler) UserLogin(ctx echo.Context) echo.HandlerFunc {
 		}
 
 		response.ErrorResponse(ctx, statusCode, "Failed to login", err, nil)
+
 		return nil
 	}
+
 	print("login")
 
-	return nil
 	// common functionality for admin and user
 	// c.setupTokenAndResponse(ctx, token.User, userID)
+	return nil
 }
 
 func (c *AuthHandler) UserSignUp(ctx echo.Context) echo.HandlerFunc {
@@ -75,12 +77,14 @@ func (c *AuthHandler) UserSignUp(ctx echo.Context) echo.HandlerFunc {
 
 	if err := ctx.Bind(&body); err != nil {
 		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, body)
+
 		return nil
 	}
 
 	var user domain.User
 	if err := copier.Copy(&user, body); err != nil {
 		response.ErrorResponse(ctx, http.StatusInternalServerError, "failed to copy details", err, nil)
+
 		return nil
 	}
 
@@ -92,11 +96,13 @@ func (c *AuthHandler) UserSignUp(ctx echo.Context) echo.HandlerFunc {
 		}
 
 		response.ErrorResponse(ctx, statusCode, "Failed to signup", err, nil)
+
 		return nil
 	}
 
 	response.SuccessResponse(ctx, http.StatusCreated,
 		"Successfully account created")
+
 	return nil
 }
 

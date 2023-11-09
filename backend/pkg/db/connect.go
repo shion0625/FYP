@@ -24,6 +24,7 @@ func ConnectDatabase(cfg *config.Config) (*gorm.DB, error) {
 
 	if err != nil {
 		log.Printf("failed to migrate database models")
+
 		return nil, err
 	}
 
@@ -39,5 +40,6 @@ func autoMigrate(db *gorm.DB) error {
 		domain.Address{},
 		domain.UserAddress{},
 	)
-	return err
+
+	return fmt.Errorf("failed to auto migrate database: %w", err)
 }

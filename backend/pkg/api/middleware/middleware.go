@@ -8,7 +8,7 @@ type Middleware interface {
 	// AuthenticateUser() echo.HandlerFunc
 	// AuthenticateAdmin() echo.HandlerFunc
 	// TrimSpaces() echo.HandlerFunc
-	Context(echo.HandlerFunc) echo.HandlerFunc
+	Context(handler echo.HandlerFunc) echo.HandlerFunc
 }
 
 type middleware struct{}

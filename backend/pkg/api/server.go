@@ -1,8 +1,8 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -11,8 +11,6 @@ import (
 	"github.com/shion0625/FYP/backend/pkg/api/router"
 	"github.com/shion0625/FYP/backend/pkg/config"
 )
-
-var timeout = 30 * time.Second
 
 type ServerHTTP struct {
 	Engine *echo.Echo
@@ -53,5 +51,10 @@ func (s *ServerHTTP) Start(cfg *config.Config) error {
 	if port == "" {
 		port = "8080"
 	}
-	return s.Engine.Start(":" + port)
+
+	if err := s.Engine.Start(":" + port); err != nil {
+		return fmt.Errorf("failed to start server: %w", err)
+	}
+
+	return nil
 }

@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -33,6 +34,7 @@ func (c *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (uint
 		user domain.User
 		err  error
 	)
+
 	switch {
 	case loginInfo.Email != "":
 		user, err = c.userRepo.FindUserByEmail(ctx, loginInfo.Email)
@@ -45,7 +47,7 @@ func (c *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (uint
 	}
 
 	if err != nil {
-		return 0, utils.PrependMessageToError(err, "failed to find user from database")
+		return 0, fmt.Errorf("failed to find user from database: %w", err)
 	}
 
 	if user.ID == 0 {
@@ -71,14 +73,14 @@ func (c *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (uint
 func (c *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (string, error) {
 	existUser, err := c.userRepo.FindUserByUserNameEmailOrPhoneNotID(ctx, signUpDetails)
 	if err != nil {
-		return "", utils.PrependMessageToError(err, "failed to check user details already exist")
+		return "", fmt.Errorf("failed to check user details already exist: %w", err)
 	}
 
 	// if user credentials already exist and  verified then return it as errors
 	if existUser.ID != 0 && existUser.Verified {
 		err = utils.CompareUserExistingDetails(existUser, signUpDetails)
-		err = utils.AppendMessageToError(ErrUserAlreadyExit, err.Error())
-		return "", err
+
+		return "", fmt.Errorf("failed to check user details already exist: %w", err)
 	}
 
 	userID := existUser.ID
@@ -86,16 +88,16 @@ func (c *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (s
 	if userID == 0 { // if user not exist then save user on database
 		hashPass, err := utils.GenerateHashFromPassword(signUpDetails.Password)
 		if err != nil {
-			return "", utils.PrependMessageToError(err, "failed to hash the password")
+			return "", fmt.Errorf("failed to hash the password: %w", err)
 		}
 
-		signUpDetails.Password = string(hashPass)
-		userID, err = c.userRepo.SaveUser(ctx, signUpDetails)
+		signUpDetails.Password = hashPass
+		_, err = c.userRepo.SaveUser(ctx, signUpDetails)
 
 		if err != nil {
-			return "", utils.PrependMessageToError(err, "failed to save user details")
+			return "", fmt.Errorf("failed to save user details: %w", err)
 		}
 	}
 
-	return "", nil
+	return "success", nil
 }

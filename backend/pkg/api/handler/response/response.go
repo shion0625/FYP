@@ -8,7 +8,7 @@ import (
 )
 
 type Response struct {
-	Status  bool        `json:"success"`
+	Status  bool        `json:"status"`
 	Message string      `json:"message"`
 	Error   interface{} `json:"error,omitempty"`
 	Data    interface{} `json:"data,omitempty"`
@@ -23,7 +23,10 @@ func SuccessResponse(ctx echo.Context, statusCode int, message string, data ...i
 		Error:   nil,
 		Data:    data,
 	}
-	ctx.JSON(statusCode, response)
+
+	if err := ctx.JSON(statusCode, response); err != nil {
+		log.Println("Error:", err)
+	}
 }
 
 func ErrorResponse(ctx echo.Context, statusCode int, message string, err error, data interface{}) {
@@ -37,5 +40,7 @@ func ErrorResponse(ctx echo.Context, statusCode int, message string, err error, 
 		Data:    data,
 	}
 
-	ctx.JSON(statusCode, response)
+	if err := ctx.JSON(statusCode, response); err != nil {
+		log.Println("Error:", err)
+	}
 }

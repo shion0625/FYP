@@ -18,7 +18,7 @@ func main() {
 		log.Fatal("Failed to initialize the api: ", err)
 	}
 
-	if server.Start(cfg); err != nil {
+	if err = server.Start(cfg); err != nil {
 		log.Fatal("failed to start server: ", err)
 	}
 }

@@ -1,9 +1,10 @@
 package utils
 
 import (
+	"crypto/rand"
 	"encoding/hex"
 	"fmt"
-	"math/rand"
+	"math/big"
 	"strconv"
 	"strings"
 	"time"
@@ -11,52 +12,53 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+var (
+	suffixLength     = 4
+	numbersLength    = 10
+	couponCodeLength = 30
+	skuLength        = 10
+	bcryptCost       = 10
+)
+
 func StringToUint(str string) (uint, error) {
 	val, err := strconv.Atoi(str)
+
 	return uint(val), err
 }
 
 // generate userName.
-func GenerateRandomUserName(FirstName string) string {
-	suffix := make([]byte, 4)
-
-	numbers := "1234567890"
-	seed := time.Now().UnixNano()
-	rng := rand.New(rand.NewSource(seed))
-
-	for i := range suffix {
-		suffix[i] = numbers[rng.Intn(10)]
+func GenerateRandomUserName(firstName string) string {
+	suffix, err := rand.Int(rand.Reader, big.NewInt(int64(numbersLength)))
+	if err != nil {
+		panic(err)
 	}
 
-	userName := (FirstName + string(suffix))
+	userName := (firstName + suffix.String())
 
 	return strings.ToLower(userName)
 }
 
 // generate unique string for sku.
-func GenerateSKU() string {
-	sku := make([]byte, 10)
+func GenerateSKU() (string, error) {
+	sku := make([]byte, skuLength)
 
-	rand.Read(sku)
+	_, err := rand.Read(sku)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate SKU: %w", err)
+	}
 
-	return hex.EncodeToString(sku)
+	return hex.EncodeToString(sku), nil
 }
 
 // random coupons.
 func GenerateCouponCode(couponCodeLength int) string {
 	// letter for coupons
-	letters := `ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`
-	rand.Seed(time.Now().UnixMilli())
-
-	// create a byte array of couponCodeLength
-	couponCode := make([]byte, couponCodeLength)
-
-	// loop through the array and randomly pic letter and add to array
-	for i := range couponCode {
-		couponCode[i] = letters[rand.Intn(len(letters))]
+	couponCode, err := rand.Int(rand.Reader, big.NewInt(int64(couponCodeLength)))
+	if err != nil {
+		panic(err)
 	}
 	// convert into string and return the random letter array
-	return string(couponCode)
+	return couponCode.String()
 }
 
 func StringToTime(timeString string) (timeValue time.Time, err error) {
@@ -66,33 +68,44 @@ func StringToTime(timeString string) (timeValue time.Time, err error) {
 	if err != nil {
 		return timeValue, fmt.Errorf("faild to parse given time %v to time variable \nivalid input", timeString)
 	}
-	return timeValue, err
+
+	return timeValue, fmt.Errorf("failed to parse time: %w", err)
 }
 
-func GenerateRandomString(length int) string {
+func GenerateRandomString(length int) (string, error) {
 	sku := make([]byte, length)
 
-	rand.Read(sku)
+	_, err := rand.Read(sku)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate random string: %w", err)
+	}
 
-	return hex.EncodeToString(sku)
+	return hex.EncodeToString(sku), nil
 }
 
 func RandomInt(min, max int) int {
-	rand.Seed(time.Hour.Nanoseconds())
+	// 乱数の範囲は[min, max)となるように調整する
+	num, err := rand.Int(rand.Reader, big.NewInt(int64(max-min)))
+	if err != nil {
+		panic(err)
+	}
 
-	return rand.Intn(max-min) + min
+	return int(num.Int64()) + min
 }
 
 func GetHashedPassword(password string) (hashedPassword string, err error) {
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), 10)
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcryptCost)
 	if err != nil {
-		return hashedPassword, err
+		return hashedPassword, fmt.Errorf("failed to generate hashed password: %w", err)
 	}
+
 	hashedPassword = string(hash)
+
 	return hashedPassword, nil
 }
 
 func ComparePasswordWithHashedPassword(actualpassword, hashedPassword string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(actualpassword))
-	return err
+
+	return fmt.Errorf("failed to compare password with hashed password: %w", err)
 }

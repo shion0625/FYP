@@ -12,6 +12,7 @@ func UserRoutes(api *echo.Group, authHandler handlerInterfaces.AuthHandler) {
 	{
 		signup.GET("/", func(c echo.Context) error {
 			print("こんにちは")
+
 			return nil
 		})
 		// signup.POST("/verify", authHandler.UserSignUpVerify)
@@ -19,19 +20,12 @@ func UserRoutes(api *echo.Group, authHandler handlerInterfaces.AuthHandler) {
 
 	login := auth.Group("/sign-in")
 	{
-		login.POST("/", func(c echo.Context) error { authHandler.UserLogin(c); return nil })
+		login.POST("/", func(c echo.Context) error {
+			authHandler.UserLogin(c)
+
+			return nil
+		})
 		// login.POST("/otp/send", authHandler.UserLoginOtpSend)
 		// login.POST("/otp/verify", authHandler.UserLoginOtpVerify)
 	}
-
-	// goath := auth.Group("/google-auth")
-	// {
-	// 	goath.GET("/", authHandler.UserGoogleAuthLoginPage)
-	// 	goath.GET("/initialize", authHandler.UserGoogleAuthInitialize)
-	// 	goath.GET("/callback", authHandler.UserGoogleAuthCallBack)
-	// }
-
-	// auth.POST("/renew-access-token", authHandler.UserRenewAccessToken())
-
-	// api.POST("/logout")
 }

@@ -21,18 +21,19 @@ type Config struct {
 	FrontendDevelopUrl string `env:"PORT"         envDefault:"hoge_test"`
 }
 
-var cfg Config
-
 func LoadConfig() (cfg *Config, err error) {
 	if err := godotenv.Load(".env"); err != nil {
-		fmt.Printf("読み込み出来ませんでした: %v", err)
-		return nil, err
+		fmt.Printf("Failed to load: %v", err)
+
+		return nil, fmt.Errorf("failed to load .env file: %w", err)
 	}
 
 	cfg = new(Config)
 	if err := env.Parse(cfg); err != nil {
 		fmt.Printf("failed to setup config, error: %s", err)
-		return nil, err
+
+		return nil, fmt.Errorf("failed to setup config, error: %w", err)
 	}
+
 	return cfg, nil
 }
