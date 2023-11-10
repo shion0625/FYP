@@ -18,7 +18,7 @@ func UserRoutes(api *echo.Group, authHandler handlerInterfaces.AuthHandler) {
 		// signup.POST("/verify", authHandler.UserSignUpVerify)
 	}
 
-	login := auth.Group("/sign-in")
+	login := auth.Group("/login")
 	{
 		login.POST("/", func(c echo.Context) error {
 			authHandler.UserLogin(c)

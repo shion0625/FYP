@@ -31,6 +31,8 @@ func (c *userDatabase) FindUserByUserName(ctx echo.Context, userName string) (us
 }
 
 func (c *userDatabase) FindUserByEmail(ctx echo.Context, email string) (user domain.User, err error) {
+	err = c.DB.Where("email = ?", email).First(&user).Error
+
 	return user, err
 }
 

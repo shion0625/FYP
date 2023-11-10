@@ -54,10 +54,6 @@ func (c *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (stri
 		return "", ErrUserNotExist
 	}
 
-	if !user.Verified {
-		return "", ErrUserNotVerified
-	}
-
 	if user.BlockStatus {
 		return "", ErrUserBlocked
 	}
