@@ -59,7 +59,7 @@
 				
 				<option value="file1">github.com/shion0625/FYP/backend/pkg/utils/errors.go (100.0%)</option>
 				
-				<option value="file2">github.com/shion0625/FYP/backend/pkg/utils/helper.go (0.0%)</option>
+				<option value="file2">github.com/shion0625/FYP/backend/pkg/utils/helper.go (11.1%)</option>
 				
 				<option value="file3">github.com/shion0625/FYP/backend/pkg/utils/hsash.go (0.0%)</option>
 				
@@ -197,7 +197,7 @@ func StringToTime(timeString string) (timeValue time.Time, err error) <span clas
         <span class="cov0" title="0">return timeValue, fmt.Errorf("failed to parse time: %w", err)</span>
 }
 
-func GenerateRandomString(length int) (string, error) <span class="cov0" title="0">{
+func GenerateRandomString(length int) (string, error) <span class="cov8" title="1">{
         sku := make([]byte, length)
 
         _, err := rand.Read(sku)
@@ -205,7 +205,7 @@ func GenerateRandomString(length int) (string, error) <span class="cov0" title="
                 return "", fmt.Errorf("failed to generate random string: %w", err)
         }</span>
 
-        <span class="cov0" title="0">return hex.EncodeToString(sku), nil</span>
+        <span class="cov8" title="1">return hex.EncodeToString(sku), nil</span>
 }
 
 func RandomInt(min, max int) int <span class="cov0" title="0">{
