@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// Test function for AppendMessageToError
+// Test function for AppendMessageToError.
 func TestAppendMessageToError(t *testing.T) {
 	t.Parallel()
 
