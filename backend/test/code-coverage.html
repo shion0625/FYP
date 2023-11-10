@@ -57,7 +57,7 @@
 				
 				<option value="file0">github.com/shion0625/FYP/backend/pkg/utils/compare.go (100.0%)</option>
 				
-				<option value="file1">github.com/shion0625/FYP/backend/pkg/utils/errors.go (66.7%)</option>
+				<option value="file1">github.com/shion0625/FYP/backend/pkg/utils/errors.go (100.0%)</option>
 				
 				<option value="file2">github.com/shion0625/FYP/backend/pkg/utils/helper.go (0.0%)</option>
 				
@@ -87,15 +87,15 @@ import (
 func CompareUserExistingDetails(user1, user2 domain.User) error <span class="cov8" title="1">{
         var err error
         if user1.Email == user2.Email </span><span class="cov8" title="1">{
-                err = AppendMessageToError(err, "user already exist with this email")
+                err = AppendMessageToError(err, "user already exists with this email")
         }</span>
 
         <span class="cov8" title="1">if user1.UserName == user2.UserName </span><span class="cov8" title="1">{
-                err = AppendMessageToError(err, "user already exist with this user name")
+                err = AppendMessageToError(err, "user already exists with this username")
         }</span>
 
         <span class="cov8" title="1">if user1.Phone == user2.Phone </span><span class="cov8" title="1">{
-                err = AppendMessageToError(err, "user already exist with this phone")
+                err = AppendMessageToError(err, "user already exists with this phone number")
         }</span>
 
         <span class="cov8" title="1">if err == nil </span><span class="cov8" title="1">{
@@ -119,7 +119,7 @@ func AppendMessageToError(err error, message string) error <span class="cov8" ti
                 return errors.New(message)
         }</span>
 
-        <span class="cov0" title="0">return fmt.Errorf("%w \n%s", err, message)</span>
+        <span class="cov8" title="1">return fmt.Errorf("%w \n%s", err, message)</span>
 }
 </pre>
 		

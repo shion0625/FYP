@@ -23,7 +23,7 @@ func TestCompareUserExistingDetails(t *testing.T) {
 		Phone:    "0987654321",
 	}
 
-	// 入出力を定義
+	// Define input and output
 	type input struct {
 		user1 domain.User
 		user2 domain.User
@@ -42,11 +42,11 @@ func TestCompareUserExistingDetails(t *testing.T) {
 		input input
 		want  output
 	}{
-		"正常系: 既にユーザが存在しない": {
+		"Normal case: User does not exist yet": {
 			input: req,
 			want:  output{errors.New("failed to find existing details")},
 		},
-		"異常系: 同一のメールアドレスが存在": {
+		"Abnormal case: Same email address already exists": {
 			input: input{
 				user1: req.user1,
 				user2: domain.User{
@@ -55,8 +55,8 @@ func TestCompareUserExistingDetails(t *testing.T) {
 					Phone:    req.user2.Phone,
 				},
 			},
-			want: output{errors.New("user already exist with this email")},
-		}, "異常系: 同一のユーザ名が存在": {
+			want: output{errors.New("user already exists with this email")},
+		}, "Abnormal case: Same username already exists": {
 			input: input{
 				user1: req.user1,
 				user2: domain.User{
@@ -65,8 +65,8 @@ func TestCompareUserExistingDetails(t *testing.T) {
 					Phone:    req.user2.Phone,
 				},
 			},
-			want: output{errors.New("user already exist with this user name")},
-		}, "異常系: 同一の電話番号が存在": {
+			want: output{errors.New("user already exists with this username")},
+		}, "Abnormal case: Same phone number already exists": {
 			input: input{
 				user1: req.user1,
 				user2: domain.User{
@@ -75,7 +75,7 @@ func TestCompareUserExistingDetails(t *testing.T) {
 					Phone:    req.user1.Phone,
 				},
 			},
-			want: output{errors.New("user already exist with this phone")},
+			want: output{errors.New("user already exists with this phone number")},
 		},
 	}
 
