@@ -10,8 +10,8 @@ func UserRoutes(api *echo.Group, authHandler handlerInterfaces.AuthHandler) {
 
 	signup := auth.Group("/sign-up")
 	{
-		signup.GET("/", func(c echo.Context) error {
-			print("こんにちは")
+		signup.POST("/", func(c echo.Context) error {
+			authHandler.UserSignUp(c)
 
 			return nil
 		})

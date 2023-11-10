@@ -29,7 +29,7 @@ func NewAuthUseCase(
 	}
 }
 
-func (c *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (uint, error) {
+func (c *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (string, error) {
 	var (
 		user domain.User
 		err  error
@@ -43,28 +43,28 @@ func (c *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (uint
 	case loginInfo.Phone != "":
 		user, err = c.userRepo.FindUserByPhoneNumber(ctx, loginInfo.Phone)
 	default:
-		return 0, ErrEmptyLoginCredentials
+		return "", ErrEmptyLoginCredentials
 	}
 
 	if err != nil {
-		return 0, fmt.Errorf("failed to find user from database: %w", err)
+		return "", fmt.Errorf("failed to find user from database: %w", err)
 	}
 
-	if user.ID == 0 {
-		return 0, ErrUserNotExist
+	if user.ID == "" {
+		return "", ErrUserNotExist
 	}
 
 	if !user.Verified {
-		return 0, ErrUserNotVerified
+		return "", ErrUserNotVerified
 	}
 
 	if user.BlockStatus {
-		return 0, ErrUserBlocked
+		return "", ErrUserBlocked
 	}
 
 	err = utils.ComparePasswordWithHashedPassword(loginInfo.Password, user.Password)
 	if err != nil {
-		return 0, ErrWrongPassword
+		return "", ErrWrongPassword
 	}
 
 	return user.ID, nil
@@ -77,7 +77,7 @@ func (c *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (s
 	}
 
 	// if user credentials already exist and  verified then return it as errors
-	if existUser.ID != 0 && existUser.Verified {
+	if existUser.ID != "" && existUser.Verified {
 		err = utils.CompareUserExistingDetails(existUser, signUpDetails)
 
 		return "", fmt.Errorf("failed to check user details already exist: %w", err)
@@ -85,7 +85,7 @@ func (c *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (s
 
 	userID := existUser.ID
 
-	if userID == 0 { // if user not exist then save user on database
+	if userID == "" { // if user not exist then save user on database
 		hashPass, err := utils.GenerateHashFromPassword(signUpDetails.Password)
 		if err != nil {
 			return "", fmt.Errorf("failed to hash the password: %w", err)

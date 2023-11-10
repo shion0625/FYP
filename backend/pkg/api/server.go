@@ -52,7 +52,7 @@ func (s *ServerHTTP) Start(cfg *config.Config) error {
 		port = "8080"
 	}
 
-	if err := s.Engine.Start(":" + port); err != nil {
+	if err := s.Engine.Start("127.0.0.1:" + port); err != nil {
 		return fmt.Errorf("failed to start server: %w", err)
 	}
 

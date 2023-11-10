@@ -4,23 +4,6 @@ import (
 	"time"
 )
 
-type User struct {
-	ID          uint      `gorm:"primaryKey;unique"         json:"id"`
-	Age         uint      `binding:"required,numeric"       json:"age"`
-	GoogleImage string    `json:"googleImage"`
-	FirstName   string    `binding:"required,min=2,max=50"  gorm:"not null"        json:"firstName"`
-	LastName    string    `binding:"required,min=1,max=50"  gorm:"not null"        json:"lastName"`
-	UserName    string    `binding:"required,min=3,max=15"  gorm:"not null;unique" json:"userName"`
-	Email       string    `binding:"required,email"         gorm:"unique;not null" json:"email"`
-	Phone       string    `binding:"required,min=10,max=10" gorm:"unique"          json:"phone"`
-	Password    string    `binding:"required"               json:"password"`
-	Verified    bool      `gorm:"default:false"             json:"verified"`
-	BlockStatus bool      `gorm:"not null;default:false"    json:"blockStatus"`
-	CreatedAt   time.Time `gorm:"not null"                  json:"createdAt"`
-	UpdatedAt   time.Time `json:"updatedAt"`
-}
-
-// many to many join.
 type UserAddress struct {
 	ID        uint `gorm:"primaryKey;unique" json:"id"`
 	UserID    uint `gorm:"not null"          json:"userId"`
@@ -30,6 +13,23 @@ type UserAddress struct {
 	IsDefault bool `json:"isDefault"`
 }
 
+type User struct {
+	ID          string    `gorm:"primaryKey;size:255;default:gen_random_uuid()" json:"id"`
+	Age         uint      `binding:"required,numeric"                           json:"age"`
+	GoogleImage string    `json:"googleImage"`
+	FirstName   string    `binding:"required,min=2,max=50"                      gorm:"not null"        json:"firstName"`
+	LastName    string    `binding:"required,min=1,max=50"                      gorm:"not null"        json:"lastName"`
+	UserName    string    `binding:"required,min=3,max=15"                      gorm:"not null;unique" json:"userName"`
+	Email       string    `binding:"required,email"                             gorm:"unique;not null" json:"email"`
+	Phone       string    `binding:"required,min=10,max=10"                     gorm:"unique"          json:"phone"`
+	Password    string    `binding:"required"                                   json:"password"`
+	Verified    bool      `gorm:"default:false"                                 json:"verified"`
+	BlockStatus bool      `gorm:"not null;default:false"                        json:"blockStatus"`
+	CreatedAt   time.Time `gorm:"not null"                                      json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
+}
+
+// many to many join.
 type Address struct {
 	ID          uint   `gorm:"primaryKey;unique"               json:"id"`
 	Name        string `binding:"required,min=2,max=50"        gorm:"not null" json:"name"`

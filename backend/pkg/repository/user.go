@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -43,20 +44,27 @@ func (c *userDatabase) FindUserByUserNameEmailOrPhoneNotID(ctx echo.Context,
 	userDetails domain.User,
 ) (user domain.User, err error) {
 	err = c.DB.Where("(user_name = ? OR email = ? OR phone = ?) AND id != ?",
-		userDetails.UserName, userDetails.Email, userDetails.Phone, userDetails.ID).First(&user).Error
+		userDetails.UserName, userDetails.Email, userDetails.Phone, userDetails.ID).Find(&user).Error
 
 	return user, err
 }
 
-func (c *userDatabase) SaveUser(ctx echo.Context, user domain.User) (userID uint, err error) {
+func (c *userDatabase) SaveUser(ctx echo.Context, user domain.User) (userID string, err error) {
 	// save the user details
-	query := `INSERT INTO users (user_name, first_name,
-		last_name, age, email, phone, password, google_image, created_at)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9 ) RETURNING id`
+	user = domain.User{
+		Age:         user.Age,
+		GoogleImage: user.GoogleImage,
+		FirstName:   user.FirstName,
+		LastName:    user.LastName,
+		UserName:    user.UserName,
+		Email:       user.Email,
+		Phone:       user.Phone,
+		Password:    user.Password,
+		CreatedAt:   time.Now(),
+	}
+	result := c.DB.Create(&user)
+	fmt.Print(user.ID)
+	fmt.Print(result.Error)
 
-	createdAt := time.Now()
-	err = c.DB.Raw(query, user.UserName, user.FirstName, user.LastName,
-		user.Age, user.Email, user.Phone, user.Password, user.GoogleImage, createdAt).Scan(&userID).Error
-
-	return userID, err
+	return user.ID, result.Error
 }

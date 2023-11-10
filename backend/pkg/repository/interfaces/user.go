@@ -12,7 +12,7 @@ type UserRepository interface {
 	FindUserByPhoneNumber(ctx echo.Context, phoneNumber string) (user domain.User, err error)
 	FindUserByUserNameEmailOrPhoneNotID(ctx echo.Context, user domain.User) (domain.User, error)
 
-	SaveUser(ctx echo.Context, user domain.User) (userID uint, err error)
+	SaveUser(ctx echo.Context, user domain.User) (userID string, err error)
 	// UpdateVerified(ctx echo.Context, userID uint) error
 	// UpdateUser(ctx echo.Context, user domain.User) (err error)
 	// UpdateBlockStatus(ctx echo.Context, userID uint, blockStatus bool) error

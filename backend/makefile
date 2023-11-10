@@ -23,6 +23,13 @@ build-run: build ## run project build file if not exist build it
 run: ## Start application
 	$(GOCMD) run ./cmd/api/main.go
 
+air: ## Start application
+	air -c .air.toml
+
+start:
+	@make docker-up
+	@make air
+
 test: ## Run tests
 	$(GOCMD) test ./... -cover
 
@@ -62,7 +69,7 @@ mockgen: # Generate mock files for the test
 	mockgen -source=pkg/usecase/interfaces/auth.go -destination=pkg/mock/mockusecase/auth_mock.go -package=mockusecase
 
 docker-up: ## To up the docker compose file
-	docker-compose up
+	docker-compose up -d
 
 docker-down: ## To down the docker compose file
 	docker-compose down

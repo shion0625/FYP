@@ -3,7 +3,6 @@ package db
 import (
 	"errors"
 	"fmt"
-	"log"
 
 	"github.com/shion0625/FYP/backend/pkg/config"
 	"github.com/shion0625/FYP/backend/pkg/domain"
@@ -20,20 +19,7 @@ func ConnectDatabase(cfg *config.Config) (*gorm.DB, error) {
 		panic(err.Error())
 	}
 
-	err = autoMigrate(db)
-
-	if err != nil {
-		log.Printf("failed to migrate database models")
-
-		return nil, err
-	}
-
-	return db, nil
-}
-
-func autoMigrate(db *gorm.DB) error {
-	// migrate the database tables
-	err := db.AutoMigrate(
+	err = db.AutoMigrate(
 
 		domain.User{},
 		domain.Country{},
@@ -41,5 +27,9 @@ func autoMigrate(db *gorm.DB) error {
 		domain.UserAddress{},
 	)
 
-	return fmt.Errorf("failed to auto migrate database: %w", err)
+	if err != nil {
+		return nil, fmt.Errorf("failed to migrate database models: %w", err)
+	}
+
+	return db, nil
 }
