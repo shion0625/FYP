@@ -105,10 +105,12 @@ func GetHashedPassword(password string) (hashedPassword string, err error) {
 	return hashedPassword, nil
 }
 
-func ComparePasswordWithHashedPassword(actualpassword, hashedPassword string) error {
-	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(actualpassword))
+func ComparePasswordWithHashedPassword(actualPassword, hashedPassword string) error {
+	if err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(actualPassword)); err != nil {
+		return fmt.Errorf("failed to compare password with hashed password: %w", err)
+	}
 
-	return fmt.Errorf("failed to compare password with hashed password: %w", err)
+	return nil
 }
 
 func GenerateUniqueString() string {

@@ -72,6 +72,8 @@ func (c *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (stri
 	}
 
 	err = utils.ComparePasswordWithHashedPassword(loginInfo.Password, user.Password)
+	fmt.Printf("Failed to load: %v", err)
+
 	if err != nil {
 		return "", ErrWrongPassword
 	}
