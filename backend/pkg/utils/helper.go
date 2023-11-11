@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -108,4 +109,8 @@ func ComparePasswordWithHashedPassword(actualpassword, hashedPassword string) er
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(actualpassword))
 
 	return fmt.Errorf("failed to compare password with hashed password: %w", err)
+}
+
+func GenerateUniqueString() string {
+	return uuid.NewString()
 }

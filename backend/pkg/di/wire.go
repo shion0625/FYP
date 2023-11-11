@@ -11,20 +11,23 @@ import (
 	"github.com/shion0625/FYP/backend/pkg/config"
 	"github.com/shion0625/FYP/backend/pkg/db"
 	"github.com/shion0625/FYP/backend/pkg/repository"
+	"github.com/shion0625/FYP/backend/pkg/service/token"
 	"github.com/shion0625/FYP/backend/pkg/usecase"
 )
 
 func InitializeApi(cfg *config.Config) (*http.ServerHTTP, error) {
 
 	wire.Build(
-		//external
-		middleware.NewMiddleware,
-
 		//db
 		db.ConnectDatabase,
 
+		//external
+		token.NewTokenService,
+		middleware.NewMiddleware,
+
 		//repository
 		repository.NewUserRepository,
+		repository.NewAuthRepository,
 
 		//usecase
 		usecase.NewAuthUseCase,

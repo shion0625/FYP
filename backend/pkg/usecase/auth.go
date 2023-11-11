@@ -2,12 +2,14 @@ package usecase
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/request"
 	"github.com/shion0625/FYP/backend/pkg/domain"
 	repoInterfaces "github.com/shion0625/FYP/backend/pkg/repository/interfaces"
+	"github.com/shion0625/FYP/backend/pkg/service/token"
 	"github.com/shion0625/FYP/backend/pkg/usecase/interfaces"
 	"github.com/shion0625/FYP/backend/pkg/utils"
 )
@@ -17,15 +19,26 @@ const (
 	otpExpireDuration = time.Minute * 2
 )
 
+const (
+	AccessTokenDuration  = time.Minute * 20
+	RefreshTokenDuration = time.Hour * 24 * 7
+)
+
 type authUseCase struct {
-	userRepo repoInterfaces.UserRepository
+	userRepo     repoInterfaces.UserRepository
+	tokenService token.TokenService
+	authRepo     repoInterfaces.AuthRepository
 }
 
 func NewAuthUseCase(
 	userRepo repoInterfaces.UserRepository,
+	tokenService token.TokenService,
+	authRepo repoInterfaces.AuthRepository,
 ) interfaces.AuthUseCase {
 	return &authUseCase{
-		userRepo: userRepo,
+		userRepo:     userRepo,
+		tokenService: tokenService,
+		authRepo:     authRepo,
 	}
 }
 
@@ -96,4 +109,48 @@ func (c *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (s
 	}
 
 	return "success", nil
+}
+
+func (c *authUseCase) GenerateAccessToken(ctx echo.Context, tokenParams interfaces.GenerateTokenParams) (string, error) {
+	tokenReq := token.GenerateTokenRequest{
+		UserID:   tokenParams.UserID,
+		UsedFor:  tokenParams.UserType,
+		ExpireAt: time.Now().Add(AccessTokenDuration),
+	}
+
+	tokenRes, err := c.tokenService.GenerateToken(tokenReq)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate access token: %w", err)
+	}
+
+	return tokenRes.TokenString, nil
+}
+
+func (c *authUseCase) GenerateRefreshToken(ctx echo.Context, tokenParams interfaces.GenerateTokenParams) (string, error) {
+	expireAt := time.Now().Add(RefreshTokenDuration)
+	tokenReq := token.GenerateTokenRequest{
+		UserID:   tokenParams.UserID,
+		UsedFor:  tokenParams.UserType,
+		ExpireAt: expireAt,
+	}
+
+	tokenRes, err := c.tokenService.GenerateToken(tokenReq)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate refresh token: %w", err)
+	}
+
+	err = c.authRepo.SaveRefreshSession(ctx, domain.RefreshSession{
+		UserID:       tokenParams.UserID,
+		TokenID:      tokenRes.TokenID,
+		RefreshToken: tokenRes.TokenString,
+		ExpireAt:     expireAt,
+	})
+
+	if err != nil {
+		return "", fmt.Errorf("failed to save refresh session: %w", err)
+	}
+
+	log.Printf("successfully refresh token created and refresh session stored in database")
+
+	return tokenRes.TokenString, nil
 }

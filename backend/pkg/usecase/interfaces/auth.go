@@ -4,6 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/request"
 	"github.com/shion0625/FYP/backend/pkg/domain"
+	"github.com/shion0625/FYP/backend/pkg/service/token"
 )
 
 type AuthUseCase interface {
@@ -17,12 +18,12 @@ type AuthUseCase interface {
 	// // admin
 	// AdminLogin(ctx echo.Context, loginInfo request.Login) (adminID uint, err error)
 	// // token
-	// GenerateAccessToken(ctx echo.Context, tokenParams GenerateTokenParams) (tokenString string, err error)
-	// GenerateRefreshToken(ctx echo.Context, tokenParams GenerateTokenParams) (tokenString string, err error)
+	GenerateAccessToken(ctx echo.Context, tokenParams GenerateTokenParams) (tokenString string, err error)
+	GenerateRefreshToken(ctx echo.Context, tokenParams GenerateTokenParams) (tokenString string, err error)
 	// VerifyAndGetRefreshTokenSession(ctx echo.Context, refreshToken string, usedFor token.UserType) (domain.RefreshSession, error)
 }
 
-// type GenerateTokenParams struct {
-// 	UserID   uint
-// 	UserType token.UserType
-// }
+type GenerateTokenParams struct {
+	UserID   string
+	UserType token.UserType
+}

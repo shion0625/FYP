@@ -11,6 +11,7 @@ import (
 	"github.com/shion0625/FYP/backend/pkg/api/handler/response"
 	"github.com/shion0625/FYP/backend/pkg/config"
 	"github.com/shion0625/FYP/backend/pkg/domain"
+	"github.com/shion0625/FYP/backend/pkg/service/token"
 	"github.com/shion0625/FYP/backend/pkg/usecase"
 	usecaseInterface "github.com/shion0625/FYP/backend/pkg/usecase/interfaces"
 )
@@ -41,7 +42,7 @@ func (a *AuthHandler) UserLogin(ctx echo.Context) echo.HandlerFunc {
 		return nil
 	}
 
-	_, err := a.authUseCase.UserLogin(ctx, body)
+	userID, err := a.authUseCase.UserLogin(ctx, body)
 	if err != nil {
 		var statusCode int
 
@@ -68,7 +69,8 @@ func (a *AuthHandler) UserLogin(ctx echo.Context) echo.HandlerFunc {
 	print("login")
 
 	// common functionality for admin and user
-	// c.setupTokenAndResponse(ctx, token.User, userID)
+	a.setupTokenAndResponse(ctx, token.User, userID)
+
 	return nil
 }
 
@@ -106,39 +108,39 @@ func (c *AuthHandler) UserSignUp(ctx echo.Context) echo.HandlerFunc {
 	return nil
 }
 
-// func (c *AuthHandler) setupTokenAndResponse(ctx *echo.Context, tokenUser token.UserType, userID uint) {
+func (a *AuthHandler) setupTokenAndResponse(ctx echo.Context, tokenUser token.UserType, userID string) {
+	tokenParams := usecaseInterface.GenerateTokenParams{
+		UserID:   userID,
+		UserType: tokenUser,
+	}
 
-// 	tokenParams := usecaseInterface.GenerateTokenParams{
-// 		UserID:   userID,
-// 		UserType: tokenUser,
-// 	}
+	accessToken, err := a.authUseCase.GenerateAccessToken(ctx, tokenParams)
+	if err != nil {
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to generate access token", err, nil)
 
-// 	accessToken, err := c.authUseCase.GenerateAccessToken(ctx, tokenParams)
+		return
+	}
 
-// 	if err != nil {
-// 		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to generate access token", err, nil)
-// 		return
-// 	}
+	refreshToken, err := a.authUseCase.GenerateRefreshToken(ctx, usecaseInterface.GenerateTokenParams{
+		UserID:   userID,
+		UserType: tokenUser,
+	})
+	if err != nil {
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to generate refresh token", err, nil)
 
-// 	refreshToken, err := c.authUseCase.GenerateRefreshToken(ctx, usecaseInterface.GenerateTokenParams{
-// 		UserID:   userID,
-// 		UserType: tokenUser,
-// 	})
-// 	if err != nil {
-// 		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to generate refresh token", err, nil)
-// 		return
-// 	}
+		return
+	}
 
-// 	authorizationValue := authorizationType + " " + accessToken
-// 	ctx.Header(authorizationHeaderKey, authorizationValue)
+	authorizationValue := authorizationType + " " + accessToken
+	ctx.Response().Header().Set(authorizationHeaderKey, authorizationValue)
 
-// 	ctx.Header("access_token", accessToken)
-// 	ctx.Header("refresh_token", refreshToken)
+	ctx.Response().Header().Set("access_token", accessToken)
+	ctx.Response().Header().Set("refresh_token", refreshToken)
 
-// 	tokenRes := response.TokenResponse{
-// 		AccessToken:  accessToken,
-// 		RefreshToken: refreshToken,
-// 	}
+	tokenRes := response.TokenResponse{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}
 
-// 	response.SuccessResponse(ctx, http.StatusOK, "Successfully logged in", tokenRes)
-// }
+	response.SuccessResponse(ctx, http.StatusOK, "Successfully logged in", tokenRes)
+}
