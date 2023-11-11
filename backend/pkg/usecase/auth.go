@@ -71,6 +71,11 @@ func (c *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (stri
 		return "", ErrUserBlocked
 	}
 
+	// // otp verified
+	// if !user.Verified {
+	// 	return "", ErrUserNotVerified
+	// }
+
 	err = utils.ComparePasswordWithHashedPassword(loginInfo.Password, user.Password)
 	fmt.Printf("Failed to load: %v", err)
 
@@ -82,17 +87,17 @@ func (c *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (stri
 }
 
 func (c *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (string, error) {
-	existUser, err := c.userRepo.FindUserByUserNameEmailOrPhoneNotID(ctx, signUpDetails)
-	if err != nil {
+	existUser, err := c.userRepo.FindUserByUserNameEmailOrPhone(ctx, signUpDetails)
+	if existUser != (domain.User{}) {
 		return "", fmt.Errorf("failed to check user details already exist: %w", err)
 	}
 
-	// if user credentials already exist and  verified then return it as errors
-	if existUser.ID != "" && existUser.Verified {
-		err = utils.CompareUserExistingDetails(existUser, signUpDetails)
+	// // if user credentials already exist and  verified then return it as errors
+	// if existUser.ID != "" && existUser.Verified {
+	// 	err = utils.CompareUserExistingDetails(existUser, signUpDetails)
 
-		return "", fmt.Errorf("failed to check user details already exist: %w", err)
-	}
+	// 	return "", fmt.Errorf("failed to user is not otp verified: %w", err)
+	// }
 
 	userID := existUser.ID
 

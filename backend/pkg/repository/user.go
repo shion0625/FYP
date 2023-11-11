@@ -42,11 +42,11 @@ func (c *userDatabase) FindUserByPhoneNumber(ctx echo.Context, phoneNumber strin
 	return user, err
 }
 
-func (c *userDatabase) FindUserByUserNameEmailOrPhoneNotID(ctx echo.Context,
+func (c *userDatabase) FindUserByUserNameEmailOrPhone(ctx echo.Context,
 	userDetails domain.User,
 ) (user domain.User, err error) {
-	err = c.DB.Where("(user_name = ? OR email = ? OR phone = ?) AND id != ?",
-		userDetails.UserName, userDetails.Email, userDetails.Phone, userDetails.ID).Find(&user).Error
+	err = c.DB.Debug().Where("user_name = ? OR email = ? OR phone = ?",
+		userDetails.UserName, userDetails.Email, userDetails.Phone).Find(&user).Error
 
 	return user, err
 }

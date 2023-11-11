@@ -53,8 +53,8 @@ func (a *AuthHandler) UserLogin(ctx echo.Context) echo.HandlerFunc {
 			statusCode = http.StatusNotFound
 		case errors.Is(err, usecase.ErrUserBlocked):
 			statusCode = http.StatusForbidden
-		case errors.Is(err, usecase.ErrUserNotVerified):
-			statusCode = http.StatusUnauthorized
+		// case errors.Is(err, usecase.ErrUserNotVerified):
+		// 	statusCode = http.StatusUnauthorized
 		case errors.Is(err, usecase.ErrWrongPassword):
 			statusCode = http.StatusUnauthorized
 		default:
