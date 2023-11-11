@@ -88,8 +88,26 @@ func (c *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (stri
 
 func (c *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (string, error) {
 	existUser, err := c.userRepo.FindUserByUserNameEmailOrPhone(ctx, signUpDetails)
+	if err != nil {
+		return "", fmt.Errorf("failed to check user %w", err)
+	}
+
 	if existUser != (domain.User{}) {
-		return "", fmt.Errorf("failed to check user details already exist: %w", err)
+		// 一致しているプロパティをエラー内容として返す
+		errorMsg := "failed to check user details already exist:"
+		if signUpDetails.UserName == existUser.UserName {
+			errorMsg += "\rUserName already exists"
+		}
+
+		if signUpDetails.Email == existUser.Email {
+			errorMsg += "\rEmail already exists"
+		}
+
+		if signUpDetails.Phone == existUser.Phone {
+			errorMsg += "\rPhone already exists"
+		}
+
+		return "", fmt.Errorf("%s.", errorMsg)
 	}
 
 	// // if user credentials already exist and  verified then return it as errors
