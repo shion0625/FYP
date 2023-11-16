@@ -7,7 +7,8 @@ import (
 )
 
 func UserRoutes(api *echo.Group, middleware middleware.Middleware, authHandler handlerInterfaces.AuthHandler,
-	userHandler handlerInterfaces.UserHandler) {
+	userHandler handlerInterfaces.UserHandler,
+) {
 	auth := api.Group("/auth")
 	{
 		signup := auth.Group("/sign-up")
