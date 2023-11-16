@@ -33,7 +33,7 @@ func NewAuthHandler(authUsecase usecaseInterface.AuthUseCase, config *config.Con
 	}
 }
 
-func (a *AuthHandler) UserLogin(ctx echo.Context) echo.HandlerFunc {
+func (a *AuthHandler) UserLogin(ctx echo.Context) error {
 	var body request.Login
 
 	if err := ctx.Bind(&body); err != nil {
@@ -74,7 +74,7 @@ func (a *AuthHandler) UserLogin(ctx echo.Context) echo.HandlerFunc {
 	return nil
 }
 
-func (c *AuthHandler) UserSignUp(ctx echo.Context) echo.HandlerFunc {
+func (c *AuthHandler) UserSignUp(ctx echo.Context) error {
 	var body request.SignUp
 
 	if err := ctx.Bind(&body); err != nil {

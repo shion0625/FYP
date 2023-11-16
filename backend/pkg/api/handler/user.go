@@ -23,30 +23,32 @@ func NewUserHandler(userUsecase usecaseInterface.UserUseCase) interfaces.UserHan
 	}
 }
 
-func (u *UserHandler) GetProfile(ctx echo.Context) {
+func (u *UserHandler) GetProfile(ctx echo.Context) error {
 	userID, err := utils.GetUserIdFromContext(ctx)
 	if err != nil {
 		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
 
-		return
+		return nil
 	}
 
 	user, err := u.userUseCase.FindProfile(ctx, userID)
 	if err != nil {
 		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
 
-		return
+		return nil
 	}
 
 	response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved user details", user)
+
+	return nil
 }
 
-func (u *UserHandler) UpdateProfile(ctx echo.Context) {
+func (u *UserHandler) UpdateProfile(ctx echo.Context) error {
 	userID, err := utils.GetUserIdFromContext(ctx)
 	if err != nil {
 		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
 
-		return
+		return nil
 	}
 
 	var body request.EditUser
@@ -54,14 +56,14 @@ func (u *UserHandler) UpdateProfile(ctx echo.Context) {
 	if err := ctx.Bind(&body); err != nil {
 		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
 
-		return
+		return nil
 	}
 
 	var user domain.User
 	if err := copier.Copy(&user, &body); err != nil {
 		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to copy user data", err, nil)
 
-		return
+		return nil
 	}
 
 	user.ID = userID
@@ -69,25 +71,27 @@ func (u *UserHandler) UpdateProfile(ctx echo.Context) {
 	if err := u.userUseCase.UpdateProfile(ctx, user); err != nil {
 		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to update profile", err, nil)
 
-		return
+		return nil
 	}
 
 	response.SuccessResponse(ctx, http.StatusOK, "Successfully profile updated", nil)
+
+	return nil
 }
 
-func (u *UserHandler) SaveAddress(ctx echo.Context) {
+func (u *UserHandler) SaveAddress(ctx echo.Context) error {
 	var body request.Address
 	if err := ctx.Bind(&body); err != nil {
 		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
 
-		return
+		return nil
 	}
 
 	userID, err := utils.GetUserIdFromContext(ctx)
 	if err != nil {
 		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
 
-		return
+		return nil
 	}
 
 	var address domain.Address
@@ -95,7 +99,7 @@ func (u *UserHandler) SaveAddress(ctx echo.Context) {
 	if err := copier.Copy(&address, &body); err != nil {
 		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to copy address data", err, nil)
 
-		return
+		return nil
 	}
 
 	// check is default is null
@@ -106,42 +110,46 @@ func (u *UserHandler) SaveAddress(ctx echo.Context) {
 	if err := u.userUseCase.SaveAddress(ctx, userID, address, *body.IsDefault); err != nil {
 		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to save address", err, nil)
 
-		return
+		return nil
 	}
 
 	response.SuccessResponse(ctx, http.StatusCreated, "Successfully address saved")
+
+	return nil
 }
 
-func (u *UserHandler) GetAllAddresses(ctx echo.Context) {
+func (u *UserHandler) GetAllAddresses(ctx echo.Context) error {
 	userID, err := utils.GetUserIdFromContext(ctx)
 	if err != nil {
 		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
 
-		return
+		return nil
 	}
 
 	addresses, err := u.userUseCase.FindAddresses(ctx, userID)
 	if err != nil {
 		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get user addresses", err, nil)
 
-		return
+		return nil
 	}
 
 	if addresses == nil {
 		response.SuccessResponse(ctx, http.StatusOK, "No addresses found")
 
-		return
+		return nil
 	}
 
 	response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all user addresses", addresses)
+
+	return nil
 }
 
-func (u *UserHandler) UpdateAddress(ctx echo.Context) {
+func (u *UserHandler) UpdateAddress(ctx echo.Context) error {
 	userID, err := utils.GetUserIdFromContext(ctx)
 	if err != nil {
 		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
 
-		return
+		return nil
 	}
 
 	var body request.EditAddress
@@ -149,7 +157,7 @@ func (u *UserHandler) UpdateAddress(ctx echo.Context) {
 	if err := ctx.Bind(&body); err != nil {
 		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
 
-		return
+		return nil
 	}
 
 	// address is_default reference pointer need to change in future
@@ -160,8 +168,10 @@ func (u *UserHandler) UpdateAddress(ctx echo.Context) {
 	if err := u.userUseCase.UpdateAddress(ctx, body, userID); err != nil {
 		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to update user address", err, nil)
 
-		return
+		return nil
 	}
 
 	response.SuccessResponse(ctx, http.StatusOK, "successfully addresses updated", body)
+
+	return nil
 }
