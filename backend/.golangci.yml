@@ -65,6 +65,7 @@ linters:
     - depguard
     - nonamedreturns
     - unused
+    - interfacebloat
 
 issues:
   exclude-rules:

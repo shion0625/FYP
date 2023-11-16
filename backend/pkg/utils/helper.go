@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -20,6 +21,16 @@ var (
 	skuLength        = 10
 	bcryptCost       = 10
 )
+
+// take userId from context.
+func GetUserIdFromContext(ctx echo.Context) (string, error) {
+	userID, ok := ctx.Get("userId").(string)
+	if !ok {
+		return "", fmt.Errorf("failed to get userID from context")
+	}
+
+	return userID, nil
+}
 
 func StringToUint(str string) (uint, error) {
 	val, err := strconv.Atoi(str)

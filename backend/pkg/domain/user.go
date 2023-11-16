@@ -5,8 +5,8 @@ import (
 )
 
 type UserAddress struct {
-	ID        uint `gorm:"primaryKey;unique" json:"id"`
-	UserID    uint `gorm:"not null"          json:"userId"`
+	ID        uint   `gorm:"primaryKey;unique" json:"id"`
+	UserID    string `gorm:"not null"          json:"userId"`
 	User      User
 	AddressID uint `gorm:"not null" json:"addressId"`
 	Address   Address
