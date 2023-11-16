@@ -18,8 +18,9 @@ type ServerHTTP struct {
 
 func NewServerHTTP(
 	cfg *config.Config,
-	authHandler handlerInterfaces.AuthHandler,
 	apiMiddleware apiMiddleware.Middleware,
+	authHandler handlerInterfaces.AuthHandler,
+	userHandler handlerInterfaces.UserHandler,
 ) *ServerHTTP {
 	engine := echo.New()
 
@@ -41,7 +42,7 @@ func NewServerHTTP(
 	}))
 	engine.Use(apiMiddleware.Context)
 
-	router.UserRoutes(engine.Group("/api"), authHandler)
+	router.UserRoutes(engine.Group("/api"), apiMiddleware, authHandler, userHandler)
 
 	return &ServerHTTP{Engine: engine}
 }

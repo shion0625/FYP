@@ -31,9 +31,11 @@ func InitializeApi(cfg *config.Config) (*http.ServerHTTP, error) {
 
 		//usecase
 		usecase.NewAuthUseCase,
+		usecase.NewUserUseCase,
 
 		//handler
 		handler.NewAuthHandler,
+		handler.NewUserHandler,
 
 		// server
 		http.NewServerHTTP,

@@ -24,7 +24,7 @@ func UserRoutes(api *echo.Group, middleware middleware.Middleware, authHandler h
 		}
 	}
 
-	api.Use(middleware.AuthenticateUser())
+	api.Use(middleware.AuthenticateUser)
 	{
 		// profile
 		account := api.Group("/account")
