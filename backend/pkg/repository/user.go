@@ -21,7 +21,8 @@ func NewUserRepository(db *gorm.DB) interfaces.UserRepository {
 }
 
 func (c *userDatabase) FindUserByUserID(ctx echo.Context, userID string) (user domain.User, err error) {
-	err = c.DB.Find(&user, userID).Error
+	fmt.Print(userID)
+	err = c.DB.Where("id = ?", userID).First(&user).Error
 
 	return user, err
 }
