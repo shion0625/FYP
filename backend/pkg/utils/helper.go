@@ -38,6 +38,12 @@ func StringToUint(str string) (uint, error) {
 	return uint(val), err
 }
 
+func ParseStringToUint32(param string) (uint, error) {
+	value, err := strconv.ParseUint(param, 10, 32)
+
+	return uint(value), err
+}
+
 // generate userName.
 func GenerateRandomUserName(firstName string) string {
 	suffix, err := rand.Int(rand.Reader, big.NewInt(int64(numbersLength)))

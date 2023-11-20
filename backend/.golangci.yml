@@ -66,6 +66,10 @@ linters:
     - nonamedreturns
     - unused
     - interfacebloat
+    - funlen
+    - gocognit
+    - dupl
+    - cyclop
 
 issues:
   exclude-rules:

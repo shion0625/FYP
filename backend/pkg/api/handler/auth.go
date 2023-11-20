@@ -6,7 +6,7 @@ import (
 
 	"github.com/jinzhu/copier"
 	"github.com/labstack/echo/v4"
-	handlerInterface "github.com/shion0625/FYP/backend/pkg/api/handler/interfaces"
+	"github.com/shion0625/FYP/backend/pkg/api/handler/interfaces"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/request"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/response"
 	"github.com/shion0625/FYP/backend/pkg/config"
@@ -26,7 +26,7 @@ type AuthHandler struct {
 	config      *config.Config
 }
 
-func NewAuthHandler(authUsecase usecaseInterface.AuthUseCase, config *config.Config) handlerInterface.AuthHandler {
+func NewAuthHandler(authUsecase usecaseInterface.AuthUseCase, config *config.Config) interfaces.AuthHandler {
 	return &AuthHandler{
 		authUseCase: authUsecase,
 		config:      config,

@@ -28,8 +28,8 @@ func NewUserUseCase(userRepo interfaces.UserRepository) service.UserUseCase {
 	}
 }
 
-func (c *userUserCase) FindProfile(ctx echo.Context, userID string) (domain.User, error) {
-	user, err := c.userRepo.FindUserByUserID(ctx, userID)
+func (u *userUserCase) FindProfile(ctx echo.Context, userID string) (domain.User, error) {
+	user, err := u.userRepo.FindUserByUserID(ctx, userID)
 	if err != nil {
 		return domain.User{}, fmt.Errorf("failed to find user details: %w", err)
 	}
@@ -37,9 +37,9 @@ func (c *userUserCase) FindProfile(ctx echo.Context, userID string) (domain.User
 	return user, nil
 }
 
-func (c *userUserCase) UpdateProfile(ctx echo.Context, user domain.User) error {
+func (u *userUserCase) UpdateProfile(ctx echo.Context, user domain.User) error {
 	// first check any other user exist with this entered unique fields
-	checkUser, err := c.userRepo.FindUserByUserNameEmailOrPhone(ctx, user)
+	checkUser, err := u.userRepo.FindUserByUserNameEmailOrPhone(ctx, user)
 	if err != nil {
 		return fmt.Errorf("failed to find user: %w", err)
 	}
@@ -60,7 +60,7 @@ func (c *userUserCase) UpdateProfile(ctx echo.Context, user domain.User) error {
 		user.Password = string(hash)
 	}
 
-	err = c.userRepo.UpdateUser(ctx, user)
+	err = u.userRepo.UpdateUser(ctx, user)
 
 	if err != nil {
 		return fmt.Errorf("failed to update user: %w", err)
@@ -70,8 +70,8 @@ func (c *userUserCase) UpdateProfile(ctx echo.Context, user domain.User) error {
 }
 
 // adddress.
-func (c *userUserCase) SaveAddress(ctx echo.Context, userID string, address domain.Address, isDefault bool) error {
-	exist, err := c.userRepo.IsAddressAlreadyExistForUser(ctx, address, userID)
+func (u *userUserCase) SaveAddress(ctx echo.Context, userID string, address domain.Address, isDefault bool) error {
+	exist, err := u.userRepo.IsAddressAlreadyExistForUser(ctx, address, userID)
 	if err != nil {
 		return fmt.Errorf("failed to check address already exist \nerror:%v", err.Error())
 	}
@@ -81,7 +81,7 @@ func (c *userUserCase) SaveAddress(ctx echo.Context, userID string, address doma
 	}
 
 	// //this address not exist then create it
-	// country, err := c.userRepo.FindCountryByID(ctx, address.CountryID)
+	// country, err := u.userRepo.FindCountryByID(ctx, address.CountryID)
 	// if err != nil {
 	// 	return err
 	// } else if country.ID == 0 {
@@ -89,7 +89,7 @@ func (c *userUserCase) SaveAddress(ctx echo.Context, userID string, address doma
 	// }
 
 	// save the address on database
-	addressID, err := c.userRepo.SaveAddress(ctx, address)
+	addressID, err := u.userRepo.SaveAddress(ctx, address)
 	if err != nil {
 		return fmt.Errorf("failed to save address: %w", err)
 	}
@@ -101,7 +101,7 @@ func (c *userUserCase) SaveAddress(ctx echo.Context, userID string, address doma
 	}
 
 	// then update the address with user
-	err = c.userRepo.SaveUserAddress(ctx, userAddress)
+	err = u.userRepo.SaveUserAddress(ctx, userAddress)
 
 	if err != nil {
 		return fmt.Errorf("failed to save user address: %w", err)
@@ -110,8 +110,8 @@ func (c *userUserCase) SaveAddress(ctx echo.Context, userID string, address doma
 	return nil
 }
 
-func (c *userUserCase) UpdateAddress(ctx echo.Context, addressBody request.EditAddress, userID string) error {
-	if exist, err := c.userRepo.IsAddressIDExist(ctx, addressBody.ID); err != nil {
+func (u *userUserCase) UpdateAddress(ctx echo.Context, addressBody request.EditAddress, userID string) error {
+	if exist, err := u.userRepo.IsAddressIDExist(ctx, addressBody.ID); err != nil {
 		return fmt.Errorf("failed to check address ID existence: %w", err)
 	} else if !exist {
 		return errors.New("invalid address id")
@@ -122,7 +122,7 @@ func (c *userUserCase) UpdateAddress(ctx echo.Context, addressBody request.EditA
 		return fmt.Errorf("failed to copy address: %w", err)
 	}
 
-	if err := c.userRepo.UpdateAddress(ctx, address); err != nil {
+	if err := u.userRepo.UpdateAddress(ctx, address); err != nil {
 		return fmt.Errorf("failed to update address: %w", err)
 	}
 
@@ -134,7 +134,7 @@ func (c *userUserCase) UpdateAddress(ctx echo.Context, addressBody request.EditA
 			IsDefault: *addressBody.IsDefault,
 		}
 
-		err := c.userRepo.UpdateUserAddress(ctx, userAddress)
+		err := u.userRepo.UpdateUserAddress(ctx, userAddress)
 		if err != nil {
 			return fmt.Errorf("failed to update user address: %w", err)
 		}
@@ -146,8 +146,8 @@ func (c *userUserCase) UpdateAddress(ctx echo.Context, addressBody request.EditA
 }
 
 // get all address.
-func (c *userUserCase) FindAddresses(ctx echo.Context, userID string) (addresses []response.Address, err error) {
-	addresses, err = c.userRepo.FindAllAddressByUserID(ctx, userID)
+func (u *userUserCase) FindAddresses(ctx echo.Context, userID string) (addresses []response.Address, err error) {
+	addresses, err = u.userRepo.FindAllAddressByUserID(ctx, userID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to find addresses: %w", err)
 	}

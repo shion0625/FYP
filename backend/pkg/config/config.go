@@ -21,6 +21,7 @@ type Config struct {
 	FrontendDevelopUrl string `env:"FrontendDevelopUrl" envDefault:"hoge_test"`
 	AdminAuthKey       string `env:"ADMIN_AUTH_KEY"     envDefault:"hoge_test"`
 	UserAuthKey        string `env:"USER_AUTH_KEY"      envDefault:"hoge_test"`
+	GcpBucketName      string `env:"GCP_BUCKET_NAME"    envDefault:"hoge_test"`
 }
 
 func LoadConfig() (cfg *Config, err error) {

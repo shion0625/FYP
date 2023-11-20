@@ -42,7 +42,7 @@ func NewAuthUseCase(
 	}
 }
 
-func (c *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (string, error) {
+func (a *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (string, error) {
 	var (
 		user domain.User
 		err  error
@@ -50,11 +50,11 @@ func (c *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (stri
 
 	switch {
 	case loginInfo.Email != "":
-		user, err = c.userRepo.FindUserByEmail(ctx, loginInfo.Email)
+		user, err = a.userRepo.FindUserByEmail(ctx, loginInfo.Email)
 	case loginInfo.UserName != "":
-		user, err = c.userRepo.FindUserByUserName(ctx, loginInfo.UserName)
+		user, err = a.userRepo.FindUserByUserName(ctx, loginInfo.UserName)
 	case loginInfo.Phone != "":
-		user, err = c.userRepo.FindUserByPhoneNumber(ctx, loginInfo.Phone)
+		user, err = a.userRepo.FindUserByPhoneNumber(ctx, loginInfo.Phone)
 	default:
 		return "", ErrEmptyLoginCredentials
 	}
@@ -86,8 +86,8 @@ func (c *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (stri
 	return user.ID, nil
 }
 
-func (c *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (string, error) {
-	existUser, err := c.userRepo.FindUserByUserNameEmailOrPhone(ctx, signUpDetails)
+func (a *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (string, error) {
+	existUser, err := a.userRepo.FindUserByUserNameEmailOrPhone(ctx, signUpDetails)
 	if err != nil {
 		return "", fmt.Errorf("failed to check user %w", err)
 	}
@@ -126,7 +126,7 @@ func (c *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (s
 		}
 
 		signUpDetails.Password = hashPass
-		_, err = c.userRepo.SaveUser(ctx, signUpDetails)
+		_, err = a.userRepo.SaveUser(ctx, signUpDetails)
 
 		if err != nil {
 			return "", fmt.Errorf("failed to save user details: %w", err)
@@ -136,14 +136,14 @@ func (c *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (s
 	return "success", nil
 }
 
-func (c *authUseCase) GenerateAccessToken(ctx echo.Context, tokenParams interfaces.GenerateTokenParams) (string, error) {
+func (a *authUseCase) GenerateAccessToken(ctx echo.Context, tokenParams interfaces.GenerateTokenParams) (string, error) {
 	tokenReq := token.GenerateTokenRequest{
 		UserID:   tokenParams.UserID,
 		UsedFor:  tokenParams.UserType,
 		ExpireAt: time.Now().Add(AccessTokenDuration),
 	}
 
-	tokenRes, err := c.tokenService.GenerateToken(tokenReq)
+	tokenRes, err := a.tokenService.GenerateToken(tokenReq)
 	if err != nil {
 		return "", fmt.Errorf("failed to generate access token: %w", err)
 	}
@@ -151,7 +151,7 @@ func (c *authUseCase) GenerateAccessToken(ctx echo.Context, tokenParams interfac
 	return tokenRes.TokenString, nil
 }
 
-func (c *authUseCase) GenerateRefreshToken(ctx echo.Context, tokenParams interfaces.GenerateTokenParams) (string, error) {
+func (a *authUseCase) GenerateRefreshToken(ctx echo.Context, tokenParams interfaces.GenerateTokenParams) (string, error) {
 	expireAt := time.Now().Add(RefreshTokenDuration)
 	tokenReq := token.GenerateTokenRequest{
 		UserID:   tokenParams.UserID,
@@ -159,12 +159,12 @@ func (c *authUseCase) GenerateRefreshToken(ctx echo.Context, tokenParams interfa
 		ExpireAt: expireAt,
 	}
 
-	tokenRes, err := c.tokenService.GenerateToken(tokenReq)
+	tokenRes, err := a.tokenService.GenerateToken(tokenReq)
 	if err != nil {
 		return "", fmt.Errorf("failed to generate refresh token: %w", err)
 	}
 
-	err = c.authRepo.SaveRefreshSession(ctx, domain.RefreshSession{
+	err = a.authRepo.SaveRefreshSession(ctx, domain.RefreshSession{
 		UserID:       tokenParams.UserID,
 		TokenID:      tokenRes.TokenID,
 		RefreshToken: tokenRes.TokenString,
