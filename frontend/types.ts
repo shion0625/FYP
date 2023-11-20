@@ -7,18 +7,20 @@ export interface Billboard {
 export interface Category {
   id: string;
   name: string;
-  billboard: Billboard;
+  categoryId: string;
 }
 
 export interface Product {
   id: string;
-  category: Category;
   name: string;
-  price: string;
-  isFeatured: boolean;
-  size: Size;
-  color: Color;
-  images: Image[];
+  description: string;
+  categoryId: string;
+  brandId: string;
+  price: number;
+  discountPrice: number;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Image {

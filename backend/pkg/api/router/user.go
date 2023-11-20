@@ -8,6 +8,7 @@ import (
 
 func UserRoutes(api *echo.Group, middleware middleware.Middleware, authHandler handlerInterfaces.AuthHandler,
 	userHandler handlerInterfaces.UserHandler,
+	productHandler handlerInterfaces.ProductHandler,
 ) {
 	auth := api.Group("/auth")
 	{
@@ -23,6 +24,22 @@ func UserRoutes(api *echo.Group, middleware middleware.Middleware, authHandler h
 			// login.POST("/otp/send", authHandler.UserLoginOtpSend)
 			// login.POST("/otp/verify", authHandler.UserLoginOtpVerify)
 		}
+	}
+	// product
+	product := api.Group("/products")
+	{
+		product.GET("/", productHandler.GetAllProductsUser())
+
+		productItem := product.Group("/:product_id/items")
+		{
+			productItem.GET("/", productHandler.GetAllProductItemsUser())
+		}
+	}
+
+	// category
+	category := api.Group("/categories")
+	{
+		category.GET("/", productHandler.GetAllCategories)
 	}
 
 	api.Use(middleware.AuthenticateUser)

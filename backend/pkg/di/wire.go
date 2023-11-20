@@ -13,6 +13,7 @@ import (
 	"github.com/shion0625/FYP/backend/pkg/repository"
 	"github.com/shion0625/FYP/backend/pkg/service/token"
 	"github.com/shion0625/FYP/backend/pkg/usecase"
+	"github.com/shion0625/FYP/backend/pkg/service/cloud"
 )
 
 func InitializeApi(cfg *config.Config) (*http.ServerHTTP, error) {
@@ -23,19 +24,23 @@ func InitializeApi(cfg *config.Config) (*http.ServerHTTP, error) {
 
 		//external
 		token.NewTokenService,
+		cloud.NewGCPCloudService,
 		middleware.NewMiddleware,
 
 		//repository
 		repository.NewUserRepository,
 		repository.NewAuthRepository,
+		repository.NewProductRepository,
 
 		//usecase
 		usecase.NewAuthUseCase,
 		usecase.NewUserUseCase,
+		usecase.NewProductUseCase,
 
 		//handler
 		handler.NewAuthHandler,
 		handler.NewUserHandler,
+		handler.NewProductHandler,
 
 		// server
 		http.NewServerHTTP,

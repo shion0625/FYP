@@ -11,28 +11,31 @@ import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/shion0625/FYP/backend/pkg/config"
+	"google.golang.org/api/option"
 )
 
 type gcpService struct {
-	service    *storage.Client
-	bucketName string
+	service         *storage.Client
+	bucketName      string
+	credentialsFile string
 }
 
 const (
 	filePreSignExpireDuration = time.Hour * 12
 )
 
-func NewGCPCloudService(cfg config.Config) (CloudService, error) {
+func NewGCPCloudService(cfg *config.Config) (CloudService, error) {
 	ctx := context.Background()
 
-	client, err := storage.NewClient(ctx)
+	client, err := storage.NewClient(ctx, option.WithCredentialsFile(cfg.CredentialsFile))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create client for gcp service : %w", err)
 	}
 
 	return &gcpService{
-		service:    client,
-		bucketName: cfg.GcpBucketName,
+		service:         client,
+		bucketName:      cfg.GcpBucketName,
+		credentialsFile: cfg.CredentialsFile,
 	}, nil
 }
 

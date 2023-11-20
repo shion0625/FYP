@@ -13,6 +13,7 @@ import (
 	"github.com/shion0625/FYP/backend/pkg/config"
 	"github.com/shion0625/FYP/backend/pkg/db"
 	"github.com/shion0625/FYP/backend/pkg/repository"
+	"github.com/shion0625/FYP/backend/pkg/service/cloud"
 	"github.com/shion0625/FYP/backend/pkg/service/token"
 	"github.com/shion0625/FYP/backend/pkg/usecase"
 )
@@ -32,6 +33,13 @@ func InitializeApi(cfg *config.Config) (*api.ServerHTTP, error) {
 	authHandler := handler.NewAuthHandler(authUseCase, cfg)
 	userUseCase := usecase.NewUserUseCase(userRepository)
 	userHandler := handler.NewUserHandler(userUseCase)
-	serverHTTP := api.NewServerHTTP(cfg, middlewareMiddleware, authHandler, userHandler)
+	productRepository := repository.NewProductRepository(gormDB)
+	cloudService, err := cloud.NewGCPCloudService(cfg)
+	if err != nil {
+		return nil, err
+	}
+	productUseCase := usecase.NewProductUseCase(productRepository, cloudService)
+	productHandler := handler.NewProductHandler(productUseCase)
+	serverHTTP := api.NewServerHTTP(cfg, middlewareMiddleware, authHandler, userHandler, productHandler)
 	return serverHTTP, nil
 }
