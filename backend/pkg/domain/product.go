@@ -33,10 +33,8 @@ type ProductItem struct {
 
 // for a products category main and sub category as self joining.
 type Category struct {
-	ID         uint      `gorm:"primaryKey;not null"      json:"-"`
-	CategoryID uint      `json:"categoryId"`
-	Category   *Category `json:"-"`
-	Name       string    `binding:"required,min=1,max=30" gorm:"not null" json:"name"`
+	ID   uint   `gorm:"primaryKey;not null"      json:"-"`
+	Name string `binding:"required,min=1,max=30" gorm:"not null" json:"name"`
 }
 
 type Brand struct {
