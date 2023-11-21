@@ -10,7 +10,6 @@ import (
 type ProductUseCase interface {
 	FindAllCategories(ctx echo.Context, pagination request.Pagination) ([]response.Category, error)
 	SaveCategory(ctx echo.Context, categoryName string) error
-	SaveSubCategory(ctx echo.Context, subCategory request.SubCategory) error
 
 	// variations
 	SaveVariation(ctx echo.Context, categoryID uint, variationNames []string) error

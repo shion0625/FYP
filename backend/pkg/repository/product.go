@@ -58,21 +58,6 @@ func (c *productDatabase) SaveCategory(ctx echo.Context, categoryName string) (e
 	return err
 }
 
-// To check the sub category name already exist for the category.
-func (c *productDatabase) IsSubCategoryNameExist(ctx echo.Context, name string, categoryID uint) (exist bool, err error) {
-	query := `SELECT EXISTS(SELECT 1 FROM categories WHERE name = $1 AND category_id = $2)`
-	err = c.DB.Raw(query, name, categoryID).Scan(&exist).Error
-
-	return
-}
-
-// Save Category as sub category.
-func (c *productDatabase) SaveSubCategory(ctx echo.Context, categoryID uint, categoryName string) (err error) {
-	query := `INSERT INTO categories (category_id, name) VALUES ($1, $2)`
-	err = c.DB.Exec(query, categoryID, categoryName).Error
-
-	return err
-}
 
 // Find all main category(its not have a category_id).
 func (c *productDatabase) FindAllMainCategories(ctx echo.Context,
@@ -81,22 +66,13 @@ func (c *productDatabase) FindAllMainCategories(ctx echo.Context,
 	limit := pagination.Count
 	offset := (pagination.PageNumber - 1) * limit
 
-	query := `SELECT id, name FROM categories WHERE category_id IS NULL
+	query := `SELECT id, name FROM categories
 	LIMIT $1 OFFSET $2`
 	err = c.DB.Raw(query, limit, offset).Scan(&categories).Error
 
 	return
 }
 
-// Find all sub categories of a category.
-func (c *productDatabase) FindAllSubCategories(ctx echo.Context,
-	categoryID uint,
-) (subCategories []response.SubCategory, err error) {
-	query := `SELECT id, name FROM categories WHERE category_id = $1`
-	err = c.DB.Raw(query, categoryID).Scan(&subCategories).Error
-
-	return
-}
 
 // Find all variations which related to given category id.
 func (c *productDatabase) FindAllVariationsByCategoryID(ctx echo.Context,
@@ -209,12 +185,10 @@ func (c *productDatabase) FindAllProducts(ctx echo.Context, pagination request.P
 	limit := pagination.Count
 	offset := (pagination.PageNumber - 1) * limit
 	query := `SELECT p.id, p.name, p.description, p.price, p.discount_price,
-	p.image, p.category_id, sc.name AS category_name,
-	mc.name AS main_category_name, p.brand_id, b.name AS brand_name,
+	p.image, p.category_id, sc.name AS category_name, p.brand_id, b.name AS brand_name,
 	p.created_at, p.updated_at
 	FROM products p
 	INNER JOIN categories sc ON p.category_id = sc.id
-	INNER JOIN categories mc ON sc.category_id = mc.id
 	INNER JOIN brands b ON b.id = p.brand_id
 	ORDER BY created_at DESC LIMIT $1 OFFSET $2`
 
@@ -279,11 +253,10 @@ func (c *productDatabase) FindAllProductItems(ctx echo.Context,
 	// first find all product_items
 	query := `SELECT p.name, pi.id,  pi.product_id, pi.price, pi.discount_price,
 	pi.qty_in_stock, pi.sku, p.category_id, sc.name AS category_name,
-	mc.name AS main_category_name  p.brand_id, b.name AS brand_name
+	p.brand_id, b.name AS brand_name
 	FROM product_items pi
 	INNER JOIN products p ON p.id = pi.product_id
 	INNER JOIN categories sc ON p.category_id = sc.id
-	INNER JOIN categories mc ON sc.category_id = mc.id
 	INNER JOIN brands b ON b.id = p.brand_id
 	AND pi.product_id = $1`
 

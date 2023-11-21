@@ -12,7 +12,7 @@ interface MainNavProps {
 
 const MainNav: React.FC<MainNavProps> = ({ data }) => {
   const pathname = usePathname();
-  if (!data || data.length === 0 || (data.length === 1 && data[0] === null)) {
+  if (!data || data.length === 0) {
     return <div>No categories available</div>;
   }
 

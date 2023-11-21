@@ -73,31 +73,6 @@ func (p *ProductHandler) SaveCategory(ctx echo.Context) error {
 	return nil
 }
 
-func (p *ProductHandler) SaveSubCategory(ctx echo.Context) error {
-	var body request.SubCategory
-	if err := ctx.Bind(&body); err != nil {
-		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
-
-		return fmt.Errorf("Bind error: %w", err)
-	}
-
-	err := p.productUseCase.SaveSubCategory(ctx, body)
-	if err != nil {
-		statusCode := http.StatusInternalServerError
-		if errors.Is(err, usecase.ErrCategoryAlreadyExist) {
-			statusCode = http.StatusConflict
-		}
-
-		response.ErrorResponse(ctx, statusCode, "Failed to add sub category", err, nil)
-
-		return fmt.Errorf("SaveSubCategory error: %w", err)
-	}
-
-	response.SuccessResponse(ctx, http.StatusCreated, "Successfully sub category added")
-
-	return nil
-}
-
 func (p *ProductHandler) SaveVariation(ctx echo.Context) error {
 	categoryIDStr := ctx.Param("category_id")
 

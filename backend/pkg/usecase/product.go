@@ -35,15 +35,6 @@ func (p *productUseCase) FindAllCategories(ctx echo.Context, pagination request.
 		return nil, fmt.Errorf("failed find all main categories %w", err)
 	}
 
-	for i, category := range categories {
-		subCategory, err := p.productRepo.FindAllSubCategories(ctx, category.ID)
-		if err != nil {
-			return nil, fmt.Errorf("failed to find sub categories: %w", err)
-		}
-
-		categories[i].SubCategory = subCategory
-	}
-
 	return categories, nil
 }
 
@@ -61,25 +52,6 @@ func (p *productUseCase) SaveCategory(ctx echo.Context, categoryName string) err
 	err = p.productRepo.SaveCategory(ctx, categoryName)
 	if err != nil {
 		return fmt.Errorf("failed to save category: %w", err)
-	}
-
-	return nil
-}
-
-// Save Sub category.
-func (p *productUseCase) SaveSubCategory(ctx echo.Context, subCategory request.SubCategory) error {
-	subCatExist, err := p.productRepo.IsSubCategoryNameExist(ctx, subCategory.Name, subCategory.CategoryID)
-	if err != nil {
-		return fmt.Errorf("failed to check sub category already exist: %w", err)
-	}
-
-	if subCatExist {
-		return ErrCategoryAlreadyExist
-	}
-
-	err = p.productRepo.SaveSubCategory(ctx, subCategory.CategoryID, subCategory.Name)
-	if err != nil {
-		return fmt.Errorf("failed to save sub category: %w", err)
 	}
 
 	return nil

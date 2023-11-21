@@ -17,11 +17,6 @@ type ProductRepository interface {
 	FindAllMainCategories(ctx echo.Context, pagination request.Pagination) ([]response.Category, error)
 	SaveCategory(ctx echo.Context, categoryName string) error
 
-	// sub category
-	IsSubCategoryNameExist(ctx echo.Context, categoryName string, categoryID uint) (bool, error)
-	FindAllSubCategories(ctx echo.Context, categoryID uint) ([]response.SubCategory, error)
-	SaveSubCategory(ctx echo.Context, categoryID uint, categoryName string) error
-
 	// variation
 	IsVariationNameExistForCategory(ctx echo.Context, name string, categoryID uint) (bool, error)
 	SaveVariation(ctx echo.Context, categoryID uint, variationName string) error

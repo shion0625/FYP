@@ -23,12 +23,6 @@ type Product struct {
 
 // for a specific category representation.
 type Category struct {
-	ID          uint          `json:"id"`
-	Name        string        `json:"name"`
-	SubCategory []SubCategory `gorm:"-"    json:"subCategory"`
-}
-
-type SubCategory struct {
 	ID   uint   `json:"id"`
 	Name string `json:"name"`
 }

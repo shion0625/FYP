@@ -42,11 +42,6 @@ type Category struct {
 	Name string `binding:"required" json:"name"`
 }
 
-type SubCategory struct {
-	CategoryID uint   `binding:"required" json:"categoryId"`
-	Name       string `binding:"required" json:"name"`
-}
-
 type Brand struct {
 	Name string `binding:"required,min=3,max=25" json:"name"`
 }
