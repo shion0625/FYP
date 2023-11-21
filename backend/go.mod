@@ -10,7 +10,7 @@ require (
 	github.com/google/uuid v1.4.0
 	github.com/google/wire v0.5.0
 	github.com/jinzhu/copier v0.4.0
-	github.com/joho/godotenv v1.4.0
+	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.9.0
 	github.com/stretchr/testify v1.8.1
 	golang.org/x/crypto v0.14.0
