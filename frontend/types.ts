@@ -27,14 +27,25 @@ export interface Image {
   url: string;
 }
 
-export interface Size {
-  id: string;
+export interface ProductItem {
+  id: number;
   name: string;
-  value: string;
+  productId: number;
+  price: number;
+  discountPrice: number;
+  sku: string;
+  qtyInStock: number;
+  categoryName: string;
+  mainCategoryName: string;
+  brandId: number;
+  brandName: string;
+  variationValues: ProductVariationValue[];
+  images: string[];
 }
 
-export interface Color {
-  id: string;
+export interface ProductVariationValue {
+  variationId: number;
   name: string;
+  variationOptionId: number;
   value: string;
 }
