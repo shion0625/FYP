@@ -33,7 +33,9 @@ type ProductRepository interface {
 	IsProductNameExistForOtherProduct(ctx echo.Context, name string, productID uint) (bool, error)
 	IsProductNameExist(ctx echo.Context, productName string) (exist bool, err error)
 
-	FindAllProducts(ctx echo.Context, pagination request.Pagination) ([]response.Product, error)
+	FindAllProducts(ctx echo.Context, pagination request.Pagination, categoryID *uint, brandID *uint) ([]response.Product, error)
+
+
 	SaveProduct(ctx echo.Context, product domain.Product) error
 	UpdateProduct(ctx echo.Context, product domain.Product) error
 

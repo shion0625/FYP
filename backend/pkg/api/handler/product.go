@@ -209,9 +209,23 @@ func (p *ProductHandler) GetAllProductsUser() func(ctx echo.Context) error {
 // Get products is common for user and admin so this function is to get the common Get all products func for them.
 func (p *ProductHandler) getAllProducts() func(ctx echo.Context) error {
 	return func(ctx echo.Context) error {
+		categoryID, err := utils.GetParamID(ctx, "category_id")
+		if err != nil {
+			response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
+
+			return fmt.Errorf("getAllProducts error: %w", err)
+		}
+
+		brandID, err := utils.GetParamID(ctx, "brand_id")
+		if err != nil {
+			response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
+
+			return fmt.Errorf("getAllProducts error: %w", err)
+		}
+
 		pagination := request.GetPagination(ctx)
 
-		products, err := p.productUseCase.FindAllProducts(ctx, pagination)
+		products, err := p.productUseCase.FindAllProducts(ctx, pagination, categoryID, brandID)
 		if err != nil {
 			response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to Get all products", err, nil)
 

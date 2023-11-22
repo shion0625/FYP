@@ -132,8 +132,8 @@ func (p *productUseCase) FindAllVariationsAndItsValues(ctx echo.Context, categor
 }
 
 // to get all product.
-func (p *productUseCase) FindAllProducts(ctx echo.Context, pagination request.Pagination) ([]response.Product, error) {
-	products, err := p.productRepo.FindAllProducts(ctx, pagination)
+func (p *productUseCase) FindAllProducts(ctx echo.Context, pagination request.Pagination, categoryID *uint, brandID *uint) ([]response.Product, error) {
+	products, err := p.productRepo.FindAllProducts(ctx, pagination, categoryID, brandID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get product details from database: %w", err)
 	}

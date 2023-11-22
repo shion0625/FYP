@@ -58,7 +58,6 @@ func (c *productDatabase) SaveCategory(ctx echo.Context, categoryName string) (e
 	return err
 }
 
-
 // Find all main category(its not have a category_id).
 func (c *productDatabase) FindAllMainCategories(ctx echo.Context,
 	pagination request.Pagination,
@@ -72,7 +71,6 @@ func (c *productDatabase) FindAllMainCategories(ctx echo.Context,
 
 	return
 }
-
 
 // Find all variations which related to given category id.
 func (c *productDatabase) FindAllVariationsByCategoryID(ctx echo.Context,
@@ -181,18 +179,27 @@ func (c *productDatabase) UpdateProduct(ctx echo.Context, product domain.Product
 }
 
 // get all products from database.
-func (c *productDatabase) FindAllProducts(ctx echo.Context, pagination request.Pagination) (products []response.Product, err error) {
-	limit := pagination.Count
-	offset := (pagination.PageNumber - 1) * limit
-	query := `SELECT p.id, p.name, p.description, p.price, p.discount_price,
-	p.image, p.category_id, sc.name AS category_name, p.brand_id, b.name AS brand_name,
-	p.created_at, p.updated_at
-	FROM products p
-	INNER JOIN categories sc ON p.category_id = sc.id
-	INNER JOIN brands b ON b.id = p.brand_id
-	ORDER BY created_at DESC LIMIT $1 OFFSET $2`
+func (c *productDatabase) FindAllProducts(ctx echo.Context, pagination request.Pagination, categoryID *uint, brandID *uint) (products []response.Product, err error) {
+	limit := int(pagination.Count)
+	offset := int((int(pagination.PageNumber) - 1) * limit)
 
-	err = c.DB.Raw(query, limit, offset).Scan(&products).Error
+	db := c.DB.Table("products p").
+		Select("p.id, p.name, p.description, p.price, p.discount_price, p.image, p.category_id, sc.name AS category_name, p.brand_id, b.name AS brand_name, p.created_at, p.updated_at").
+		Joins("INNER JOIN categories sc ON p.category_id = sc.id").
+		Joins("INNER JOIN brands b ON b.id = p.brand_id").
+		Order("created_at DESC").
+		Limit(limit).
+		Offset(offset)
+
+	if categoryID != nil {
+		db = db.Where("p.category_id = ?", *categoryID)
+	}
+
+	if brandID != nil {
+		db = db.Where("p.brand_id = ?", *brandID)
+	}
+
+	err = db.Scan(&products).Error
 
 	return
 }

@@ -7,6 +7,7 @@ const URL = `${process.env.NEXT_PUBLIC_API_URL}/products/`;
 
 interface Query {
   categoryId?: string;
+  brandId?: string;
 }
 
 const getProducts = async (query: Query): Promise<Product[]> => {
@@ -16,6 +17,7 @@ const getProducts = async (query: Query): Promise<Product[]> => {
       categoryId: query.categoryId,
     },
   });
+
   const res = await axios.get(url);
   return res.data.data[0];
 };
