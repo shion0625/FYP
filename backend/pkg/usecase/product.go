@@ -150,6 +150,23 @@ func (p *productUseCase) FindAllProducts(ctx echo.Context, pagination request.Pa
 	return products, nil
 }
 
+func (p *productUseCase) GetProduct(ctx echo.Context, productID uint) (response.Product, error) {
+	product, err := p.productRepo.FindProductByID(ctx, productID)
+	if err != nil {
+		return response.Product{}, fmt.Errorf("failed to get product from database: %w", err)
+	}
+
+	url, err := p.cloudService.GetFileUrl(ctx, product.Image)
+
+	if err != nil {
+		return response.Product{}, fmt.Errorf("failed to get image url from could service: %w", err)
+	}
+
+	product.Image = url
+
+	return product, nil
+}
+
 // to add new product.
 func (p *productUseCase) SaveProduct(ctx echo.Context, product request.Product) error {
 	productNameExist, err := p.productRepo.IsProductNameExist(ctx, product.Name)

@@ -14,6 +14,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/shion0625/FYP/backend/pkg/config"
+	"github.com/shion0625/FYP/backend/pkg/domain"
 	"google.golang.org/api/option"
 )
 
@@ -22,10 +23,6 @@ type gcpService struct {
 	bucketName      string
 	credentialsFile string
 	googleAccessID  string
-}
-
-type ServiceAccount struct {
-	PrivateKey string
 }
 
 const (
@@ -76,7 +73,7 @@ func (c *gcpService) GetFileUrl(ctx echo.Context, uploadID string) (string, erro
 	}
 
 	// JSONを構造体にデコードする
-	var sa ServiceAccount
+	var sa domain.ServiceAccount
 	if err := json.Unmarshal(jsonKey, &sa); err != nil {
 		return "", fmt.Errorf("failed to decode service account key file: %w", err)
 	}

@@ -29,6 +29,7 @@ func UserRoutes(api *echo.Group, middleware middleware.Middleware, authHandler h
 	product := api.Group("/products")
 	{
 		product.GET("/", productHandler.GetAllProductsUser())
+		product.GET("/:product_id", productHandler.GetProduct)
 
 		productItem := product.Group("/:product_id/items")
 		{

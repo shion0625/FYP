@@ -1,14 +1,13 @@
-import NextImage from 'next/image';
-import { Tab } from '@headlessui/react';
+import NextImage from "next/image";
+import { Tab } from "@headlessui/react";
 
-import { cn } from '@/lib/tailwind';
-import { Image } from '@/types';
+import { cn } from "@/lib/tailwind";
 
 interface GalleryTabProps {
-  image: Image;
+  url: string;
 }
 
-const GalleryTab: React.FC<GalleryTabProps> = ({ image }) => {
+const GalleryTab: React.FC<GalleryTabProps> = ({ url }) => {
   return (
     <Tab className="relative flex aspect-square cursor-pointer items-center justify-center rounded-md bg-white">
       {({ selected }) => (
@@ -16,15 +15,15 @@ const GalleryTab: React.FC<GalleryTabProps> = ({ image }) => {
           <span className="absolute h-full w-full aspect-square inset-0 overflow-hidden rounded-md">
             <NextImage
               fill
-              src={image.url}
+              src={url}
               alt=""
               className="object-cover object-center"
             />
           </span>
           <span
             className={cn(
-              'absolute inset-0 rounded-md ring-2 ring-offset-2',
-              selected ? 'ring-black' : 'ring-transparent'
+              "absolute inset-0 rounded-md ring-2 ring-offset-2",
+              selected ? "ring-black" : "ring-transparent"
             )}
           />
         </div>

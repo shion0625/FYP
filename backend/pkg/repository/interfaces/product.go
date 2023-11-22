@@ -29,12 +29,11 @@ type ProductRepository interface {
 
 	FindAllVariationValuesOfProductItem(ctx echo.Context, productItemID uint) ([]response.ProductVariationValue, error)
 
-	FindProductByID(ctx echo.Context, productID uint) (product domain.Product, err error)
+	FindProductByID(ctx echo.Context, productID uint) (product response.Product, err error)
 	IsProductNameExistForOtherProduct(ctx echo.Context, name string, productID uint) (bool, error)
 	IsProductNameExist(ctx echo.Context, productName string) (exist bool, err error)
 
 	FindAllProducts(ctx echo.Context, pagination request.Pagination, categoryID *uint, brandID *uint) ([]response.Product, error)
-
 
 	SaveProduct(ctx echo.Context, product domain.Product) error
 	UpdateProduct(ctx echo.Context, product domain.Product) error

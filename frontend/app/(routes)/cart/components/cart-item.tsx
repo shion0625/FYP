@@ -1,4 +1,4 @@
-import Image from "next/image";
+import NextImage from "next/image";
 import { toast } from "react-hot-toast";
 import { X } from "lucide-react";
 
@@ -21,7 +21,7 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
   return (
     <li className="flex py-6 border-b">
       <div className="relative h-24 w-24 rounded-md overflow-hidden sm:h-48 sm:w-48">
-        <Image
+        <NextImage
           fill
           src={data.image}
           alt=""

@@ -44,16 +44,14 @@ func (c *productDatabase) Transactions(ctx echo.Context, trxFn func(repo interfa
 
 // To check the category name exist.
 func (c *productDatabase) IsCategoryNameExist(ctx echo.Context, name string) (exist bool, err error) {
-	query := `SELECT EXISTS(SELECT 1 FROM categories WHERE name = $1 AND category_id IS NULL)`
-	err = c.DB.Raw(query, name).Scan(&exist).Error
+	err = c.DB.Table("categories").Where("name = ? AND category_id IS NULL", name).First(&exist).Error
 
 	return
 }
 
 // Save Category.
 func (c *productDatabase) SaveCategory(ctx echo.Context, categoryName string) (err error) {
-	query := `INSERT INTO categories (name) VALUES ($1)`
-	err = c.DB.Exec(query, categoryName).Error
+	err = c.DB.Table("categories").Create(&domain.Category{Name: categoryName}).Error
 
 	return err
 }
@@ -65,9 +63,7 @@ func (c *productDatabase) FindAllMainCategories(ctx echo.Context,
 	limit := pagination.Count
 	offset := (pagination.PageNumber - 1) * limit
 
-	query := `SELECT id, name FROM categories
-	LIMIT $1 OFFSET $2`
-	err = c.DB.Raw(query, limit, offset).Scan(&categories).Error
+	err = c.DB.Table("categories").Limit(int(limit)).Offset(int(offset)).Find(&categories).Error
 
 	return
 }
@@ -76,8 +72,7 @@ func (c *productDatabase) FindAllMainCategories(ctx echo.Context,
 func (c *productDatabase) FindAllVariationsByCategoryID(ctx echo.Context,
 	categoryID uint,
 ) (variations []response.Variation, err error) {
-	query := `SELECT id, name FROM variations WHERE category_id = $1`
-	err = c.DB.Raw(query, categoryID).Scan(&variations).Error
+	err = c.DB.Table("variations").Where("category_id = ?", categoryID).Find(&variations).Error
 
 	return
 }
@@ -86,8 +81,7 @@ func (c *productDatabase) FindAllVariationsByCategoryID(ctx echo.Context,
 func (c productDatabase) FindAllVariationOptionsByVariationID(ctx echo.Context,
 	variationID uint,
 ) (variationOptions []response.VariationOption, err error) {
-	query := `SELECT id, value FROM variation_options WHERE variation_id = $1`
-	err = c.DB.Raw(query, variationID).Scan(&variationOptions).Error
+	err = c.DB.Table("variation_options").Where("variation_id = ?", variationID).Find(&variationOptions).Error
 
 	return
 }
@@ -96,8 +90,7 @@ func (c productDatabase) FindAllVariationOptionsByVariationID(ctx echo.Context,
 func (c *productDatabase) IsVariationNameExistForCategory(ctx echo.Context,
 	name string, categoryID uint,
 ) (exist bool, err error) {
-	query := `SELECT EXISTS(SELECT 1 FROM variations WHERE name = $1 AND category_id = $2)`
-	err = c.DB.Raw(query, name, categoryID).Scan(&exist).Error
+	err = c.DB.Table("variations").Where("name = ? AND category_id = ?", name, categoryID).First(&exist).Error
 
 	return
 }
@@ -106,32 +99,28 @@ func (c *productDatabase) IsVariationNameExistForCategory(ctx echo.Context,
 func (c *productDatabase) IsVariationValueExistForVariation(ctx echo.Context,
 	value string, variationID uint,
 ) (exist bool, err error) {
-	query := `SELECT EXISTS(SELECT 1 FROM variation_options WHERE value = $1 AND variation_id = $2)`
-	err = c.DB.Raw(query, value, variationID).Scan(&exist).Error
+	err = c.DB.Table("variation_options").Where("value = ? AND variation_id = ?", value, variationID).First(&exist).Error
 
 	return
 }
 
 // Save Variation for category.
 func (c *productDatabase) SaveVariation(ctx echo.Context, categoryID uint, variationName string) error {
-	query := `INSERT INTO variations (category_id, name) VALUES($1, $2)`
-	err := c.DB.Exec(query, categoryID, variationName).Error
+	err := c.DB.Table("variations").Create(&domain.Variation{CategoryID: categoryID, Name: variationName}).Error
 
 	return err
 }
 
 // add variation option.
 func (c *productDatabase) SaveVariationOption(ctx echo.Context, variationID uint, variationValue string) error {
-	query := `INSERT INTO variation_options (variation_id, value) VALUES($1, $2)`
-	err := c.DB.Exec(query, variationID, variationValue).Error
+	err := c.DB.Table("variation_options").Create(&domain.VariationOption{VariationID: variationID, Value: variationValue}).Error
 
 	return err
 }
 
 // find product by id.
-func (c *productDatabase) FindProductByID(ctx echo.Context, productID uint) (product domain.Product, err error) {
-	query := `SELECT * FROM products WHERE id = $1`
-	err = c.DB.Raw(query, productID).Scan(&product).Error
+func (c *productDatabase) FindProductByID(ctx echo.Context, productID uint) (product response.Product, err error) {
+	err = c.DB.Table("products").Where("id = ?", productID).Find(&product).Error
 
 	return
 }
@@ -139,41 +128,30 @@ func (c *productDatabase) FindProductByID(ctx echo.Context, productID uint) (pro
 func (c *productDatabase) IsProductNameExistForOtherProduct(ctx echo.Context,
 	name string, productID uint,
 ) (exist bool, err error) {
-	query := `SELECT EXISTS(SELECT id FROM products WHERE name = $1 AND id != $2)`
-	err = c.DB.Raw(query, name, productID).Scan(&exist).Error
+	err = c.DB.Table("products").Where("name = ? AND id != ?", name, productID).First(&exist).Error
 
 	return
 }
 
 func (c *productDatabase) IsProductNameExist(ctx echo.Context, productName string) (exist bool, err error) {
-	query := `SELECT EXISTS(SELECT 1 FROM products WHERE name = $1)`
-	err = c.DB.Raw(query, productName).Scan(&exist).Error
+	err = c.DB.Table("products").Where("name = ?", productName).First(&exist).Error
 
 	return
 }
 
 // to add a new product in database.
 func (c *productDatabase) SaveProduct(ctx echo.Context, product domain.Product) error {
-	query := `INSERT INTO products (name, description, category_id, brand_id, price, image, created_at)
-	VALUES($1, $2, $3, $4, $5, $6, $7)`
-
-	createdAt := time.Now()
-	err := c.DB.Exec(query, product.Name, product.Description, product.CategoryID, product.BrandID,
-		product.Price, product.Image, createdAt).Error
+	product.CreatedAt = time.Now()
+	err := c.DB.Table("products").Create(&product).Error
 
 	return err
 }
 
 // update product.
 func (c *productDatabase) UpdateProduct(ctx echo.Context, product domain.Product) error {
-	query := `UPDATE products SET name = $1, description = $2, category_id = $3,
-	price = $4, image = $5, brand_id = $6 updated_at = $7
-	WHERE id = $8`
+	product.UpdatedAt = time.Now()
 
-	updatedAt := time.Now()
-
-	err := c.DB.Exec(query, product.Name, product.Description, product.CategoryID,
-		product.Price, product.Image, product.BrandID, updatedAt, product.ID).Error
+	err := c.DB.Table("products").Where("id = ?", product.ID).Updates(&product).Error
 
 	return err
 }
@@ -206,20 +184,19 @@ func (c *productDatabase) FindAllProducts(ctx echo.Context, pagination request.P
 
 // to get productItem id.
 func (c *productDatabase) FindProductItemByID(ctx echo.Context, productItemID uint) (productItem domain.ProductItem, err error) {
-	query := `SELECT * FROM product_items WHERE id = $1`
-	err = c.DB.Raw(query, productItemID).Scan(&productItem).Error
+	err = c.DB.Table("product_items").Where("id = ?", productItemID).Find(&productItem).Error
 
 	return productItem, err
 }
 
 // to get how many variations are available for a product.
 func (c *productDatabase) FindVariationCountForProduct(ctx echo.Context, productID uint) (variationCount uint, err error) {
-	query := `SELECT COUNT(v.id) FROM variations v
-	INNER JOIN categories c ON c.id = v.category_id
-	INNER JOIN products p ON p.category_id = v.category_id
-	WHERE p.id = $1`
-
-	err = c.DB.Raw(query, productID).Scan(&variationCount).Error
+	var count int64
+	err = c.DB.Table("variations v").
+		Joins("INNER JOIN categories c ON c.id = v.category_id").
+		Joins("INNER JOIN products p ON p.category_id = v.category_id").
+		Where("p.id = ?", productID).Count(&count).Error
+	variationCount = uint(count)
 
 	return
 }
@@ -228,27 +205,22 @@ func (c *productDatabase) FindVariationCountForProduct(ctx echo.Context, product
 func (c *productDatabase) FindAllProductItemIDsByProductIDAndVariationOptionID(ctx context.Context, productID,
 	variationOptionID uint,
 ) (productItemIDs []uint, err error) {
-	query := `SELECT id FROM product_items pi
-		INNER JOIN product_configurations pc ON pi.id = pc.product_item_id
-		WHERE pi.product_id = $1 AND variation_option_id = $2`
-	err = c.DB.Raw(query, productID, variationOptionID).Scan(&productItemIDs).Error
+	err = c.DB.Table("product_items pi").
+		Joins("INNER JOIN product_configurations pc ON pi.id = pc.product_item_id").
+		Where("pi.product_id = ? AND variation_option_id = ?", productID, variationOptionID).Find(&productItemIDs).Error
 
 	return
 }
 
 func (c *productDatabase) SaveProductConfiguration(ctx echo.Context, productItemID, variationOptionID uint) error {
-	query := `INSERT INTO product_configurations (product_item_id, variation_option_id) VALUES ($1, $2)`
-	err := c.DB.Exec(query, productItemID, variationOptionID).Error
+	err := c.DB.Table("product_configurations").Create(&domain.ProductConfiguration{ProductItemID: productItemID, VariationOptionID: variationOptionID}).Error
 
 	return err
 }
 
 func (c *productDatabase) SaveProductItem(ctx echo.Context, productItem domain.ProductItem) (productItemID uint, err error) {
-	query := `INSERT INTO product_items (product_id, qty_in_stock, price, sku,created_at) VALUES($1, $2, $3, $4, $5)
-	 RETURNING id AS product_item_id`
-	createdAt := time.Now()
-	err = c.DB.Raw(query, productItem.ProductID, productItem.QtyInStock, productItem.Price, productItem.SKU, createdAt).
-		Scan(&productItemID).Error
+	productItem.CreatedAt = time.Now()
+	err = c.DB.Table("product_items").Create(&productItem).Scan(&productItemID).Error
 
 	return
 }
@@ -258,16 +230,12 @@ func (c *productDatabase) FindAllProductItems(ctx echo.Context,
 	productID uint,
 ) (productItems []response.ProductItemsDB, err error) {
 	// first find all product_items
-	query := `SELECT p.name, pi.id,  pi.product_id, pi.price, pi.discount_price,
-	pi.qty_in_stock, pi.sku, p.category_id, sc.name AS category_name,
-	p.brand_id, b.name AS brand_name
-	FROM product_items pi
-	INNER JOIN products p ON p.id = pi.product_id
-	INNER JOIN categories sc ON p.category_id = sc.id
-	INNER JOIN brands b ON b.id = p.brand_id
-	AND pi.product_id = $1`
-
-	err = c.DB.Raw(query, productID).Scan(&productItems).Error
+	err = c.DB.Table("product_items pi").
+		Select("p.name, pi.id,  pi.product_id, pi.price, pi.discount_price, pi.qty_in_stock, pi.sku, p.category_id, sc.name AS category_name, p.brand_id, b.name AS brand_name").
+		Joins("INNER JOIN products p ON p.id = pi.product_id").
+		Joins("INNER JOIN categories sc ON p.category_id = sc.id").
+		Joins("INNER JOIN brands b ON b.id = p.brand_id").
+		Where("pi.product_id = ?", productID).Find(&productItems).Error
 
 	return
 }
@@ -276,29 +244,25 @@ func (c *productDatabase) FindAllProductItems(ctx echo.Context,
 func (c *productDatabase) FindAllVariationValuesOfProductItem(ctx echo.Context,
 	productItemID uint,
 ) (productVariationsValues []response.ProductVariationValue, err error) {
-	query := `SELECT v.id AS variation_id, v.name, vo.id AS variation_option_id, vo.value
-	FROM  product_configurations pc
-	INNER JOIN variation_options vo ON vo.id = pc.variation_option_id
-	INNER JOIN variations v ON v.id = vo.variation_id
-	WHERE pc.product_item_id = $1`
-	err = c.DB.Raw(query, productItemID).Scan(&productVariationsValues).Error
+	err = c.DB.Table("product_configurations pc").
+		Select("v.id AS variation_id, v.name, vo.id AS variation_option_id, vo.value").
+		Joins("INNER JOIN variation_options vo ON vo.id = pc.variation_option_id").
+		Joins("INNER JOIN variations v ON v.id = vo.variation_id").
+		Where("pc.product_item_id = ?", productItemID).Find(&productVariationsValues).Error
 
 	return
 }
 
 // To save image for product item.
 func (c *productDatabase) SaveProductItemImage(ctx echo.Context, productItemID uint, image string) error {
-	query := `INSERT INTO product_images (product_item_id, image) VALUES ($1, $2)`
-	err := c.DB.Exec(query, productItemID, image).Error
+	err := c.DB.Table("product_images").Create(&domain.ProductImage{ProductItemID: productItemID, Image: image}).Error
 
 	return err
 }
 
 // To find all images of a product item.
 func (c *productDatabase) FindAllProductItemImages(ctx echo.Context, productItemID uint) (images []string, err error) {
-	query := `SELECT image FROM product_images WHERE product_item_id = $1`
-
-	err = c.DB.Raw(query, productItemID).Scan(&images).Error
+	err = c.DB.Table("product_images").Select("image").Where("product_item_id = ?", productItemID).Find(&images).Error
 
 	return
 }

@@ -19,6 +19,8 @@ type ProductUseCase interface {
 
 	// products
 	FindAllProducts(ctx echo.Context, pagination request.Pagination, categoryID *uint, brandID *uint) (products []response.Product, err error)
+
+	GetProduct(ctx echo.Context, productID uint) (products response.Product, err error)
 	SaveProduct(ctx echo.Context, product request.Product) error
 	UpdateProduct(ctx echo.Context, product domain.Product) error
 

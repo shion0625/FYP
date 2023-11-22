@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import NextImage from "next/image";
 import { useRouter } from "next/navigation";
 import { Expand, ShoppingCart } from "lucide-react";
 import { MouseEventHandler } from "react";
@@ -43,10 +43,10 @@ const ProductCard: React.FC<ProductCard> = ({ data }) => {
     >
       {/* Images and Actions */}
       <div className="aspect-square rounded-xl bg-gray-100 relative">
-        <Image
+        <NextImage
           src={data?.image}
           fill
-          alt="Image"
+          alt="NextImage"
           className="aspect-square object-cover rounded-md"
         />
         <div className="opacity-0 group-hover:opacity-100 transition absolute w-full px-6 bottom-5">

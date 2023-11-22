@@ -244,6 +244,28 @@ func (p *ProductHandler) getAllProducts() func(ctx echo.Context) error {
 	}
 }
 
+func (p *ProductHandler) GetProduct(ctx echo.Context) error {
+	productIDStr := ctx.Param("product_id")
+
+	productID, err := utils.ParseStringToUint32(productIDStr)
+	if err != nil {
+		response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
+
+		return fmt.Errorf("ParseStringToUint32 error: %w", err)
+	}
+
+	products, err := p.productUseCase.GetProduct(ctx, productID)
+	if err != nil {
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to Get all products", err, nil)
+
+		return fmt.Errorf("FindAllProducts error: %w", err)
+	}
+
+	response.SuccessResponse(ctx, http.StatusOK, "Successfully found all products", products)
+
+	return nil
+}
+
 func (c *ProductHandler) UpdateProduct(ctx echo.Context) error {
 	var body request.UpdateProduct
 

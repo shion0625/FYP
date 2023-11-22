@@ -12,6 +12,7 @@ type ProductHandler interface {
 	GetAllProductsAdmin() func(ctx echo.Context) error
 	GetAllProductsUser() func(ctx echo.Context) error
 
+	GetProduct(ctx echo.Context) error
 	SaveProduct(ctx echo.Context) error
 	UpdateProduct(ctx echo.Context) error
 

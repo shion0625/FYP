@@ -22,11 +22,6 @@ export interface Product {
   updatedAt: string;
 }
 
-export interface Image {
-  id: string;
-  url: string;
-}
-
 export interface ProductItem {
   id: number;
   name: string;
