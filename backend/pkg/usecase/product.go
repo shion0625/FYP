@@ -138,14 +138,14 @@ func (p *productUseCase) FindAllProducts(ctx echo.Context, pagination request.Pa
 		return nil, fmt.Errorf("failed to get product details from database: %w", err)
 	}
 
-	// for i := range products {
+	for i := range products {
+		url, err := p.cloudService.GetFileUrl(ctx, products[i].Image)
+		if err != nil {
+			continue
+		}
 
-	// 	url, err := p.cloudService.GetFileUrl(ctx, products[i].Image)
-	// 	if err != nil {
-	// 		continue
-	// 	}
-	// 	products[i].Image = url
-	// }
+		products[i].Image = url
+	}
 
 	return products, nil
 }
@@ -330,8 +330,28 @@ func (p *productUseCase) isProductVariationCombinationExist(productID uint, vari
 // for get all productItem for a specific product.
 func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) ([]response.ProductItems, error) {
 	productItems, err := p.productRepo.FindAllProductItems(ctx, productID)
+	completeProductItems := make([]response.ProductItems, len(productItems))
+
+	for i, item := range productItems {
+		completeProductItems[i] = response.ProductItems{
+			ID:               item.ID,
+			Name:             item.Name,
+			ProductID:        item.ProductID,
+			Price:            item.Price,
+			DiscountPrice:    item.DiscountPrice,
+			SKU:              item.SKU,
+			QtyInStock:       item.QtyInStock,
+			CategoryName:     item.CategoryName,
+			MainCategoryName: item.MainCategoryName,
+			BrandID:          item.BrandID,
+			BrandName:        item.BrandName,
+			Images:           item.Images,
+			VariationValues:  []response.ProductVariationValue{},
+		}
+	}
+
 	if err != nil {
-		return productItems, fmt.Errorf("failed to find all product items: %w", err)
+		return completeProductItems, fmt.Errorf("failed to find all product items: %w", err)
 	}
 
 	errChan := make(chan error, numGoroutines)
@@ -341,19 +361,19 @@ func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) (
 
 	go func() {
 		// get all variation values of each product items
-		for i := range productItems {
+		for i := range completeProductItems {
 			select { // checking each time echo is cancelled or not
 			case <-ctx.Request().Context().Done():
 				return
 			default:
-				variationValues, err := p.productRepo.FindAllVariationValuesOfProductItem(ctx, productItems[i].ID)
+				variationValues, err := p.productRepo.FindAllVariationValuesOfProductItem(ctx, completeProductItems[i].ID)
 				if err != nil {
 					errChan <- fmt.Errorf("failed to find variation values product item: %w", err)
 
 					return
 				}
 
-				productItems[i].VariationValues = variationValues
+				completeProductItems[i].VariationValues = variationValues
 			}
 		}
 		errChan <- nil
@@ -361,16 +381,17 @@ func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) (
 
 	go func() {
 		// get all images of each product items
-		for i := range productItems {
+		for i := range completeProductItems {
 			select { // checking each time echo is cancelled or not
 			case <-newCtx.Done():
 				return
 			default:
-				images, err := p.productRepo.FindAllProductItemImages(ctx, productItems[i].ID)
+				images, err := p.productRepo.FindAllProductItemImages(ctx, completeProductItems[i].ID)
 
 				imageUrls := make([]string, len(images))
 
 				for j := range images {
+					fmt.Println(images[j])
 					url, err := p.cloudService.GetFileUrl(ctx, images[j])
 					if err != nil {
 						errChan <- fmt.Errorf("failed to get image url from could service: %w", err)
@@ -385,7 +406,7 @@ func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) (
 					return
 				}
 
-				productItems[i].Images = imageUrls
+				completeProductItems[i].Images = imageUrls
 			}
 		}
 		errChan <- nil
@@ -404,7 +425,7 @@ func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) (
 		}
 	}
 
-	return productItems, nil
+	return completeProductItems, nil
 }
 
 func (p *productUseCase) UpdateProduct(ctx echo.Context, updateDetails domain.Product) error {

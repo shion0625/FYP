@@ -256,7 +256,7 @@ func (c *productDatabase) SaveProductItem(ctx echo.Context, productItem domain.P
 // for get all products items for a product.
 func (c *productDatabase) FindAllProductItems(ctx echo.Context,
 	productID uint,
-) (productItems []response.ProductItems, err error) {
+) (productItems []response.ProductItemsDB, err error) {
 	// first find all product_items
 	query := `SELECT p.name, pi.id,  pi.product_id, pi.price, pi.discount_price,
 	pi.qty_in_stock, pi.sku, p.category_id, sc.name AS category_name,

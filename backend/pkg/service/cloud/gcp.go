@@ -2,9 +2,12 @@ package cloud
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"mime/multipart"
+	"net/http"
+	"os"
 	"time"
 
 	"cloud.google.com/go/storage"
@@ -18,6 +21,11 @@ type gcpService struct {
 	service         *storage.Client
 	bucketName      string
 	credentialsFile string
+	googleAccessID  string
+}
+
+type ServiceAccount struct {
+	PrivateKey string
 }
 
 const (
@@ -36,6 +44,7 @@ func NewGCPCloudService(cfg *config.Config) (CloudService, error) {
 		service:         client,
 		bucketName:      cfg.GcpBucketName,
 		credentialsFile: cfg.CredentialsFile,
+		googleAccessID:  cfg.GcpServiceAccount,
 	}, nil
 }
 
@@ -60,10 +69,28 @@ func (c *gcpService) SaveFile(ctx echo.Context, fileHeader *multipart.FileHeader
 }
 
 func (c *gcpService) GetFileUrl(ctx echo.Context, uploadID string) (string, error) {
-	attrs, err := c.service.Bucket(c.bucketName).Object(uploadID).Attrs(ctx.Request().Context())
+	// サービスアカウントキーファイルを読み込む
+	jsonKey, err := os.ReadFile(c.credentialsFile)
 	if err != nil {
-		return "", fmt.Errorf("failed to get attributes of uploaded file: %w", err)
+		return "", fmt.Errorf("failed to read service account key file: %w", err)
 	}
 
-	return attrs.MediaLink, nil
+	// JSONを構造体にデコードする
+	var sa ServiceAccount
+	if err := json.Unmarshal(jsonKey, &sa); err != nil {
+		return "", fmt.Errorf("failed to decode service account key file: %w", err)
+	}
+
+	url, err := storage.SignedURL(c.bucketName, uploadID, &storage.SignedURLOptions{
+		GoogleAccessID: c.googleAccessID,
+		PrivateKey:     []byte(sa.PrivateKey),
+		Method:         http.MethodGet,
+		Expires:        time.Now().Add(filePreSignExpireDuration),
+	})
+
+	if err != nil {
+		return "", fmt.Errorf("failed to sign url: %w", err)
+	}
+
+	return url, nil
 }

@@ -41,7 +41,7 @@ type ProductRepository interface {
 
 	// product items
 	FindProductItemByID(ctx echo.Context, productItemID uint) (domain.ProductItem, error)
-	FindAllProductItems(ctx echo.Context, productID uint) ([]response.ProductItems, error)
+	FindAllProductItems(ctx echo.Context, productID uint) ([]response.ProductItemsDB, error)
 	FindVariationCountForProduct(ctx echo.Context, productID uint) (variationCount uint, err error) // to check the product config already exist
 	FindAllProductItemIDsByProductIDAndVariationOptionID(ctx context.Context, productID, variationOptionID uint) ([]uint, error)
 	SaveProductConfiguration(ctx echo.Context, productItemID, variationOptionID uint) error
