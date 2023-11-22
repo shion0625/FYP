@@ -1,1 +1,0 @@
- PrivateKey string `json:"private_key"`
