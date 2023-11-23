@@ -12,6 +12,8 @@
     "@headlessui/react": "^1.7.17",
     "axios": "^1.6.2",
     "clsx": "^2.0.0",
+    "flowbite": "^2.2.0",
+    "flowbite-react": "^0.6.4",
     "lucide-react": "^0.279.0",
     "next": "latest",
     "query-string": "^8.1.0",
