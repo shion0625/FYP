@@ -1,4 +1,3 @@
-import axios from "axios";
 import qs from "query-string";
 import useSWR from "swr";
 import { axiosFetcher } from "@/actions/fecher";
@@ -25,9 +24,13 @@ export const useGetProducts = (query: Query): UseGetProductsReturn => {
     },
   });
 
-  const { data, error } = useSWR<Response<Product[]>>(url, axiosFetcher, {
-    suspense: true,
-  });
+  const { data, error } = useSWR<UseGetProductsReturn["products"]>(
+    url,
+    axiosFetcher,
+    {
+      suspense: true,
+    }
+  );
 
   return {
     products: data,
