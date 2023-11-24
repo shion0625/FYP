@@ -1,6 +1,7 @@
+"use client";
+
 import Container from "@/components/ui/container";
-import getProducts from "@/actions/product/get-products";
-import ProductList from "@/components/product-list";
+import { getDynamicComponent } from "@/lib/dynamic-component";
 
 export const revalidate = 0;
 
@@ -9,19 +10,13 @@ interface CategoryIdPageProps {
     categoryId: string;
   };
 }
+const DynamicLazyCategoryID =
+  getDynamicComponent<CategoryIdPageProps["params"]>("views/categoryID");
 
-const CategoryIdPage = async ({ params }: CategoryIdPageProps) => {
-  const products = await getProducts({
-    categoryId: params.categoryId,
-  });
-
+const CategoryIdPage = ({ params }: CategoryIdPageProps) => {
   return (
     <Container>
-      <div className="space-y-10 pb-10">
-        <div className="flex flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
-          <ProductList title="Featured Products" items={products} />
-        </div>
-      </div>
+      <DynamicLazyCategoryID categoryId={params.categoryId} />
     </Container>
   );
 };

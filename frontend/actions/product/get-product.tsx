@@ -1,11 +1,25 @@
-import { Product } from "@/types";
-import axios from "axios";
+import useSWR from "swr";
+import { Response, Product } from "@/types";
+import { axiosFetcher } from "@/actions/fecher";
 
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/products`;
 
-const getProduct = async (id: string): Promise<Product> => {
-  const res = await axios.get(`${URL}/${id}`);
-  return res.data.data;
-};
+interface UseGetProductReturn {
+  product: Response<Product> | undefined;
+  isError: any;
+}
 
-export default getProduct;
+export const useGetProduct = (id: string): UseGetProductReturn => {
+  const { data, error } = useSWR<Response<Product>>(
+    `${URL}/${id}`,
+    axiosFetcher,
+    {
+      suspense: true,
+    }
+  );
+
+  return {
+    product: data,
+    isError: error,
+  };
+};

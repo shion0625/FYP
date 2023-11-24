@@ -1,7 +1,8 @@
 import axios from "axios";
 import qs from "query-string";
-
-import { Product } from "@/types";
+import useSWR from "swr";
+import { axiosFetcher } from "@/actions/fecher";
+import { Response, Product } from "@/types";
 
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/products/`;
 
@@ -10,7 +11,12 @@ interface Query {
   brandId?: string;
 }
 
-const getProducts = async (query: Query): Promise<Product[]> => {
+interface UseGetProductsReturn {
+  products: Response<Product[]> | undefined;
+  isError: any;
+}
+
+export const useGetProducts = (query: Query): UseGetProductsReturn => {
   const url = qs.stringifyUrl({
     url: URL,
     query: {
@@ -19,8 +25,12 @@ const getProducts = async (query: Query): Promise<Product[]> => {
     },
   });
 
-  const res = await axios.get(url);
-  return res.data.data;
-};
+  const { data, error } = useSWR<Response<Product[]>>(url, axiosFetcher, {
+    suspense: true,
+  });
 
-export default getProducts;
+  return {
+    products: data,
+    isError: error,
+  };
+};

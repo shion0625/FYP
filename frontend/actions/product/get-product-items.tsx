@@ -1,11 +1,15 @@
-"use client";
 import useSWR from "swr";
 import { axiosFetcher } from "@/actions/fecher";
-import { ProductItem, Response } from "@/types";
+import { Response, ProductItem } from "@/types";
 
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/products`;
 
-const useProductItems = (id: string) => {
+interface UseGetProductItemsReturn {
+  productItems: Response<ProductItem[]> | undefined;
+  isError: any;
+}
+
+export const useGetProductItems = (id: string): UseGetProductItemsReturn => {
   const { data, error } = useSWR<Response<ProductItem[]>>(
     `${URL}/${id}/items/`,
     axiosFetcher,
@@ -19,5 +23,3 @@ const useProductItems = (id: string) => {
     isError: error,
   };
 };
-
-export default useProductItems;
