@@ -4,7 +4,7 @@ import { getDynamicComponent } from "@/lib/dynamic-component";
 
 export const revalidate = 0;
 
-const DynamicLazyHome = getDynamicComponent("views/home");
+const DynamicLazyHome = getDynamicComponent("views/home", 8);
 
 const HomePage = () => {
   return (

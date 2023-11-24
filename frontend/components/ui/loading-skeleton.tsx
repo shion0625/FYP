@@ -1,23 +1,23 @@
 "use client";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import { SkeletonTheme } from "react-loading-skeleton";
+import { ProductCardListSkeleton } from "@/components/ui/skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 interface loadingSkeletonProps {
   baseColor?: string;
   highlightColor?: string;
   count?: number;
+  type?: "productCard" | "productCardItem";
 }
 const LoadingSkeleton: React.FC<loadingSkeletonProps> = ({
-  baseColor = "#202020",
-  highlightColor = "#444",
+  baseColor = "#ebebeb",
+  highlightColor = "#f5f5f5",
   count = 4,
+  type = "productCard",
 }) => {
-  console.log("loading");
   return (
     <SkeletonTheme baseColor={baseColor} highlightColor={highlightColor}>
-      <p>
-        <Skeleton count={count} />
-      </p>
+      {type == "productCard" && <ProductCardListSkeleton count={count} />}
     </SkeletonTheme>
   );
 };
