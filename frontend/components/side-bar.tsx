@@ -15,6 +15,7 @@ import { twMerge } from "tailwind-merge";
 import { Flowbite } from "flowbite-react";
 import { Category } from "@/types";
 import { usePathname } from "next/navigation";
+import useSidebar from "@/hooks/use-sidebar";
 
 interface SidebarProps {
   data: Category[];
@@ -22,6 +23,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ data }) => {
   const pathname = usePathname();
+  const sidebar = useSidebar();
   if (!data || data.length === 0) {
     return <div>No categories available</div>;
   }
@@ -59,57 +61,63 @@ const Sidebar: React.FC<SidebarProps> = ({ data }) => {
     },
   };
   return (
-    <Flowbite theme={{ theme: customTheme }}>
-      <SidebarFlow
-        aria-label="Sidebar with multi-level dropdown example"
-        className="z-10 absolute"
-      >
-        <SidebarFlow.Items>
-          <SidebarFlow.ItemGroup>
-            <SidebarFlow.Item href="#" icon={HiChartPie}>
-              Dashboard
-            </SidebarFlow.Item>
-            <SidebarFlow.Collapse
-              icon={HiShoppingBag}
-              label="Category"
-              renderChevronIcon={(theme, open) => {
-                const IconComponent = open ? HiOutlineMinusSm : HiOutlinePlusSm;
-
-                return (
-                  <IconComponent
-                    aria-hidden
-                    className={twMerge(
-                      theme?.label?.icon?.open?.[open ? "on" : "off"]
-                    )}
-                  />
-                );
-              }}
-            >
-              {categories.map((category) => (
-                <SidebarFlow.Item key={category.href} href={category.href}>
-                  {category.label}
+    <>
+      {sidebar.isOpen && (
+        <Flowbite theme={{ theme: customTheme }}>
+          <SidebarFlow
+            aria-label="Sidebar with multi-level dropdown example"
+            className="z-10 absolute"
+          >
+            <SidebarFlow.Items>
+              <SidebarFlow.ItemGroup>
+                <SidebarFlow.Item href="#" icon={HiChartPie}>
+                  Dashboard
                 </SidebarFlow.Item>
-              ))}
-            </SidebarFlow.Collapse>
-            <SidebarFlow.Item href="#" icon={HiInbox}>
-              Inbox
-            </SidebarFlow.Item>
-            <SidebarFlow.Item href="#" icon={HiUser}>
-              Users
-            </SidebarFlow.Item>
-            <SidebarFlow.Item href="#" icon={HiShoppingBag}>
-              Products
-            </SidebarFlow.Item>
-            <SidebarFlow.Item href="#" icon={HiArrowSmRight}>
-              Sign In
-            </SidebarFlow.Item>
-            <SidebarFlow.Item href="#" icon={HiTable}>
-              Sign Up
-            </SidebarFlow.Item>
-          </SidebarFlow.ItemGroup>
-        </SidebarFlow.Items>
-      </SidebarFlow>
-    </Flowbite>
+                <SidebarFlow.Collapse
+                  icon={HiShoppingBag}
+                  label="Category"
+                  renderChevronIcon={(theme, open) => {
+                    const IconComponent = open
+                      ? HiOutlineMinusSm
+                      : HiOutlinePlusSm;
+
+                    return (
+                      <IconComponent
+                        aria-hidden
+                        className={twMerge(
+                          theme?.label?.icon?.open?.[open ? "on" : "off"]
+                        )}
+                      />
+                    );
+                  }}
+                >
+                  {categories.map((category) => (
+                    <SidebarFlow.Item key={category.href} href={category.href}>
+                      {category.label}
+                    </SidebarFlow.Item>
+                  ))}
+                </SidebarFlow.Collapse>
+                <SidebarFlow.Item href="#" icon={HiInbox}>
+                  Inbox
+                </SidebarFlow.Item>
+                <SidebarFlow.Item href="#" icon={HiUser}>
+                  Users
+                </SidebarFlow.Item>
+                <SidebarFlow.Item href="#" icon={HiShoppingBag}>
+                  Products
+                </SidebarFlow.Item>
+                <SidebarFlow.Item href="#" icon={HiArrowSmRight}>
+                  Sign In
+                </SidebarFlow.Item>
+                <SidebarFlow.Item href="#" icon={HiTable}>
+                  Sign Up
+                </SidebarFlow.Item>
+              </SidebarFlow.ItemGroup>
+            </SidebarFlow.Items>
+          </SidebarFlow>
+        </Flowbite>
+      )}
+    </>
   );
 };
 
