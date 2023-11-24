@@ -5,7 +5,7 @@ import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import ModalProvider from "@/providers/modal-provider";
 import ToastProvider from "@/providers/toast-provider";
-import Sidebar from "@/components/side-bar";
+import Sidebar from "@/components/sidebar";
 import { getCategories } from "@/actions/category";
 
 import "./globals.css";
@@ -30,7 +30,7 @@ export default async function RootLayout({
         <ToastProvider />
         <ModalProvider />
         <Navbar />
-        <Sidebar data={categories} />
+        <Sidebar data={categories?.data} />
         {children}
         <Footer />
       </body>

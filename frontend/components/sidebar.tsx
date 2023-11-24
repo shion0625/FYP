@@ -18,7 +18,7 @@ import { usePathname } from "next/navigation";
 import useSidebar from "@/hooks/use-sidebar";
 
 interface SidebarProps {
-  data: Category[];
+  data?: Category[] | null;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ data }) => {

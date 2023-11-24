@@ -1,5 +1,4 @@
 "use client";
-
 import Container from "@/components/ui/container";
 import { getDynamicComponent } from "@/lib/dynamic-component";
 
