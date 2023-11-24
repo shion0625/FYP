@@ -29,6 +29,7 @@ const Currency: React.FC<CurrencyProps> = ({ value, discountPrice }) => {
               right: -10,
               color: "gray",
               textDecoration: "line-through",
+              fontSize: "80%",
             }}
           >
             {formatter.format(Number(value))}
