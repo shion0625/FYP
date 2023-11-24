@@ -58,17 +58,17 @@ type ProductItems struct {
 }
 
 type ProductItemsDB struct {
-	ID               uint      `json:"id"`
-	Name             string    `json:"name"`
-	ProductID        uint      `json:"productId"`
-	Price            uint      `json:"price"`
-	DiscountPrice    uint      `json:"discountPrice"`
-	SKU              string    `json:"sku"`
-	QtyInStock       uint      `json:"qtyInStock"`
-	CategoryName     string    `json:"categoryName"`
-	MainCategoryName string    `json:"mainCategoryName"`
-	BrandID          uint      `json:"brandId"`
-	BrandName        string    `json:"brandName"`
+	ID               uint     `json:"id"`
+	Name             string   `json:"name"`
+	ProductID        uint     `json:"productId"`
+	Price            uint     `json:"price"`
+	DiscountPrice    uint     `json:"discountPrice"`
+	SKU              string   `json:"sku"`
+	QtyInStock       uint     `json:"qtyInStock"`
+	CategoryName     string   `json:"categoryName"`
+	MainCategoryName string   `json:"mainCategoryName"`
+	BrandID          uint     `json:"brandId"`
+	BrandName        string   `json:"brandName"`
 	Images           []string `json:"images"`
 }
 

@@ -44,3 +44,10 @@ export interface ProductVariationValue {
   variationOptionId: number;
   value: string;
 }
+
+export interface Response<T> {
+  status: boolean;
+  message: string;
+  error?: any;
+  data: T | null;
+}

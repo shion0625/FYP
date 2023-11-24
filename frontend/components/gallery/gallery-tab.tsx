@@ -15,6 +15,7 @@ const GalleryTab: React.FC<GalleryTabProps> = ({ url }) => {
           <span className="absolute h-full w-full aspect-square inset-0 overflow-hidden rounded-md">
             <NextImage
               fill
+              sizes="(max-width: 600px) 100vw, 600px"
               src={url}
               alt=""
               className="object-cover object-center"

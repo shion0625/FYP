@@ -103,7 +103,7 @@ func (c *AuthHandler) UserSignUp(ctx echo.Context) error {
 	}
 
 	response.SuccessResponse(ctx, http.StatusCreated,
-		"Successfully account created")
+		"Successfully account created", nil)
 
 	return nil
 }

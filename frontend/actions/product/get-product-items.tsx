@@ -1,16 +1,23 @@
-import axios from "axios";
-import qs from "query-string";
-
-import { ProductItem } from "@/types";
+"use client";
+import useSWR from "swr";
+import { axiosFetcher } from "@/actions/fecher";
+import { ProductItem, Response } from "@/types";
 
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/products`;
 
-const getProductItems = async (id: string): Promise<ProductItem[]> => {
-  const res = await axios.get(`${URL}/${id}/items/`);
-  if (res?.data || res.data.data || res.data.data.length > 0) {
-    return [];
-  }
-  return res.data.data[0];
+const useProductItems = (id: string) => {
+  const { data, error } = useSWR<Response<ProductItem[]>>(
+    `${URL}/${id}/items/`,
+    axiosFetcher,
+    {
+      suspense: true,
+    }
+  );
+
+  return {
+    productItems: data,
+    isError: error,
+  };
 };
 
-export default getProductItems;
+export default useProductItems;

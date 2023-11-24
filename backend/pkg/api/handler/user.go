@@ -113,7 +113,7 @@ func (u *UserHandler) SaveAddress(ctx echo.Context) error {
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusCreated, "Successfully address saved")
+	response.SuccessResponse(ctx, http.StatusCreated, "Successfully address saved", nil)
 
 	return nil
 }
@@ -134,7 +134,7 @@ func (u *UserHandler) GetAllAddresses(ctx echo.Context) error {
 	}
 
 	if addresses == nil {
-		response.SuccessResponse(ctx, http.StatusOK, "No addresses found")
+		response.SuccessResponse(ctx, http.StatusOK, "No addresses found", nil)
 
 		return nil
 	}

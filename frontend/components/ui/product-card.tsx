@@ -46,6 +46,7 @@ const ProductCard: React.FC<ProductCard> = ({ data }) => {
         <NextImage
           src={data?.image}
           fill
+          sizes="(max-width: 600px) 100vw, 600px"
           alt="NextImage"
           className="aspect-square object-cover rounded-md"
         />

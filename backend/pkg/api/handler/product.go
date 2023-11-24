@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/jinzhu/copier"
@@ -68,7 +69,7 @@ func (p *ProductHandler) SaveCategory(ctx echo.Context) error {
 		return fmt.Errorf("SaveCategory error: %w", err)
 	}
 
-	response.SuccessResponse(ctx, http.StatusCreated, "Successfully added category")
+	response.SuccessResponse(ctx, http.StatusCreated, "Successfully added category", nil)
 
 	return nil
 }
@@ -104,7 +105,7 @@ func (p *ProductHandler) SaveVariation(ctx echo.Context) error {
 		return fmt.Errorf("SaveVariation error: %w", err)
 	}
 
-	response.SuccessResponse(ctx, http.StatusCreated, "Successfully added variations")
+	response.SuccessResponse(ctx, http.StatusCreated, "Successfully added variations", nil)
 
 	return nil
 }
@@ -139,7 +140,7 @@ func (p *ProductHandler) SaveVariationOption(ctx echo.Context) error {
 		return fmt.Errorf("SaveVariationOption error: %w", err)
 	}
 
-	response.SuccessResponse(ctx, http.StatusCreated, "Successfully added variation options")
+	response.SuccessResponse(ctx, http.StatusCreated, "Successfully added variation options", nil)
 
 	return nil
 }
@@ -162,7 +163,7 @@ func (c *ProductHandler) GetAllVariations(ctx echo.Context) error {
 	}
 
 	if len(variations) == 0 {
-		response.SuccessResponse(ctx, http.StatusOK, "No variations found")
+		response.SuccessResponse(ctx, http.StatusOK, "No variations found", nil)
 
 		return nil
 	}
@@ -193,7 +194,7 @@ func (p *ProductHandler) SaveProduct(ctx echo.Context) error {
 		return fmt.Errorf("SaveProduct error: %w", err)
 	}
 
-	response.SuccessResponse(ctx, http.StatusCreated, "Successfully product added")
+	response.SuccessResponse(ctx, http.StatusCreated, "Successfully product added", nil)
 
 	return nil
 }
@@ -371,10 +372,12 @@ func (p *ProductHandler) getAllProductItems() func(ctx echo.Context) error {
 
 		// check the product have productItem exist or not
 		if len(productItems) == 0 {
-			response.SuccessResponse(ctx, http.StatusOK, "No product items found")
+			response.SuccessResponse(ctx, http.StatusOK, "No product items found", nil)
 
 			return nil
 		}
+
+		log.Print(productItems)
 
 		response.SuccessResponse(ctx, http.StatusOK, "Successfully get all product items ", productItems)
 

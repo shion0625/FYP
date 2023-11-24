@@ -20,7 +20,7 @@ const getProducts = async (query: Query): Promise<Product[]> => {
   });
 
   const res = await axios.get(url);
-  return res.data.data[0];
+  return res.data.data;
 };
 
 export default getProducts;

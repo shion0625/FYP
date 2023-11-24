@@ -5,5 +5,5 @@ const URL = `${process.env.NEXT_PUBLIC_API_URL}/categories/`;
 
 export const getCategories = async (): Promise<Category[]> => {
   const res = await axios.get(URL);
-  return res.data.data[0];
+  return res.data.data;
 };
