@@ -60,7 +60,10 @@ const Sidebar: React.FC<SidebarProps> = ({ data }) => {
   };
   return (
     <Flowbite theme={{ theme: customTheme }}>
-      <SidebarFlow aria-label="Sidebar with multi-level dropdown example">
+      <SidebarFlow
+        aria-label="Sidebar with multi-level dropdown example"
+        className="z-10 absolute"
+      >
         <SidebarFlow.Items>
           <SidebarFlow.ItemGroup>
             <SidebarFlow.Item href="#" icon={HiChartPie}>
