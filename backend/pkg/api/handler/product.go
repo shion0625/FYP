@@ -3,7 +3,6 @@ package handler
 import (
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/jinzhu/copier"
@@ -377,7 +376,6 @@ func (p *ProductHandler) getAllProductItems() func(ctx echo.Context) error {
 			return nil
 		}
 
-		log.Print(productItems)
 
 		response.SuccessResponse(ctx, http.StatusOK, "Successfully get all product items ", productItems)
 

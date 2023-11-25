@@ -45,6 +45,7 @@ type ProductItems struct {
 	ID               uint                    `json:"id"`
 	Name             string                  `json:"name"`
 	ProductID        uint                    `json:"productId"`
+	ItemName         string                  `json:"itemName"`
 	Price            uint                    `json:"price"`
 	DiscountPrice    uint                    `json:"discountPrice"`
 	SKU              string                  `json:"sku"`
@@ -61,6 +62,7 @@ type ProductItemsDB struct {
 	ID               uint     `json:"id"`
 	Name             string   `json:"name"`
 	ProductID        uint     `json:"productId"`
+	ItemName         string   `json:"itemName"`
 	Price            uint     `json:"price"`
 	DiscountPrice    uint     `json:"discountPrice"`
 	SKU              string   `json:"sku"`

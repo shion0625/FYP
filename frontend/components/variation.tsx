@@ -1,28 +1,32 @@
+import { ProductVariationValue } from "@/types";
+
 interface VariationProps {
   name: string;
-  values: string[];
-  selectedValue: string | null;
-  onSelect: (value: string) => void;
+  productVariationValues: ProductVariationValue[];
+  selectedValue: ProductVariationValue | null;
+  onSelect: (value: ProductVariationValue) => void;
 }
 
 const Variation: React.FC<VariationProps> = ({
   name,
-  values,
+  productVariationValues,
   selectedValue,
   onSelect,
 }) => (
   <div>
     <h4>{name}</h4>
     <div className="flex flex-wrap">
-      {values.map((value, i) => (
+      {productVariationValues.map((productVariationValue, i) => (
         <p
           key={i}
           className={`mr-2 p-2 rounded-full border ${
-            selectedValue === value ? "bg-blue-500 text-white" : "bg-white"
+            selectedValue?.value === productVariationValue.value
+              ? "bg-blue-500 text-white"
+              : "bg-white"
           }`}
-          onClick={() => onSelect(value)}
+          onClick={() => onSelect(productVariationValue)}
         >
-          {value}
+          {productVariationValue.value}
         </p>
       ))}
     </div>

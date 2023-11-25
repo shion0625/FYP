@@ -231,7 +231,7 @@ func (c *productDatabase) FindAllProductItems(ctx echo.Context,
 ) (productItems []response.ProductItemsDB, err error) {
 	// first find all product_items
 	err = c.DB.Table("product_items pi").
-		Select("p.name, pi.id,  pi.product_id, pi.price, pi.discount_price, pi.qty_in_stock, pi.sku, p.category_id, sc.name AS category_name, p.brand_id, b.name AS brand_name").
+		Select("p.name, pi.id,  pi.product_id,pi.name AS item_name, pi.price, pi.discount_price, pi.qty_in_stock, pi.sku, p.category_id, sc.name AS category_name, p.brand_id, b.name AS brand_name").
 		Joins("INNER JOIN products p ON p.id = pi.product_id").
 		Joins("INNER JOIN categories sc ON p.category_id = sc.id").
 		Joins("INNER JOIN brands b ON b.id = p.brand_id").

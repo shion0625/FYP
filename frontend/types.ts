@@ -26,6 +26,7 @@ export interface ProductItem {
   id: number;
   name: string;
   productId: number;
+  itemName: string;
   price: number;
   discountPrice: number;
   sku: string;

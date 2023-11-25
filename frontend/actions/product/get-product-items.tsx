@@ -9,7 +9,7 @@ interface UseGetProductItemsReturn {
   isError: any;
 }
 
-export const useGetProductItems = (id: string): UseGetProductItemsReturn => {
+export const useGetProductItems = (id: number): UseGetProductItemsReturn => {
   const { data, error } = useSWR<Response<ProductItem[]>>(
     `${URL}/${id}/items/`,
     axiosFetcher,

@@ -47,6 +47,7 @@ func CreateProductDomain(db *gorm.DB, options ...func(*domain.User)) error {
 
 	productItem := domain.ProductItem{
 		ProductID:  product.ID,
+		Name:       gofakeit.AppName(),
 		Product:    product,
 		QtyInStock: uint(gofakeit.Number(1, MaxQtyInStock)),
 		Price:      uint(gofakeit.Price(1, MaxPrice)),

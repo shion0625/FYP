@@ -45,13 +45,15 @@ const ProductItemCard: React.FC<ProductItemCardProps> = ({ data }) => {
           </div>
         </div>
       </div>
-      {/* Price */}
-      <div className="text-gray-500 ml-2">
-        <Currency value={data?.price} discountPrice={data.discountPrice} />
+      {/* Name */}
+      <div>
+        <h2 className="text-lg text-stone-800">{data.itemName}</h2>
       </div>
+      {/* Price */}
+        <Currency value={data?.price} discountPrice={data.discountPrice} />
       {/* Description */}
       <div>
-        <p className="text-sm text-gray-500">在庫: {data.qtyInStock}</p>
+        <p className="text-sm text-gray-500">stock: {data.qtyInStock}</p>
       </div>
     </div>
   );

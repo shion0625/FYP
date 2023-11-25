@@ -23,6 +23,7 @@ type ProductItem struct {
 	ID            uint      `gorm:"primaryKey;not null" json:"id"`
 	ProductID     uint      `binding:"required,numeric" gorm:"not null"  json:"productId"`
 	Product       Product   `json:"-"`
+	Name          string    `gorm:"unique;not null"     json:"name"`
 	QtyInStock    uint      `binding:"required,numeric" gorm:"not null"  json:"qtyInStock"`
 	Price         uint      `binding:"required,numeric" gorm:"not null"  json:"price"`
 	SKU           string    `gorm:"unique;not null"     json:"sku"`

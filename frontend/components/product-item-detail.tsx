@@ -1,6 +1,6 @@
 "use client";
 
-import { ProductItem } from "@/types";
+import { ProductItem, ProductVariationValue } from "@/types";
 import Currency from "@/components/ui/currency";
 import Button from "@/components/ui/button";
 import { useGetProductItems } from "@/actions/product";
@@ -25,30 +25,30 @@ const ProductItemDetail: React.FC<ProductItemDetailProps> = ({ data }) => {
   // valueのmap配列(keyがname)
   const valuesMap = useMemo(
     () =>
-      data.variationValues.reduce((acc: { [key: string]: string[] }, curr) => {
-        if (!acc[curr.name]) {
-          acc[curr.name] = [];
-        }
-        acc[curr.name].push(curr.value);
-        return acc;
-      }, {}),
+      data.variationValues.reduce(
+        (acc: { [key: string]: ProductVariationValue[] }, curr) => {
+          if (!acc[curr.name]) {
+            acc[curr.name] = [];
+          }
+          acc[curr.name].push(curr);
+          return acc;
+        },
+        {}
+      ),
     [data.variationValues]
   );
 
   // 選択された値を追跡するためのstate
   const [selectedValues, setSelectedValues] = useState<{
-    [key: string]: string | null;
+    [key: string]: ProductVariationValue | null;
   }>({});
 
   return (
     <div>
       <div className="mt-3 flex items-end justify-between">
-        <h2 className="text-3xl font-bold text-gray-900">{data.name}</h2>
+        <h2 className="text-3xl font-bold text-gray-900">{data.itemName}</h2>
         <div className="text-2xl text-gray-900">
-          <Currency
-            value={data?.price}
-            discountPrice={data?.discountPrice}
-          />
+          <Currency value={data?.price} discountPrice={data?.discountPrice} />
         </div>
       </div>
       <hr className="my-4" />
@@ -58,7 +58,7 @@ const ProductItemDetail: React.FC<ProductItemDetailProps> = ({ data }) => {
           <Variation
             key={index}
             name={name}
-            values={valuesMap[name]}
+            productVariationValues={valuesMap[name]}
             selectedValue={selectedValues[name]}
             onSelect={(value) =>
               setSelectedValues((prev) => ({ ...prev, [name]: value }))

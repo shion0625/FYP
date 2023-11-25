@@ -353,7 +353,7 @@ func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) (
 		completeProductItems[i] = response.ProductItems{
 			ID:               item.ID,
 			Name:             item.Name,
-			ProductID:        item.ProductID,
+			ItemName:         item.ItemName,
 			Price:            item.Price,
 			DiscountPrice:    item.DiscountPrice,
 			SKU:              item.SKU,
