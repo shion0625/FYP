@@ -2,7 +2,7 @@
 
 import Container from "@/components/ui/container";
 import { getDynamicComponent } from "@/lib/dynamic-component";
-import { ProductCardListSkeleton } from "@/components/ui/skeleton";
+import LoadingSkeleton from "@/components/ui/loading-skeleton";
 
 interface ProductPageProps {
   params: {
@@ -12,7 +12,8 @@ interface ProductPageProps {
 
 const DynamicLazyProductID = getDynamicComponent<ProductPageProps["params"]>(
   "views/productID",
-  8
+  8,
+  "productCardItem"
 );
 
 const ProductPage: React.FC<ProductPageProps> = ({ params }) => {
