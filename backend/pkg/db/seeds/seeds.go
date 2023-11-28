@@ -7,9 +7,9 @@ import (
 )
 
 const (
-	UserCount    = 5
-	ProductCount = 5
-	AuthCount    = 5
+	UserCount    = 15
+	ProductCount = 15
+	AuthCount    = 15
 )
 
 // You can add the specified seed here.

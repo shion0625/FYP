@@ -2,47 +2,39 @@
 
 import { ProductItem, ProductVariationValue } from "@/types";
 import Currency from "@/components/ui/currency";
-import Button from "@/components/ui/button";
+import usePreviewModal from "@/hooks/use-preview-modal";
+
 import { useGetProductItems } from "@/actions/product";
 import NoResults from "@/components/ui/no-results";
 import { toast } from "react-hot-toast";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Variation from "@/components/variation";
 
 export const revalidate = 0;
 
 interface ProductItemDetailProps {
   data: ProductItem;
+  names: string[];
+  variationsMap: {
+    [key: string]: ProductVariationValue[];
+  };
+  selectedValues: {
+    [key: string]: ProductVariationValue | null;
+  };
+  setSelectedValues: React.Dispatch<
+    React.SetStateAction<{
+      [key: string]: ProductVariationValue | null;
+    }>
+  >;
 }
 
-const ProductItemDetail: React.FC<ProductItemDetailProps> = ({ data }) => {
-  // nameの配列（重複なし）
-  const names = useMemo(
-    () => Array.from(new Set(data.variationValues.map((item) => item.name))),
-    [data.variationValues]
-  );
-
-  // valueのmap配列(keyがname)
-  const valuesMap = useMemo(
-    () =>
-      data.variationValues.reduce(
-        (acc: { [key: string]: ProductVariationValue[] }, curr) => {
-          if (!acc[curr.name]) {
-            acc[curr.name] = [];
-          }
-          acc[curr.name].push(curr);
-          return acc;
-        },
-        {}
-      ),
-    [data.variationValues]
-  );
-
-  // 選択された値を追跡するためのstate
-  const [selectedValues, setSelectedValues] = useState<{
-    [key: string]: ProductVariationValue | null;
-  }>({});
-
+const ProductItemDetail: React.FC<ProductItemDetailProps> = ({
+  data,
+  names,
+  variationsMap,
+  selectedValues,
+  setSelectedValues,
+}) => {
   return (
     <div>
       <div className="mt-3 flex items-end justify-between">
@@ -58,7 +50,7 @@ const ProductItemDetail: React.FC<ProductItemDetailProps> = ({ data }) => {
           <Variation
             key={index}
             name={name}
-            productVariationValues={valuesMap[name]}
+            productVariationValues={variationsMap[name]}
             selectedValue={selectedValues[name]}
             onSelect={(value) =>
               setSelectedValues((prev) => ({ ...prev, [name]: value }))

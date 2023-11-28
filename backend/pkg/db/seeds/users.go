@@ -25,7 +25,7 @@ func CreateUserDomain(db *gorm.DB, options ...func(*domain.User)) error {
 	user := domain.User{
 		ID:          gofakeit.UUID(),
 		Age:         uint(gofakeit.Number(MinAge, MaxAge)),
-		GoogleImage: gofakeit.ImageURL(ImageSize, ImageSize),
+		GoogleImage: "109.jpeg",
 		FirstName:   gofakeit.FirstName(),
 		LastName:    gofakeit.LastName(),
 		UserName:    gofakeit.Username(),

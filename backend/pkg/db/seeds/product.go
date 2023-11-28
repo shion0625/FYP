@@ -39,7 +39,7 @@ func CreateProductDomain(db *gorm.DB, options ...func(*domain.User)) error {
 		BrandID:     brand.ID,
 		Brand:       brand,
 		Price:       uint(gofakeit.Price(1, MaxPrice)),
-		Image:       gofakeit.ImageURL(ImageSize, ImageSize),
+		Image:       "109.jpeg",
 	}
 	if err := db.Create(&product).Error; err != nil {
 		return err
@@ -88,7 +88,7 @@ func CreateProductDomain(db *gorm.DB, options ...func(*domain.User)) error {
 	productImage := domain.ProductImage{
 		ProductItemID: productItem.ID,
 		ProductItem:   productItem,
-		Image:         gofakeit.ImageURL(ImageSize, ImageSize),
+		Image:         "109.jpeg",
 	}
 	if err := db.Create(&productImage).Error; err != nil {
 		return err

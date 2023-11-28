@@ -1,10 +1,11 @@
 import { create } from "zustand";
 
-import { ProductItem } from "@/types";
+import { ProductItem, ProductVariationValue } from "@/types";
 
 interface PreviewModalStore {
   isOpen: boolean;
   data?: ProductItem;
+  updateItem: (data: ProductItem) => void;
   onOpen: (data: ProductItem) => void;
   onClose: () => void;
 }
@@ -12,6 +13,7 @@ interface PreviewModalStore {
 const usePreviewModal = create<PreviewModalStore>((set) => ({
   isOpen: false,
   data: undefined,
+  updateItem: (data: ProductItem) => set({ data }),
   onOpen: (data: ProductItem) => set({ isOpen: true, data }),
   onClose: () => set({ isOpen: false }),
 }));
