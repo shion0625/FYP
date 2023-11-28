@@ -16,11 +16,6 @@ const PreviewModal = () => {
   const productItem = usePreviewModal((state) => state.data);
   const cart = useCart();
 
-  // 選択された値を追跡するためのstate
-  const [selectedValues, setSelectedValues] = useState<{
-    [key: string]: ProductVariationValue | null;
-  }>({});
-
   // nameの配列（重複なし）
   const names = useMemo(
     () =>
@@ -47,6 +42,20 @@ const PreviewModal = () => {
       ) || {},
     [productItem?.variationValues]
   );
+  // 選択された値を追跡するためのstate
+  const [selectedValues, setSelectedValues] = useState<{
+    [key: string]: ProductVariationValue | null;
+  }>({});
+
+  // useEffectを使用して、valuesMapが更新されたときにselectedValuesを更新します
+  useEffect(() => {
+    const initialSelectedValues = Object.keys(valuesMap).reduce((acc, key) => {
+      acc[key] = valuesMap[key][0] || null;
+      return acc;
+    }, {} as { [key: string]: ProductVariationValue | null });
+
+    setSelectedValues(initialSelectedValues);
+  }, [valuesMap]);
 
   // selectedValuesを配列に変換
   const selectedValuesArray = useMemo(
