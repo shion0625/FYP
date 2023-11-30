@@ -376,7 +376,6 @@ func (p *ProductHandler) getAllProductItems() func(ctx echo.Context) error {
 			return nil
 		}
 
-
 		response.SuccessResponse(ctx, http.StatusOK, "Successfully get all product items ", productItems)
 
 		return nil

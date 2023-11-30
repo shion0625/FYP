@@ -49,3 +49,12 @@ type Country struct {
 	ID          uint   `gorm:"primaryKey;unique;" json:"id"`
 	CountryName string `gorm:"unique;not null"    json:"countryName"`
 }
+
+type PaymentMethod struct {
+	ID           uint      `gorm:"primaryKey;not null" json:"id"`
+	CreditNumber string    `gorm:"unique;not null"     json:"creditNumber"`
+	Cvv          int       `gorm:"unique;not null"     json:"cvv"`
+	UserId       uint      `binding:"required,string"  gorm:"not null"     json:"userId"`
+	CreatedAt    time.Time `gorm:"not null"            json:"createdAt"`
+	UpdatedAt    time.Time `json:"updatedAt"`
+}

@@ -23,7 +23,7 @@ type Config struct {
 	UserAuthKey        string `env:"USER_AUTH_KEY"        envDefault:"hoge_test"`
 	GcpBucketName      string `env:"GCP_BUCKET_NAME"      envDefault:"hoge_test"`
 	CredentialsFile    string `env:"GCP_CREDENTIALS_File" envDefault:"hoge_test"`
-	GcpServiceAccount  string `env:"GCP_SERVICE_ACCOUNT" envDefault:"hoge_test"`
+	GcpServiceAccount  string `env:"GCP_SERVICE_ACCOUNT"  envDefault:"hoge_test"`
 }
 
 func LoadConfig() (cfg *Config, err error) {

@@ -9,22 +9,8 @@ import (
 func UserRoutes(api *echo.Group, middleware middleware.Middleware, authHandler handlerInterfaces.AuthHandler,
 	userHandler handlerInterfaces.UserHandler,
 	productHandler handlerInterfaces.ProductHandler,
+	orderHandler handlerInterfaces.OrderHandler,
 ) {
-	auth := api.Group("/auth")
-	{
-		signup := auth.Group("/sign-up")
-		{
-			signup.POST("/", authHandler.UserSignUp)
-			// signup.POST("/verify", authHandler.UserSignUpVerify)
-		}
-
-		login := auth.Group("/login")
-		{
-			login.POST("/", authHandler.UserLogin)
-			// login.POST("/otp/send", authHandler.UserLoginOtpSend)
-			// login.POST("/otp/verify", authHandler.UserLoginOtpVerify)
-		}
-	}
 	// product
 	product := api.Group("/products")
 	{
@@ -43,6 +29,22 @@ func UserRoutes(api *echo.Group, middleware middleware.Middleware, authHandler h
 		category.GET("/", productHandler.GetAllCategories)
 	}
 
+	auth := api.Group("/auth")
+	{
+		signup := auth.Group("/sign-up")
+		{
+			signup.POST("/", authHandler.UserSignUp)
+			// signup.POST("/verify", authHandler.UserSignUpVerify)
+		}
+
+		login := auth.Group("/login")
+		{
+			login.POST("/", authHandler.UserLogin)
+			// login.POST("/otp/send", authHandler.UserLoginOtpSend)
+			// login.POST("/otp/verify", authHandler.UserLoginOtpVerify)
+		}
+	}
+
 	api.Use(middleware.AuthenticateUser)
 	{
 		// profile
@@ -55,6 +57,12 @@ func UserRoutes(api *echo.Group, middleware middleware.Middleware, authHandler h
 			account.POST("/address", userHandler.SaveAddress)    // to add a new address
 			account.PUT("/address", userHandler.UpdateAddress)   // to edit address
 			// account.DELETE("/address", userHandler.DeleteAddress)
+		}
+
+		// order
+		order := api.Group("/order")
+		{
+			order.POST("/purchase", orderHandler.PayOrder)
 		}
 	}
 }

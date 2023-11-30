@@ -22,6 +22,7 @@ func NewServerHTTP(
 	authHandler handlerInterfaces.AuthHandler,
 	userHandler handlerInterfaces.UserHandler,
 	productHandler handlerInterfaces.ProductHandler,
+	orderHandler handlerInterfaces.OrderHandler,
 ) *ServerHTTP {
 	engine := echo.New()
 
@@ -43,7 +44,7 @@ func NewServerHTTP(
 	}))
 	engine.Use(apiMiddleware.Context)
 
-	router.UserRoutes(engine.Group("/api"), apiMiddleware, authHandler, userHandler, productHandler)
+	router.UserRoutes(engine.Group("/api"), apiMiddleware, authHandler, userHandler, productHandler, orderHandler)
 
 	return &ServerHTTP{Engine: engine}
 }

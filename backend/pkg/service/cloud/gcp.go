@@ -84,7 +84,6 @@ func (c *gcpService) GetFileUrl(ctx echo.Context, uploadID string) (string, erro
 		Method:         http.MethodGet,
 		Expires:        time.Now().Add(filePreSignExpireDuration),
 	})
-
 	if err != nil {
 		return "", fmt.Errorf("failed to sign url: %w", err)
 	}

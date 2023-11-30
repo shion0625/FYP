@@ -31,16 +31,19 @@ func InitializeApi(cfg *config.Config) (*http.ServerHTTP, error) {
 		repository.NewUserRepository,
 		repository.NewAuthRepository,
 		repository.NewProductRepository,
+		repository.NewOrderRepository,
 
 		//usecase
 		usecase.NewAuthUseCase,
 		usecase.NewUserUseCase,
 		usecase.NewProductUseCase,
+		usecase.NewOrderUseCase,
 
 		//handler
 		handler.NewAuthHandler,
 		handler.NewUserHandler,
 		handler.NewProductHandler,
+		handler.NewOrderHandler,
 
 		// server
 		http.NewServerHTTP,

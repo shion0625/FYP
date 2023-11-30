@@ -157,7 +157,6 @@ func (p *productUseCase) GetProduct(ctx echo.Context, productID uint) (response.
 	}
 
 	url, err := p.cloudService.GetFileUrl(ctx, product.Image)
-
 	if err != nil {
 		return response.Product{}, fmt.Errorf("failed to get image url from could service: %w", err)
 	}
@@ -409,6 +408,7 @@ func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) (
 
 				for j := range images {
 					fmt.Println(images[j])
+
 					url, err := p.cloudService.GetFileUrl(ctx, images[j])
 					if err != nil {
 						errChan <- fmt.Errorf("failed to get image url from could service: %w", err)

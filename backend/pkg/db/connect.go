@@ -29,6 +29,7 @@ func ConnectDatabase(cfg *config.Config) (*gorm.DB, error) {
 		domain.Country{},
 		domain.Address{},
 		domain.UserAddress{},
+		domain.PaymentMethod{},
 
 		// product
 		domain.Product{},
@@ -43,6 +44,11 @@ func ConnectDatabase(cfg *config.Config) (*gorm.DB, error) {
 		// offer
 		domain.Offer{},
 		domain.OfferProduct{},
+
+		// order
+		domain.ShopOrder{},
+		domain.ShopOrderProductItem{},
+		domain.ShopOrderVariation{},
 	)
 
 	if err != nil {

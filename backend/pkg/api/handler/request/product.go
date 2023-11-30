@@ -23,12 +23,12 @@ type UpdateProduct struct {
 
 // for a new productItem.
 type ProductItem struct {
-	Name               string                  `binding:"required,min=3,max=50"   json:"name"`
-	Price              uint                    `binding:"required,min=1" json:"price"`
-	VariationOptionIDs []uint                  `binding:"required,gte=1" json:"variationOptionIDs"`
-	QtyInStock         uint                    `binding:"required,min=1" json:"qtyInStock"`
+	Name               string                  `binding:"required,min=3,max=50" json:"name"`
+	Price              uint                    `binding:"required,min=1"        json:"price"`
+	VariationOptionIDs []uint                  `binding:"required,gte=1"        json:"variationOptionIDs"`
+	QtyInStock         uint                    `binding:"required,min=1"        json:"qtyInStock"`
 	SKU                string                  `json:"-"`
-	ImageFileHeaders   []*multipart.FileHeader `binding:"required,gte=1" json:"imageFileHeaders"`
+	ImageFileHeaders   []*multipart.FileHeader `binding:"required,gte=1"        json:"imageFileHeaders"`
 }
 
 type Variation struct {

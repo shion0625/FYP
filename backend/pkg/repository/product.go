@@ -159,7 +159,7 @@ func (c *productDatabase) UpdateProduct(ctx echo.Context, product domain.Product
 // get all products from database.
 func (c *productDatabase) FindAllProducts(ctx echo.Context, pagination request.Pagination, categoryID *uint, brandID *uint) (products []response.Product, err error) {
 	limit := int(pagination.Count)
-	offset := int((int(pagination.PageNumber) - 1) * limit)
+	offset := (int(pagination.PageNumber) - 1) * limit
 
 	db := c.DB.Table("products p").
 		Select("p.id, p.name, p.description, p.price, p.discount_price, p.image, p.category_id, sc.name AS category_name, p.brand_id, b.name AS brand_name, p.created_at, p.updated_at").
