@@ -76,6 +76,18 @@ func CreateUserDomain(db *gorm.DB, options ...func(*domain.User)) error {
 		return err
 	}
 
+	// PaymentMethod domain
+	paymentMethod := domain.PaymentMethod{
+		CreditNumber: gofakeit.CreditCardNumber(nil),
+		Cvv:          gofakeit.CreditCardCvv(),
+		UserId:       user.ID,
+		CreatedAt:    gofakeit.Date(),
+		UpdatedAt:    gofakeit.Date(),
+	}
+
+	if err := db.Create(&paymentMethod).Error; err != nil {
+		return err
+	}
 	// auth domain
 	refreshSession := domain.RefreshSession{
 		TokenID:      gofakeit.UUID(),
