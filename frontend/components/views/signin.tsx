@@ -9,10 +9,11 @@ import {
 } from "react-icons/hi";
 import { useRef } from "react";
 import Link from "next/link";
+import { UseSignIn } from "@/actions/user";
 
 const SignInView = () => {
   const signInRef = useRef({
-    username: "",
+    userName: "",
     firstName: "",
     lastName: "",
     age: "",
@@ -22,10 +23,16 @@ const SignInView = () => {
     confirmPassword: "",
   });
 
+  const { signIn } = UseSignIn();
+
   const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const values = signInRef.current;
-    console.log(values);
+    const response = await signIn({
+      ...values,
+      age: parseInt(values.age),
+    });
+    console.log(response);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,9 +69,9 @@ const SignInView = () => {
         </div>
         <div className="grid grid-cols-4 gap-4 mb-3">
           <div className="block col-span-3">
-            <Label htmlFor="username" value="Username" />
+            <Label htmlFor="userName" value="Username" />
             <TextInput
-              id="username"
+              id="userName"
               type="text"
               icon={HiUser}
               placeholder="Username"

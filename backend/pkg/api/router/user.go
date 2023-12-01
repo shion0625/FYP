@@ -31,10 +31,10 @@ func UserRoutes(api *echo.Group, middleware middleware.Middleware, authHandler h
 
 	auth := api.Group("/auth")
 	{
-		signup := auth.Group("/sign-up")
+		signup := auth.Group("/sign-in")
 		{
 			signup.POST("/", authHandler.UserSignUp)
-			// signup.POST("/verify", authHandler.UserSignUpVerify)
+			signup.GET("/", productHandler.GetAllCategories)
 		}
 
 		login := auth.Group("/login")
