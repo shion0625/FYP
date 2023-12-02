@@ -56,6 +56,12 @@ func (p *ProductHandler) SaveCategory(ctx echo.Context) error {
 		return fmt.Errorf("Bind error: %w", err)
 	}
 
+	if err := ctx.Validate(body); err != nil {
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+		return nil
+	}
+
 	err := p.productUseCase.SaveCategory(ctx, body.Name)
 	if err != nil {
 		statusCode := http.StatusInternalServerError
@@ -89,6 +95,12 @@ func (p *ProductHandler) SaveVariation(ctx echo.Context) error {
 		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
 
 		return fmt.Errorf("Bind error: %w", err)
+	}
+
+	if err := ctx.Validate(body); err != nil {
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+		return nil
 	}
 
 	err = p.productUseCase.SaveVariation(ctx, categoryID, body.Names)
@@ -125,6 +137,12 @@ func (p *ProductHandler) SaveVariationOption(ctx echo.Context) error {
 		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
 
 		return fmt.Errorf("Bind error: %w", err)
+	}
+
+	if err := ctx.Validate(body); err != nil {
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+		return nil
 	}
 
 	err = p.productUseCase.SaveVariationOption(ctx, variationID, body.Values)
@@ -173,15 +191,21 @@ func (c *ProductHandler) GetAllVariations(ctx echo.Context) error {
 }
 
 func (p *ProductHandler) SaveProduct(ctx echo.Context) error {
-	var product request.Product
+	var body request.Product
 
-	if err := ctx.Bind(&product); err != nil {
+	if err := ctx.Bind(&body); err != nil {
 		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
 
 		return fmt.Errorf("Bind error: %w", err)
 	}
 
-	err := p.productUseCase.SaveProduct(ctx, product)
+	if err := ctx.Validate(body); err != nil {
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+		return nil
+	}
+
+	err := p.productUseCase.SaveProduct(ctx, body)
 	if err != nil {
 		statusCode := http.StatusInternalServerError
 		if errors.Is(err, usecase.ErrProductAlreadyExist) {
@@ -275,6 +299,12 @@ func (c *ProductHandler) UpdateProduct(ctx echo.Context) error {
 		return fmt.Errorf("Bind error: %w", err)
 	}
 
+	if err := ctx.Validate(body); err != nil {
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+		return nil
+	}
+
 	var product domain.Product
 	if err := copier.Copy(&product, &body); err != nil {
 		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to copy product data", err, nil)
@@ -308,17 +338,21 @@ func (p *ProductHandler) SaveProductItem(ctx echo.Context) error {
 		return fmt.Errorf("ParseStringToUint32 error: %w", err)
 	}
 
-	var productItem request.ProductItem
+	var body request.ProductItem
 
-	if err := ctx.Bind(&productItem); err != nil {
+	if err := ctx.Bind(&body); err != nil {
 		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
 
 		return fmt.Errorf("Bind error: %w", err)
 	}
 
-	fmt.Println(productItem, productID)
+	if err := ctx.Validate(body); err != nil {
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
 
-	err = p.productUseCase.SaveProductItem(ctx, productID, productItem)
+		return nil
+	}
+
+	err = p.productUseCase.SaveProductItem(ctx, productID, body)
 
 	if err != nil {
 		var statusCode int

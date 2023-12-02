@@ -59,6 +59,12 @@ func (u *UserHandler) UpdateProfile(ctx echo.Context) error {
 		return nil
 	}
 
+	if err := ctx.Validate(body); err != nil {
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+		return nil
+	}
+
 	var user domain.User
 	if err := copier.Copy(&user, &body); err != nil {
 		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to copy user data", err, nil)
@@ -83,6 +89,12 @@ func (u *UserHandler) SaveAddress(ctx echo.Context) error {
 	var body request.Address
 	if err := ctx.Bind(&body); err != nil {
 		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
+
+		return nil
+	}
+
+	if err := ctx.Validate(body); err != nil {
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
 
 		return nil
 	}
@@ -156,6 +168,12 @@ func (u *UserHandler) UpdateAddress(ctx echo.Context) error {
 
 	if err := ctx.Bind(&body); err != nil {
 		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
+
+		return nil
+	}
+
+	if err := ctx.Validate(body); err != nil {
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
 
 		return nil
 	}

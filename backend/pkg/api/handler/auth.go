@@ -42,6 +42,12 @@ func (a *AuthHandler) UserLogin(ctx echo.Context) error {
 		return nil
 	}
 
+	if err := ctx.Validate(body); err != nil {
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+		return nil
+	}
+
 	userID, err := a.authUseCase.UserLogin(ctx, body)
 	if err != nil {
 		var statusCode int
@@ -79,6 +85,12 @@ func (c *AuthHandler) UserSignUp(ctx echo.Context) error {
 
 	if err := ctx.Bind(&body); err != nil {
 		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, body)
+
+		return nil
+	}
+
+	if err := ctx.Validate(body); err != nil {
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
 
 		return nil
 	}

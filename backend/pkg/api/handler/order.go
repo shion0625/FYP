@@ -22,14 +22,20 @@ func NewOrderHandler(orderUsecase usecaseInterface.OrderUseCase) interfaces.Orde
 }
 
 func (o *OrderHandler) PayOrder(ctx echo.Context) error {
-	var payOrder request.PayOrder
-	if err := ctx.Bind(&payOrder); err != nil {
+	var body request.PayOrder
+	if err := ctx.Bind(&body); err != nil {
 		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
 
 		return fmt.Errorf("Bind error: %w", err)
 	}
 
-	if err := o.orderUseCase.PayOrder(ctx, payOrder); err != nil {
+	if err := ctx.Validate(body); err != nil {
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+		return nil
+	}
+
+	if err := o.orderUseCase.PayOrder(ctx, body); err != nil {
 		return fmt.Errorf("failed to PayOrder: %w", err)
 	}
 
