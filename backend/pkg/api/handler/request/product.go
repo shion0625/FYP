@@ -4,45 +4,45 @@ import "mime/multipart"
 
 // for a new product.
 type Product struct {
-	Name            string `binding:"required,min=3,max=50"   json:"name"`
-	Description     string `binding:"required,min=10,max=100" json:"description"`
-	CategoryID      uint   `binding:"required"                json:"categoryId"`
-	BrandID         uint   `binding:"required"                json:"brandId"`
-	Price           uint   `binding:"required,numeric"        json:"price"`
+	Name            string `json:"name"        validate:"required,min=3,max=50"`
+	Description     string `json:"description" validate:"required,min=10,max=300"`
+	CategoryID      uint   `json:"categoryId"  validate:"required"`
+	BrandID         uint   `json:"brandId"     validate:"required"`
+	Price           uint   `json:"price"       validate:"required,numeric"`
 	ImageFileHeader *multipart.FileHeader
 }
 
 type UpdateProduct struct {
-	ID          uint   `binding:"required"                json:"id"`
-	Name        string `binding:"required,min=3,max=50"   json:"name"`
-	Description string `binding:"required,min=10,max=100" json:"description"`
-	CategoryID  uint   `binding:"required"                json:"categoryId"`
-	Price       uint   `binding:"required,numeric"        json:"price"`
-	Image       string `binding:"required"                json:"image"`
+	ID          uint   `json:"id"          validate:"required"`
+	Name        string `json:"name"        validate:"required,min=3,max=50"`
+	Description string `json:"description" validate:"required,min=10,max=100"`
+	CategoryID  uint   `json:"categoryId"  validate:"required"`
+	Price       uint   `json:"price"       validate:"required,numeric"`
+	Image       string `json:"image"       validate:"required"`
 }
 
 // for a new productItem.
 type ProductItem struct {
-	Name               string                  `binding:"required,min=3,max=50" json:"name"`
-	Price              uint                    `binding:"required,min=1"        json:"price"`
-	VariationOptionIDs []uint                  `binding:"required,gte=1"        json:"variationOptionIDs"`
-	QtyInStock         uint                    `binding:"required,min=1"        json:"qtyInStock"`
+	Name               string                  `json:"name"               validate:"required,min=3,max=50"`
+	Price              uint                    `json:"price"              validate:"required,min=1"`
+	VariationOptionIDs []uint                  `json:"variationOptionIDs" validate:"required,gte=1"`
+	QtyInStock         uint                    `json:"qtyInStock"         validate:"required,min=1"`
 	SKU                string                  `json:"-"`
-	ImageFileHeaders   []*multipart.FileHeader `binding:"required,gte=1"        json:"imageFileHeaders"`
+	ImageFileHeaders   []*multipart.FileHeader `json:"imageFileHeaders"   validate:"required,gte=1"`
 }
 
 type Variation struct {
-	Names []string `binding:"required,dive,min=1" json:"names"`
+	Names []string `json:"names" validate:"required,dive,min=1"`
 }
 
 type VariationOption struct {
-	Values []string `binding:"required,dive,min=1" json:"values"`
+	Values []string `json:"values" validate:"required,dive,min=1"`
 }
 
 type Category struct {
-	Name string `binding:"required" json:"name"`
+	Name string `json:"name" validate:"required"`
 }
 
 type Brand struct {
-	Name string `binding:"required,min=3,max=25" json:"name"`
+	Name string `json:"name" validate:"required,min=3,max=25"`
 }

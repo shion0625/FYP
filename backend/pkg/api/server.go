@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	handlerInterfaces "github.com/shion0625/FYP/backend/pkg/api/handler/interfaces"
@@ -16,6 +17,19 @@ type ServerHTTP struct {
 	Engine *echo.Echo
 }
 
+type CustomValidator struct {
+	validator *validator.Validate
+}
+
+func (cv *CustomValidator) Validate(i interface{}) error {
+	if err := cv.validator.Struct(i); err != nil {
+		// Optionally, you could return the error to give each route more control over the status code
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	return nil
+}
+
 func NewServerHTTP(
 	cfg *config.Config,
 	apiMiddleware apiMiddleware.Middleware,
@@ -25,6 +39,7 @@ func NewServerHTTP(
 	orderHandler handlerInterfaces.OrderHandler,
 ) *ServerHTTP {
 	engine := echo.New()
+	engine.Validator = &CustomValidator{validator: validator.New(validator.WithRequiredStructEnabled())}
 
 	engine.Use(middleware.Logger())
 	engine.Use(middleware.Recover())

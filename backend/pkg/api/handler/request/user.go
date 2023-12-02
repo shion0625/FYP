@@ -2,38 +2,38 @@ package request
 
 // for address add address.
 type Address struct {
-	Name        string `binding:"required,min=2,max=50"  json:"name"`
-	PhoneNumber string `binding:"required,min=10,max=10" json:"phoneNumber"`
-	House       string `Binding:"required"               json:"house"`
+	Name        string `json:"name"        validate:"required,min=2,max=50"`
+	PhoneNumber string `json:"phoneNumber" validate:"required,min=10,max=11"`
+	House       string `json:"house"       validate:"required"`
 	Area        string `json:"area"`
-	LandMark    string `binding:"required"               json:"landMark"`
+	LandMark    string `json:"landMark"    validate:"required"`
 	City        string `json:"city"`
-	Pincode     uint   `binding:"required"               json:"pincode"`
-	// CountryID   uint   `json:"country_id" binding:"required"`
+	Pincode     uint   `json:"pincode"     validate:"required"`
+	// CountryID   uint   `json:"country_id" validate:"required"`
 
 	IsDefault *bool `json:"isDefault"`
 }
 type EditAddress struct {
-	ID          uint   `binding:"required"               json:"id"`
-	Name        string `binding:"required,min=2,max=50"  json:"name"`
-	PhoneNumber string `binding:"required,min=10,max=10" json:"phoneNumber"`
-	House       string `binding:"required"               json:"house"`
+	ID          uint   `json:"id"          validate:"required"`
+	Name        string `json:"name"        validate:"required,min=2,max=50"`
+	PhoneNumber string `json:"phoneNumber" validate:"required,len=10"`
+	House       string `json:"house"       validate:"required"`
 	Area        string `json:"area"`
-	LandMark    string `binding:"required"               json:"landMark"`
+	LandMark    string `json:"landMark"    validate:"required"`
 	City        string `json:"city"`
-	Pincode     uint   `binding:"required"               json:"pincode"`
-	// CountryID   uint   `json:"country_id" binding:"required"`
+	Pincode     uint   `json:"pincode"     validate:"required"`
+	// CountryID   uint   `json:"country_id" validate:"required"`
 
 	IsDefault *bool `json:"isDefault"`
 }
 
 type EditUser struct {
-	UserName        string `binding:"required,min=3,max=15"             json:"userName"`
-	FirstName       string `binding:"required,min=2,max=50"             json:"firstName"`
-	LastName        string `binding:"required,min=1,max=50"             json:"lastName"`
-	Age             uint   `binding:"required,numeric"                  json:"age"`
-	Email           string `binding:"required,email"                    json:"email"`
-	Phone           string `binding:"required,min=10,max=10"            json:"phone"`
-	Password        string `binding:"omitempty,eqfield=ConfirmPassword" json:"password"`
-	ConfirmPassword string `binding:"omitempty"                         json:"confirmPassword"`
+	UserName        string `json:"userName"        validate:"required,min=3,max=15"`
+	FirstName       string `json:"firstName"       validate:"required,min=2,max=50"`
+	LastName        string `json:"lastName"        validate:"required,min=1,max=50"`
+	Age             uint   `json:"age"             validate:"required,numeric"`
+	Email           string `json:"email"           validate:"required,email"`
+	Phone           string `json:"phone"           validate:"required,len=10"`
+	Password        string `json:"password"        validate:"required,eqfield=ConfirmPassword"`
+	ConfirmPassword string `json:"confirmPassword" validate:"required"`
 }

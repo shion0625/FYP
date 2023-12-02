@@ -15,14 +15,14 @@ type UserAddress struct {
 
 type User struct {
 	ID          string    `gorm:"primaryKey;size:255;default:gen_random_uuid()" json:"id"`
-	Age         uint      `binding:"required,numeric"                           json:"age"`
+	Age         uint      `json:"age"`
 	GoogleImage string    `json:"googleImage"`
-	FirstName   string    `binding:"required,min=2,max=50"                      gorm:"not null"        json:"firstName"`
-	LastName    string    `binding:"required,min=1,max=50"                      gorm:"not null"        json:"lastName"`
-	UserName    string    `binding:"required,min=3,max=15"                      gorm:"not null;unique" json:"userName"`
-	Email       string    `binding:"required,email"                             gorm:"unique;not null" json:"email"`
-	Phone       string    `binding:"required,min=10,max=10"                     gorm:"unique"          json:"phone"`
-	Password    string    `binding:"required"                                   json:"password"`
+	FirstName   string    `gorm:"not null"                                      json:"firstName"`
+	LastName    string    `gorm:"not null"                                      json:"lastName"`
+	UserName    string    `gorm:"not null;unique"                               json:"userName"`
+	Email       string    `gorm:"unique;not null"                               json:"email"`
+	Phone       string    `gorm:"unique"                                        json:"phone"`
+	Password    string    `json:"password"`
 	Verified    bool      `gorm:"default:false"                                 json:"verified"`
 	BlockStatus bool      `gorm:"not null;default:false"                        json:"blockStatus"`
 	CreatedAt   time.Time `gorm:"not null"                                      json:"createdAt"`
@@ -31,15 +31,15 @@ type User struct {
 
 // many to many join.
 type Address struct {
-	ID          uint   `gorm:"primaryKey;unique"               json:"id"`
-	Name        string `binding:"required,min=2,max=50"        gorm:"not null" json:"name"`
-	PhoneNumber string `binding:"required,min=10,max=10"       gorm:"not null" json:"phoneNumber"`
-	House       string `binding:"required"                     gorm:"not null" json:"house"`
-	Area        string `gorm:"not null"                        json:"area"`
-	LandMark    string `binding:"required"                     gorm:"not null" json:"landMark"`
-	City        string `gorm:"not null"                        json:"city"`
-	Pincode     uint   `binding:"required,numeric,min=6,max=6" gorm:"not null" json:"pincode"`
-	CountryID   uint   `binding:"required"                     gorm:"not null" json:"countryId"`
+	ID          uint   `gorm:"primaryKey;unique" json:"id"`
+	Name        string `gorm:"not null"          json:"name"`
+	PhoneNumber string `gorm:"not null"          json:"phoneNumber"`
+	House       string `gorm:"not null"          json:"house"`
+	Area        string `gorm:"not null"          json:"area"`
+	LandMark    string `gorm:"not null"          json:"landMark"`
+	City        string `gorm:"not null"          json:"city"`
+	Pincode     uint   `gorm:"not null"          json:"pincode"`
+	CountryID   uint   `gorm:"not null"          json:"countryId"`
 	Country     Country
 	CreatedAt   time.Time `gorm:"not null"  json:"createdAt"`
 	UpdatedAt   time.Time `json:"updatedAt"`
@@ -53,8 +53,8 @@ type Country struct {
 type PaymentMethod struct {
 	ID           uint      `gorm:"primaryKey;not null" json:"id"`
 	CreditNumber string    `gorm:"unique;not null"     json:"creditNumber"`
-	Cvv          string    `gorm:"not null"     json:"cvv"`
-	UserId       string    `binding:"required,string"  gorm:"not null"     json:"userId"`
+	Cvv          string    `gorm:"not null"            json:"cvv"`
+	UserId       string    `gorm:"not null"            json:"userId"`
 	CreatedAt    time.Time `gorm:"not null"            json:"createdAt"`
 	UpdatedAt    time.Time `json:"updatedAt"`
 }

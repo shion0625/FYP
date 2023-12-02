@@ -26,10 +26,12 @@ func CreateOrderDomain(db *gorm.DB, options ...func(*domain.ShopOrder)) error {
 	if err := db.Order("RANDOM()").Take(&user).Error; err != nil {
 		return err
 	}
+
 	address := domain.Address{}
 	if err := db.Order("RANDOM()").Take(&address).Error; err != nil {
 		return err
 	}
+
 	productItem := domain.ProductItem{}
 	if err := db.Order("RANDOM()").Take(&productItem).Error; err != nil {
 		return err
@@ -49,6 +51,7 @@ func CreateOrderDomain(db *gorm.DB, options ...func(*domain.ShopOrder)) error {
 	if err := db.Order("RANDOM()").Take(&paymentMethod).Error; err != nil {
 		return err
 	}
+
 	// order domain
 	order := domain.ShopOrder{
 		UserID:          user.ID,

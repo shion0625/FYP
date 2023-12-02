@@ -1,20 +1,20 @@
 package request
 
 type PayOrder struct {
-	UserID          string `binding:"required" json:"userId"`
-	AddressID       uint   `binding:"required" json:"addressId"`
+	UserID          string `json:"userId"    validate:"required"`
+	AddressID       uint   `json:"addressId" validate:"required"`
 	ProductItemInfo []ProductItemInfo
-	TotalFee        uint `binding:"required,numeric" json:"totalFee"`
+	TotalFee        uint `json:"totalFee" validate:"required,numeric"`
 	VariationValue  *[]VariationValues
-	PaymentMethodID uint `binding:"required" json:"paymentMethodId"`
+	PaymentMethodID uint `json:"paymentMethodId" validate:"required"`
 }
 
 type ProductItemInfo struct {
-	ProductItemID uint `binding:"required"         json:"productItemId"`
-	Count         uint `binding:"required,numeric" json:"count"`
+	ProductItemID uint `json:"productItemId" validate:"required"`
+	Count         uint `json:"count"         validate:"required,numeric"`
 }
 
 type VariationValues struct {
-	VariationID       uint `binding:"required,numeric" json:"variationId"`
-	VariationOptionID uint `binding:"required,gte=1"   json:"variationOptionId"`
+	VariationID       uint `json:"variationId"       validate:"required,numeric"`
+	VariationOptionID uint `json:"variationOptionId" validate:"required,gte=1"`
 }

@@ -1,23 +1,23 @@
 package request
 
 type Login struct {
-	UserName string `binding:"omitempty,min=3,max=15"  json:"userName"`
-	Phone    string `binding:"omitempty,min=10,max=10" json:"phone"`
-	Email    string `binding:"omitempty,email"         json:"email"`
-	Password string `binding:"required,min=5,max=30"   json:"password"`
+	UserName string `json:"userName" validate:"omitempty,min=3,max=15"`
+	Phone    string `json:"phone"    validate:"omitempty,min=10,max=10"`
+	Email    string `json:"email"    validate:"omitempty,email"`
+	Password string `json:"password" validate:"required,min=5,max=30"`
 }
 
 type RefreshToken struct {
-	RefreshToken string `binding:"min=10" json:"refreshToken"`
+	RefreshToken string `json:"refreshToken" validate:"min=10"`
 }
 
 type SignUp struct {
-	UserName        string `binding:"required,min=3,max=15"            json:"userName"`
-	FirstName       string `binding:"required,min=2,max=50"            json:"firstName"`
-	LastName        string `binding:"required,min=1,max=50"            json:"lastName"`
-	Age             uint   `binding:"required,numeric"                 json:"age"`
-	Email           string `binding:"required,email"                   json:"email"`
-	Phone           string `binding:"required,min=10,max=10"           json:"phone"`
-	Password        string `binding:"required,eqfield=ConfirmPassword" json:"password"`
-	ConfirmPassword string `binding:"required"                         json:"confirmPassword"`
+	UserName        string `json:"userName"        validate:"required,min=3,max=15"`
+	FirstName       string `json:"firstName"       validate:"required,min=2,max=50"`
+	LastName        string `json:"lastName"        validate:"required,min=1,max=50"`
+	Age             uint   `json:"age"             validate:"required,numeric"`
+	Email           string `json:"email"           validate:"required,email"`
+	Phone           string `json:"phone"           validate:"required,min=10,max=10"`
+	Password        string `json:"password"        validate:"required,eqfield=ConfirmPassword"`
+	ConfirmPassword string `json:"confirmPassword" validate:"required"`
 }

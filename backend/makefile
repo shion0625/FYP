@@ -63,10 +63,15 @@ check: ## To check the code standard violations and errors
 	golangci-lint run --fix
 
 mockgen: # Generate mock files for the test
-	mockgen -source=pkg/repository/interfaces/auth.go -destination=pkg/mock/mockrepo/auth_mock.go -package=mockrepo
-	mockgen -source=pkg/repository/interfaces/user.go -destination=pkg/mock/mockrepo/user_mock.go -package=mockrepo
-	mockgen -source=pkg/service/token/token.go -destination=pkg/mock/mockservice/token_mock.go -package=mockservice
-	mockgen -source=pkg/usecase/interfaces/auth.go -destination=pkg/mock/mockusecase/auth_mock.go -package=mockusecase
+	mockgen -source=pkg/repository/interfaces/auth.go -destination=pkg/repository/mock/auth_mock.go
+	mockgen -source=pkg/repository/interfaces/order.go -destination=pkg/repository/mock/order_mock.go
+	mockgen -source=pkg/repository/interfaces/product.go -destination=pkg/repository/mock/product_mock.go
+	mockgen -source=pkg/repository/interfaces/user.go -destination=pkg/repository/mock/user_mock.go
+	mockgen -source=pkg/service/token/token.go -destination=pkg/service/mock/token/token_mock.go
+	mockgen -source=pkg/usecase/interfaces/auth.go -destination=pkg/usecase/mock/auth_mock.go
+	mockgen -source=pkg/usecase/interfaces/order.go -destination=pkg/usecase/mock/order_mock.go
+	mockgen -source=pkg/usecase/interfaces/product.go -destination=pkg/usecase/mock/product_mock.go
+	mockgen -source=pkg/usecase/interfaces/user.go -destination=pkg/usecase/mock/user_mock.go
 
 docker-up: ## To up the docker compose file
 	docker-compose up -d
