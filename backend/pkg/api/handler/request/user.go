@@ -12,6 +12,7 @@ type Address struct {
 	CountryID   uint   `json:"countryId"   validate:"required,number,gte=1"`
 	IsDefault   *bool  `json:"isDefault"`
 }
+
 type EditAddress struct {
 	ID          uint   `json:"id"          validate:"required"`
 	Name        string `json:"name"        validate:"required,min=2,max=100"`
