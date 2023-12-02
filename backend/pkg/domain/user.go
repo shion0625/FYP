@@ -5,12 +5,12 @@ import (
 )
 
 type UserAddress struct {
-	ID        uint   `gorm:"primaryKey;unique" json:"id"`
-	UserID    string `gorm:"not null"          json:"userId"`
-	User      User
-	AddressID uint `gorm:"not null" json:"addressId"`
-	Address   Address
-	IsDefault bool `json:"isDefault"`
+	ID        uint    `gorm:"primaryKey;unique" json:"id"`
+	UserID    string  `gorm:"not null"          json:"userId"`
+	User      User    `json:"-"`
+	AddressID uint    `gorm:"not null"          json:"addressId"`
+	Address   Address `json:"-"`
+	IsDefault bool    `json:"isDefault"`
 }
 
 type User struct {
@@ -31,17 +31,17 @@ type User struct {
 
 // many to many join.
 type Address struct {
-	ID          uint   `gorm:"primaryKey;unique" json:"id"`
-	Name        string `gorm:"not null"          json:"name"`
-	PhoneNumber string `gorm:"not null"          json:"phoneNumber"`
-	House       string `gorm:"not null"          json:"house"`
-	Area        string `gorm:"not null"          json:"area"`
-	LandMark    string `gorm:"not null"          json:"landMark"`
-	City        string `gorm:"not null"          json:"city"`
-	Pincode     uint   `gorm:"not null"          json:"pincode"`
-	CountryID   uint   `gorm:"not null"          json:"countryId"`
-	Country     Country
-	CreatedAt   time.Time `gorm:"not null"  json:"createdAt"`
+	ID          uint      `gorm:"primaryKey;unique" json:"id"`
+	Name        string    `gorm:"not null"          json:"name"`
+	PhoneNumber string    `gorm:"not null"          json:"phoneNumber"`
+	House       string    `gorm:"not null"          json:"house"`
+	Area        string    `gorm:"not null"          json:"area"`
+	LandMark    string    `gorm:"not null"          json:"landMark"`
+	City        string    `gorm:"not null"          json:"city"`
+	Pincode     uint      `gorm:"not null"          json:"pincode"`
+	CountryID   uint      `gorm:"not null"          json:"countryId"`
+	Country     Country   `json:"-"`
+	CreatedAt   time.Time `gorm:"not null"          json:"createdAt"`
 	UpdatedAt   time.Time `json:"updatedAt"`
 }
 

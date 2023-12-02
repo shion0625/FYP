@@ -7,8 +7,8 @@ import (
 )
 
 type Pagination struct {
-	PageNumber uint64
-	Count      uint64
+	PageNumber uint64 `json:"pageNumber" validate:"number"`
+	Count      uint64 `json:"count"      validate:"number"`
 }
 
 const (

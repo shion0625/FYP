@@ -4,12 +4,12 @@ import "mime/multipart"
 
 // for a new product.
 type Product struct {
-	Name            string `json:"name"        validate:"required,min=3,max=50"`
-	Description     string `json:"description" validate:"required,min=10,max=300"`
-	CategoryID      uint   `json:"categoryId"  validate:"required,number,gte=1"`
-	BrandID         uint   `json:"brandId"     validate:"required,number,gte=1"`
-	Price           uint   `json:"price"       validate:"required,numeric"`
-	ImageFileHeader *multipart.FileHeader
+	Name            string                `json:"name"            validate:"required,min=3,max=50"`
+	Description     string                `json:"description"     validate:"required,min=10,max=300"`
+	CategoryID      uint                  `json:"categoryId"      validate:"required,number,gte=1"`
+	BrandID         uint                  `json:"brandId"         validate:"required,number,gte=1"`
+	Price           uint                  `json:"price"           validate:"required,numeric"`
+	ImageFileHeader *multipart.FileHeader `json:"imageFileHeader" validate:"required"`
 }
 
 type UpdateProduct struct {

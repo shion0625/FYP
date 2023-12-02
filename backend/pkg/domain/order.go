@@ -18,20 +18,20 @@ type ShopOrder struct {
 }
 
 type ShopOrderProductItem struct {
-	ID            uint `gorm:"primaryKey;unique" json:"id"`
-	ShopOrderID   uint `gorm:"not null"          json:"shopOrderId"`
-	ShopOrder     ShopOrder
-	ProductItemID uint `gorm:"not null" json:"productItemId"`
-	ProductItem   ProductItem
-	Count         uint `binding:"numeric" json:"count"`
+	ID            uint        `gorm:"primaryKey;unique" json:"id"`
+	ShopOrderID   uint        `gorm:"not null"          json:"shopOrderId"`
+	ShopOrder     ShopOrder   `json:"-"`
+	ProductItemID uint        `gorm:"not null"          json:"productItemId"`
+	ProductItem   ProductItem `json:"-"`
+	Count         uint        `json:"count"`
 }
 
 type ShopOrderVariation struct {
-	ID                uint `gorm:"primaryKey;unique" json:"id"`
-	ShopOrderID       uint `gorm:"not null"          json:"shopOrderId"`
-	ShopOrder         ShopOrder
-	VariationID       uint `gorm:"not null" json:"variationId"`
-	Variation         Variation
-	VariationOptionID uint `gorm:"not null" json:"variationOptionId"`
-	VariationOption   VariationOption
+	ID                uint            `gorm:"primaryKey;unique" json:"id"`
+	ShopOrderID       uint            `gorm:"not null"          json:"shopOrderId"`
+	ShopOrder         ShopOrder       `json:"-"`
+	VariationID       uint            `gorm:"not null"          json:"variationId"`
+	Variation         Variation       `json:"-"`
+	VariationOptionID uint            `gorm:"not null"          json:"variationOptionId"`
+	VariationOption   VariationOption `json:"-"`
 }

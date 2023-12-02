@@ -87,11 +87,11 @@ type Offer struct {
 }
 
 type OfferProduct struct {
-	ID        uint `gorm:"primaryKey;not null" json:"id"`
-	OfferID   uint `gorm:"not null"            json:"offerId"`
-	Offer     Offer
-	ProductID uint `gorm:"not null" json:"productId"`
-	Product   Product
+	ID        uint    `gorm:"primaryKey;not null" json:"id"`
+	OfferID   uint    `gorm:"not null"            json:"offerId"`
+	Offer     Offer   `json:"-"`
+	ProductID uint    `gorm:"not null" json:"productId"`
+	Product   Product `json:"-"`
 }
 
 // no need database.
