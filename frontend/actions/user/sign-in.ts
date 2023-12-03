@@ -17,17 +17,14 @@ interface Body {
 }
 
 interface UseSignInReturn {
-  signIn: Response<any> | undefined;
+  signIn: (body: Body) => Promise<Response<any>>;
   isError: any;
 }
 
-export const UseSignIn = (): {
-  signIn: (body: Body) => Promise<UseSignInReturn>;
-  isError: any;
-} => {
+export const UseSignIn = (): UseSignInReturn => {
   const { data, error, mutate } = useSWR(URL);
 
-  const signIn = async (body: Body) => {
+  const signIn = async (body: Body): Promise<Response<any>> => {
     const response = await axiosPostFetcher(URL, body);
     mutate(response, false); // Update the local data immediately, but disable revalidation
     return response;

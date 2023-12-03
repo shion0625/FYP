@@ -43,7 +43,7 @@ const SignInView = () => {
         ...data,
         age: parseInt(data.age),
       });
-      console.log(response);
+      toast.success(response.message);
     } catch (error: any) {
       toast.error(error.response.data.error);
     }
