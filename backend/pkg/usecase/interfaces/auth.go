@@ -20,7 +20,7 @@ type AuthUseCase interface {
 	// // token
 	GenerateAccessToken(ctx echo.Context, tokenParams GenerateTokenParams) (tokenString string, err error)
 	GenerateRefreshToken(ctx echo.Context, tokenParams GenerateTokenParams) (tokenString string, err error)
-	// VerifyAndGetRefreshTokenSession(ctx echo.Context, refreshToken string, usedFor token.UserType) (domain.RefreshSession, error)
+	VerifyAndGetRefreshTokenSession(ctx echo.Context, refreshToken string, usedFor token.UserType) (domain.RefreshSession, error)
 }
 
 type GenerateTokenParams struct {

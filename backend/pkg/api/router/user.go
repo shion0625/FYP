@@ -43,6 +43,7 @@ func UserRoutes(api *echo.Group, middleware middleware.Middleware, authHandler h
 			// login.POST("/otp/send", authHandler.UserLoginOtpSend)
 			// login.POST("/otp/verify", authHandler.UserLoginOtpVerify)
 		}
+		auth.POST("/renew-access-token", authHandler.UserRenewAccessToken())
 	}
 
 	api.Use(middleware.AuthenticateUser)

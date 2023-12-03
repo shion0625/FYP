@@ -52,3 +52,7 @@ export interface Response<T> {
   error?: any;
   data: T | null;
 }
+export interface TokenResponse {
+  accessToken: string;
+  refreshToken: string;
+}

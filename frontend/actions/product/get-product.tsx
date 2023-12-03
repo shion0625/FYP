@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { Response, Product } from "@/types";
-import { axiosFetcher } from "@/actions/fecher";
+import { axiosFetcher } from "@/actions/fetcher";
 
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/products`;
 

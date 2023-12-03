@@ -14,7 +14,7 @@ type AuthHandler interface {
 	// UserLoginOtpVerify(ctx *echo.Context)
 	// UserLoginOtpSend(ctx *echo.Context)
 
-	// UserRenewAccessToken() echo.HandlerFunc
+	UserRenewAccessToken() func(ctx echo.Context) error
 
 	// //admin side
 	// AdminLogin(ctx *echo.Context)

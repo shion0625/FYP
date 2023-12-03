@@ -1,9 +1,9 @@
 package request
 
 type Login struct {
-	UserName string `json:"userName" validate:"alphanum,min=3,max=15"`
-	Phone    string `json:"phone"    validate:"e164"`
-	Email    string `json:"email"    validate:"email"`
+	UserName string `json:"userName"`
+	Phone    string `json:"phone"`
+	Email    string `json:"email"`
 	Password string `json:"password" validate:"required,min=5,max=30"`
 }
 

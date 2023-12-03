@@ -120,6 +120,10 @@ func (c *AuthHandler) UserSignUp(ctx echo.Context) error {
 	return nil
 }
 
+func (a *AuthHandler) UserRenewAccessToken() func(ctx echo.Context) error {
+	return a.renewAccessToken(token.User)
+}
+
 func (a *AuthHandler) setupTokenAndResponse(ctx echo.Context, tokenUser token.UserType, userID string) {
 	tokenParams := usecaseInterface.GenerateTokenParams{
 		UserID:   userID,
@@ -145,14 +149,79 @@ func (a *AuthHandler) setupTokenAndResponse(ctx echo.Context, tokenUser token.Us
 
 	authorizationValue := authorizationType + " " + accessToken
 	ctx.Response().Header().Set(authorizationHeaderKey, authorizationValue)
-
 	ctx.Response().Header().Set("access_token", accessToken)
-	ctx.Response().Header().Set("refresh_token", refreshToken)
+	ctx.Response().Header().Set("Access-Control-Expose-Headers", "access_token")
+
+	// リフレッシュトークンをHTTP Only Cookieに設定
+	cookie := new(http.Cookie)
+	cookie.Name = "refresh_token"
+	cookie.Value = refreshToken
+	cookie.HttpOnly = true
+	ctx.SetCookie(cookie)
 
 	tokenRes := response.TokenResponse{
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
+		AccessToken: accessToken,
 	}
 
 	response.SuccessResponse(ctx, http.StatusOK, "Successfully logged in", tokenRes)
+}
+
+func (a *AuthHandler) renewAccessToken(tokenUser token.UserType) echo.HandlerFunc {
+	return func(ctx echo.Context) error {
+		cookie, err := ctx.Cookie("refresh_token")
+		if err != nil {
+			response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
+
+			return nil
+		}
+
+		body := request.RefreshToken{
+			RefreshToken: cookie.Value,
+		}
+
+		refreshSession, err := a.authUseCase.VerifyAndGetRefreshTokenSession(ctx, body.RefreshToken, tokenUser)
+		if err != nil {
+			var statusCode int
+
+			switch {
+			case errors.Is(err, usecase.ErrInvalidRefreshToken):
+				statusCode = http.StatusUnauthorized
+			case errors.Is(err, usecase.ErrRefreshSessionNotExist):
+				statusCode = http.StatusNotFound
+			case errors.Is(err, usecase.ErrRefreshSessionExpired):
+				statusCode = http.StatusGone
+			case errors.Is(err, usecase.ErrRefreshSessionBlocked):
+				statusCode = http.StatusForbidden
+			default:
+				statusCode = http.StatusInternalServerError
+			}
+
+			response.ErrorResponse(ctx, statusCode, "Failed verify refresh token", err, nil)
+
+			return nil
+		}
+
+		accessTokenParams := usecaseInterface.GenerateTokenParams{
+			UserID:   refreshSession.UserID,
+			UserType: tokenUser,
+		}
+
+		accessToken, err := a.authUseCase.GenerateAccessToken(ctx, accessTokenParams)
+		if err != nil {
+			response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed generate access token", err, nil)
+
+			return nil
+		}
+
+		authorizationValue := authorizationType + " " + accessToken
+		ctx.Response().Header().Set(authorizationHeaderKey, authorizationValue)
+		ctx.Response().Header().Set("access_token", accessToken)
+
+		accessTokenRes := response.TokenResponse{
+			AccessToken: accessToken,
+		}
+		response.SuccessResponse(ctx, http.StatusOK, "Successfully generated access token using refresh token", accessTokenRes)
+
+		return nil
+	}
 }

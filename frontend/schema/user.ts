@@ -41,7 +41,11 @@ export const signInSchema = yup.object().shape({
       /^\+[1-9]\d{1,14}$/,
       "Must be a valid E.164 format for phone number"
     ),
-  password: yup.string().required("Password is required"),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(5, "Password must be at least 5 characters")
+    .max(30, "Password can't be longer than 30 characters"),
   confirmPassword: yup
     .string()
     .required("Confirm password is required")

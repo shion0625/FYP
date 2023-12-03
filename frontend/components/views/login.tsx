@@ -1,7 +1,7 @@
 "use client";
 import { Label, TextInput, Button } from "flowbite-react";
 import { HiLockClosed, HiMail } from "react-icons/hi";
-import { UseSignIn } from "@/actions/user";
+import { UseLogin } from "@/actions/user";
 import { loginSchema } from "@/schema/user";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -21,15 +21,14 @@ const LoginView = () => {
     resolver: yupResolver(loginSchema),
   });
 
-  const { signIn } = UseSignIn();
+  const { login } = UseLogin();
 
   const onSubmit = async (data: any) => {
     try {
-      const response = await signIn({
+      const response = await login({
         ...data,
-        age: parseInt(data.age),
       });
-      console.log(response);
+      toast.success(response.message);
     } catch (error: any) {
       toast.error(error.response.data.error);
     }

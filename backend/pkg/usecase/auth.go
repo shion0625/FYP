@@ -76,10 +76,7 @@ func (a *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (stri
 	// 	return "", ErrUserNotVerified
 	// }
 
-	err = utils.ComparePasswordWithHashedPassword(loginInfo.Password, user.Password)
-	fmt.Printf("Failed to load: %v", err)
-
-	if err != nil {
+	if err := utils.ComparePasswordWithHashedPassword(loginInfo.Password, user.Password); err != nil {
 		return "", ErrWrongPassword
 	}
 
@@ -178,4 +175,35 @@ func (a *authUseCase) GenerateRefreshToken(ctx echo.Context, tokenParams interfa
 	log.Printf("successfully refresh token created and refresh session stored in database")
 
 	return tokenRes.TokenString, nil
+}
+
+func (c *authUseCase) VerifyAndGetRefreshTokenSession(ctx echo.Context, refreshToken string, usedFor token.UserType) (domain.RefreshSession, error) {
+	verifyReq := token.VerifyTokenRequest{
+		TokenString: refreshToken,
+		UsedFor:     usedFor,
+	}
+
+	verifyRes, err := c.tokenService.VerifyToken(verifyReq)
+	if err != nil {
+		return domain.RefreshSession{}, fmt.Errorf("failed to save refresh session: %w", err)
+	}
+
+	refreshSession, err := c.authRepo.FindRefreshSessionByTokenID(ctx, verifyRes.TokenID)
+	if err != nil {
+		return refreshSession, fmt.Errorf("failed to find refresh session by token ID: %w", err)
+	}
+
+	if refreshSession.TokenID == "" {
+		return refreshSession, ErrRefreshSessionNotExist
+	}
+
+	if time.Since(refreshSession.ExpireAt) > 0 {
+		return domain.RefreshSession{}, ErrRefreshSessionExpired
+	}
+
+	if refreshSession.IsBlocked {
+		return domain.RefreshSession{}, ErrRefreshSessionBlocked
+	}
+
+	return refreshSession, nil
 }

@@ -1,9 +1,9 @@
 package response
 
 type TokenResponse struct {
-	AccessToken  string `json:"accessToken"`
-	RefreshToken string `json:"refreshToken"`
+	AccessToken string `json:"accessToken"`
 }
+
 type OTPResponse struct {
 	OtpID string `json:"otpId"`
 }
