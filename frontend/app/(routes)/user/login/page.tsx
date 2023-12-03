@@ -1,12 +1,13 @@
 "use client";
 import Container from "@/components/ui/container";
-import SignInView from "@/components/views/signin";
+import LoginInView from "@/components/views/login";
 export const revalidate = 0;
+
 
 const SignInPage = () => {
   return (
     <Container>
-      <SignInView />
+      <LoginInView />
     </Container>
   );
 };

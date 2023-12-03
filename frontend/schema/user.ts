@@ -51,3 +51,15 @@ export const signInSchema = yup.object().shape({
     .required("terms and conditions is required")
     .oneOf([true], "You must agree to the terms and conditions"),
 });
+
+export const loginSchema = yup.object().shape({
+  email: yup
+    .string()
+    .required("Email is required")
+    .email("Must be a valid email address"),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(5, "Password must be at least 5 characters")
+    .max(30, "Password can't be longer than 30 characters"),
+});
