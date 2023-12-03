@@ -7,12 +7,12 @@ type Product struct {
 	ID            uint      `gorm:"primaryKey;not null" json:"id"`
 	Name          string    `gorm:"not null"            json:"name"`
 	Description   string    `gorm:"not null"            json:"description"`
-	CategoryID    uint      `json:"categoryId"`
+	CategoryID    uint      `gorm:"categoryId"`
 	Category      Category  `json:"-"`
 	BrandID       uint      `gorm:"not null"            json:"brandId"`
 	Brand         Brand     `json:"-"`
 	Price         uint      `gorm:"not null"            json:"price"`
-	DiscountPrice uint      `json:"discountPrice"`
+	DiscountPrice uint      `gorm:"discountPrice"`
 	Image         string    `gorm:"not null"            json:"image"`
 	CreatedAt     time.Time `gorm:"not null"            json:"createdAt"`
 	UpdatedAt     time.Time `json:"updatedAt"`
@@ -27,7 +27,7 @@ type ProductItem struct {
 	QtyInStock    uint      `gorm:"not null"            json:"qtyInStock"`
 	Price         uint      `gorm:"not null"            json:"price"`
 	SKU           string    `gorm:"unique;not null"     json:"sku"`
-	DiscountPrice uint      `json:"discountPrice"`
+	DiscountPrice uint      `gorm:"discountPrice"`
 	CreatedAt     time.Time `gorm:"not null"            json:"createdAt"`
 	UpdatedAt     time.Time `json:"updatedAt"`
 }
@@ -90,7 +90,7 @@ type OfferProduct struct {
 	ID        uint    `gorm:"primaryKey;not null" json:"id"`
 	OfferID   uint    `gorm:"not null"            json:"offerId"`
 	Offer     Offer   `json:"-"`
-	ProductID uint    `gorm:"not null" json:"productId"`
+	ProductID uint    `gorm:"not null"            json:"productId"`
 	Product   Product `json:"-"`
 }
 
