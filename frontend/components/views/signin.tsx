@@ -7,145 +7,228 @@ import {
   HiPhone,
   HiIdentification,
 } from "react-icons/hi";
-import { useRef } from "react";
 import Link from "next/link";
 import { UseSignIn } from "@/actions/user";
+import { signInSchema } from "@/schema/user";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-hot-toast";
 
 const SignInView = () => {
-  const signInRef = useRef({
-    userName: "",
-    firstName: "",
-    lastName: "",
-    age: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onBlur", // バリデーションチェックのトリガー（フォーカスを外した時）
+    defaultValues: {
+      userName: "",
+      firstName: "",
+      lastName: "",
+      age: 0,
+      email: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
+      agree: false,
+    },
+    resolver: yupResolver(signInSchema),
   });
 
   const { signIn } = UseSignIn();
 
-  const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const values = signInRef.current;
-    const response = await signIn({
-      ...values,
-      age: parseInt(values.age),
-    });
-    console.log(response);
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const name = event.target.id as keyof typeof signInRef.current;
-    signInRef.current[name] = event.target.value;
+  const onSubmit = async (data: any) => {
+    try {
+      const response = await signIn({
+        ...data,
+        age: parseInt(data.age),
+      });
+      console.log(response);
+    } catch (error: any) {
+      toast.error(error.response.data.error);
+    }
   };
 
   return (
     <div className="flex justify-center p-6">
-      <form onSubmit={handleSignIn} className="max-w-md">
+      <form onSubmit={handleSubmit(onSubmit)} className="max-w-md">
         <div className="grid grid-cols-2 gap-4 mb-3">
           <div className="block col-span-1">
             <Label htmlFor="firstName" value="First Name" />
+            {errors.firstName && (
+              <Label
+                className="text-sm block"
+                htmlFor="firstName"
+                color="failure"
+                value={errors.firstName.message}
+              />
+            )}
             <TextInput
               id="firstName"
               type="text"
               icon={HiUser}
               placeholder="Kwame"
-              required
-              onChange={handleChange}
+              color={errors.firstName ? "failure" : undefined}
+              {...register("firstName", { required: true })}
             />
           </div>
           <div className=" block col-span-1">
             <Label htmlFor="lastName" value="Last Name" />
+            {errors.lastName && (
+              <Label
+                className="text-sm block"
+                htmlFor="lastName"
+                color="failure"
+                value={errors.lastName.message}
+              />
+            )}
             <TextInput
               id="lastName"
               type="text"
               icon={HiUser}
               placeholder="Nkrumah"
-              required
-              onChange={handleChange}
+              color={errors.lastName ? "failure" : undefined}
+              {...register("lastName", { required: true })}
             />
           </div>
         </div>
         <div className="grid grid-cols-4 gap-4 mb-3">
           <div className="block col-span-3">
             <Label htmlFor="userName" value="Username" />
+            {errors.userName && (
+              <Label
+                className="text-sm block"
+                htmlFor="userName"
+                color="failure"
+                value={errors.userName.message}
+              />
+            )}
             <TextInput
               id="userName"
               type="text"
               icon={HiUser}
               placeholder="Username"
-              required
-              onChange={handleChange}
+              color={errors.userName ? "failure" : undefined}
+              {...register("userName", { required: true })}
             />
           </div>
           <div className="block col-span-1">
             <Label htmlFor="age" value="Age" />
+            {errors.age && (
+              <Label
+                className="text-sm block"
+                htmlFor="age"
+                color="failure"
+                value={errors.age.message}
+              />
+            )}
             <TextInput
               id="age"
               type="number"
               icon={HiIdentification}
               placeholder="20"
-              required
-              onChange={handleChange}
+              color={errors.age ? "failure" : undefined}
+              {...register("age", { required: true })}
             />
           </div>
         </div>
         <div className="block mb-3">
           <Label htmlFor="email" value="Email" />
+          {errors.email && (
+            <Label
+              className="text-sm block"
+              htmlFor="email"
+              color="failure"
+              value={errors.email.message}
+            />
+          )}
           <TextInput
             id="email"
             type="email"
             icon={HiMail}
             placeholder="name@flowbite.com"
-            required
-            onChange={handleChange}
+            color={errors.email ? "failure" : undefined}
+            {...register("email", { required: true })}
           />
         </div>
         <div className="block mb-3">
           <Label htmlFor="phone" value="Phone" />
+          {errors.phone && (
+            <Label
+              className="text-sm block"
+              htmlFor="phone"
+              color="failure"
+              value={errors.phone.message}
+            />
+          )}
           <TextInput
             id="phone"
             type="tel"
             icon={HiPhone}
             placeholder="07012345678"
-            required
-            onChange={handleChange}
+            color={errors.phone ? "failure" : undefined}
+            {...register("phone", { required: true })}
           />
         </div>
         <div className="block mb-3">
           <Label htmlFor="password" value="Password" />
+          {errors.password && (
+            <Label
+              className="text-sm block"
+              htmlFor="password"
+              color="failure"
+              value={errors.password.message}
+            />
+          )}
           <TextInput
             id="password"
             type="password"
             icon={HiLockClosed}
             placeholder="password"
-            required
-            onChange={handleChange}
+            color={errors.password ? "failure" : undefined}
+            {...register("password", { required: true })}
           />
         </div>
         <div className="block mb-3">
           <Label htmlFor="confirmPassword" value="Confirm Password" />
+          {errors.confirmPassword && (
+            <Label
+              className="text-sm block"
+              htmlFor="confirmPassword"
+              color="failure"
+              value={errors.confirmPassword.message}
+            />
+          )}
           <TextInput
             id="confirmPassword"
             type="password"
             icon={HiLockClosed}
             placeholder="confirm Password"
-            required
-            onChange={handleChange}
+            color={errors.confirmPassword ? "failure" : undefined}
+            {...register("confirmPassword", { required: true })}
           />
         </div>
-        <div className="flex items-center gap-2 mb-3">
-          <Checkbox id="agree" />
-          <Label htmlFor="agree" className="flex">
-            I agree with the&nbsp;
-            <Link
-              href="#"
-              className="text-cyan-600 hover:underline dark:text-cyan-500"
-            >
-              terms and conditions
-            </Link>
-          </Label>
+        <div className="block mb-3">
+          {errors.agree && (
+            <Label
+              className="text-sm block"
+              htmlFor="agree"
+              color="failure"
+              value={errors.agree.message}
+            />
+          )}
+          <div className="flex items-center gap-2 mb-3">
+            <Checkbox id="agree" {...register("agree", { required: true })} />
+            <Label htmlFor="agree" className="flex">
+              I agree with the&nbsp;
+              <Link
+                href="#"
+                className="text-cyan-600 hover:underline dark:text-cyan-500"
+              >
+                terms and conditions
+              </Link>
+            </Label>
+          </div>
         </div>
         <div className="flex justify-center mb-3">
           <Button type="submit">Register new account</Button>
