@@ -26,7 +26,7 @@ export const UseSignIn = (): UseSignInReturn => {
   const signIn = async (body: Body): Promise<Response<any>> => {
     const response = await axiosPostFetcher(URL, body);
     mutate(response, false); // Update the local data immediately, but disable revalidation
-    return response;
+    return response.data;
   };
 
   return {

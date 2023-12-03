@@ -20,7 +20,7 @@ export const UseLogin = (): UseRenewAccessTokenReturn => {
 
     // アクセストークンをlocalStorageに保存
     localStorage.setItem("accessToken", accessToken);
-    return response.data.data;
+    return response.data;
   };
 
   return {
