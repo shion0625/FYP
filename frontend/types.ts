@@ -54,5 +54,4 @@ export interface Response<T> {
 }
 export interface TokenResponse {
   accessToken: string;
-  refreshToken: string;
 }
