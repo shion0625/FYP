@@ -58,6 +58,7 @@ func NewServerHTTP(
 		},
 	}))
 	engine.Use(apiMiddleware.Context)
+	engine.Use(apiMiddleware.AccessControlExposeHeaders)
 
 	router.UserRoutes(engine.Group("/api"), apiMiddleware, authHandler, userHandler, productHandler, orderHandler)
 

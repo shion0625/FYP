@@ -150,7 +150,6 @@ func (a *AuthHandler) setupTokenAndResponse(ctx echo.Context, tokenUser token.Us
 	authorizationValue := authorizationType + " " + accessToken
 	ctx.Response().Header().Set(authorizationHeaderKey, authorizationValue)
 	ctx.Response().Header().Set("access_token", accessToken)
-	ctx.Response().Header().Set("Access-Control-Expose-Headers", "access_token")
 
 	// リフレッシュトークンをHTTP Only Cookieに設定
 	cookie := new(http.Cookie)
@@ -159,11 +158,7 @@ func (a *AuthHandler) setupTokenAndResponse(ctx echo.Context, tokenUser token.Us
 	cookie.HttpOnly = true
 	ctx.SetCookie(cookie)
 
-	tokenRes := response.TokenResponse{
-		AccessToken: accessToken,
-	}
-
-	response.SuccessResponse(ctx, http.StatusOK, "Successfully logged in", tokenRes)
+	response.SuccessResponse(ctx, http.StatusOK, "Successfully logged in", nil)
 }
 
 func (a *AuthHandler) renewAccessToken(tokenUser token.UserType) echo.HandlerFunc {
@@ -217,10 +212,7 @@ func (a *AuthHandler) renewAccessToken(tokenUser token.UserType) echo.HandlerFun
 		ctx.Response().Header().Set(authorizationHeaderKey, authorizationValue)
 		ctx.Response().Header().Set("access_token", accessToken)
 
-		accessTokenRes := response.TokenResponse{
-			AccessToken: accessToken,
-		}
-		response.SuccessResponse(ctx, http.StatusOK, "Successfully generated access token using refresh token", accessTokenRes)
+		response.SuccessResponse(ctx, http.StatusOK, "Successfully generated access token using refresh token", nil)
 
 		return nil
 	}

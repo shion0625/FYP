@@ -8,9 +8,9 @@ type CustomContext struct {
 	echo.Context
 }
 
-func (c *middleware) Context(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		cc := &CustomContext{c}
+func (m *middleware) Context(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(m echo.Context) error {
+		cc := &CustomContext{m}
 
 		return next(cc)
 	}

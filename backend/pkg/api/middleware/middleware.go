@@ -10,6 +10,7 @@ type Middleware interface {
 	// AuthenticateAdmin() echo.HandlerFunc
 	// TrimSpaces() echo.HandlerFunc
 	Context(next echo.HandlerFunc) echo.HandlerFunc
+	AccessControlExposeHeaders(next echo.HandlerFunc) echo.HandlerFunc
 }
 
 type middleware struct {

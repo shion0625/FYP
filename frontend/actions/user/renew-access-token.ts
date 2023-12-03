@@ -9,14 +9,14 @@ interface UseRenewAccessTokenReturn {
   isError: any;
 }
 
-export const UseLogin = (): UseRenewAccessTokenReturn => {
+export const UseRenewAccessToken = (): UseRenewAccessTokenReturn => {
   const { data, error, mutate } = useSWR(URL);
 
-  const renewAccessToken = async (body: Body): Promise<Response<any>> => {
-    const response = await axiosPostFetcher(URL, body);
+  const renewAccessToken = async (): Promise<Response<TokenResponse>> => {
+    const response = await axiosPostFetcher(URL);
     mutate(response, false);
     // アクセストークンを取得
-    const { accessToken } = response.data;
+    const accessToken = response.headers["access_token"];
 
     // アクセストークンをlocalStorageに保存
     localStorage.setItem("accessToken", accessToken);

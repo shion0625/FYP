@@ -17,19 +17,19 @@ const (
 )
 
 // Get User Auth middleware.
-func (c *middleware) AuthenticateUser(next echo.HandlerFunc) echo.HandlerFunc {
-	// return c.middlewareUsingCookie(token.User)
-	return c.authorize(next, token.User)
+func (m *middleware) AuthenticateUser(next echo.HandlerFunc) echo.HandlerFunc {
+	// return m.middlewareUsingCookie(token.User)
+	return m.authorize(next, token.User)
 }
 
 // Get Admin Auth middleware.
-func (c *middleware) AuthenticateAdmin(next echo.HandlerFunc) echo.HandlerFunc {
-	// return c.middlewareUsingCookie(token.Admin)
-	return c.authorize(next, token.Admin)
+func (m *middleware) AuthenticateAdmin(next echo.HandlerFunc) echo.HandlerFunc {
+	// return m.middlewareUsingCookie(token.Admin)
+	return m.authorize(next, token.Admin)
 }
 
 // authorize request on request header using user type.
-func (c *middleware) authorize(next echo.HandlerFunc, tokenUser token.UserType) echo.HandlerFunc {
+func (m *middleware) authorize(next echo.HandlerFunc, tokenUser token.UserType) echo.HandlerFunc {
 	return func(ctx echo.Context) error {
 		authorizationValues := ctx.Request().Header.Get(authorizationHeaderKey)
 
@@ -58,7 +58,7 @@ func (c *middleware) authorize(next echo.HandlerFunc, tokenUser token.UserType) 
 			UsedFor:     tokenUser,
 		}
 
-		verifyRes, err := c.tokenService.VerifyToken(tokenVerifyReq)
+		verifyRes, err := m.tokenService.VerifyToken(tokenVerifyReq)
 		if err != nil {
 			response.ErrorResponse(ctx, http.StatusUnauthorized, "Unauthorized user", err, nil)
 
