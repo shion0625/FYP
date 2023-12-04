@@ -1850,6 +1850,11 @@ mz@^2.7.0:
     object-assign "^4.0.1"
     thenify-all "^1.0.0"
 
+nanoid@^3.1.25:
+  version "3.3.7"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.7.tgz#d0c301a691bc8d54efa0a2226ccf3fe2fd656bd8"
+  integrity sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==
+
 nanoid@^3.3.4, nanoid@^3.3.6:
   version "3.3.6"
   resolved "https://registry.npmjs.org/nanoid/-/nanoid-3.3.6.tgz"
@@ -1859,6 +1864,14 @@ natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npmjs.org/natural-compare/-/natural-compare-1.4.0.tgz"
   integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
+
+next-session@^4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/next-session/-/next-session-4.0.5.tgz#e663248b4021e03901c5c943b6f764f6c0057cce"
+  integrity sha512-GS1X2XJcoQlND8ldw4VfeZoK44i8p2tPpwhk6mLFga07A97AbvMIq1sKYHmCJHmdSuwKtCR2YKIK3j1mPM6s4g==
+  dependencies:
+    cookie "^0.4.1"
+    nanoid "^3.1.25"
 
 next@latest:
   version "13.5.3"

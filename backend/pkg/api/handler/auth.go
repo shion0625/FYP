@@ -155,12 +155,15 @@ func (a *AuthHandler) setupTokenAndResponse(ctx echo.Context, tokenUser token.Us
 		Name:     "refresh_token",
 		Value:    refreshToken,
 		HttpOnly: true,
+		SameSite: http.SameSiteNoneMode, // これを変更
+		Secure:   false,
 	})
 
 	ctx.SetCookie(&http.Cookie{
 		Name:     "access_token",
 		Value:    accessToken,
 		HttpOnly: true,
+		Secure:   true,
 	})
 
 	response.SuccessResponse(ctx, http.StatusOK, "Successfully logged in", nil)
