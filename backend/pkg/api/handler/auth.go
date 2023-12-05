@@ -151,8 +151,11 @@ func (a *AuthHandler) setupTokenAndResponse(ctx echo.Context, tokenUser token.Us
 	ctx.Response().Header().Set(authorizationHeaderKey, authorizationValue)
 	ctx.Response().Header().Set("access_token", accessToken)
 	ctx.Response().Header().Set("refresh_token", refreshToken)
-
-	response.SuccessResponse(ctx, http.StatusOK, "Successfully logged in", nil)
+	tokenRes := response.TokenResponse{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}
+	response.SuccessResponse(ctx, http.StatusOK, "Successfully logged in", tokenRes)
 }
 
 func (a *AuthHandler) renewAccessToken(tokenUser token.UserType) echo.HandlerFunc {

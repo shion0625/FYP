@@ -20,6 +20,18 @@ export function setAccessTokenCookie(accessToken: string) {
   });
 }
 
+export function getAccessTokenCookie() {
+  return cookies().get("access_token");
+}
+
+export function hasAccessTokenCookie():boolean {
+  return cookies().has("access_token");
+}
+
+export function getRefreshTokenCookie() {
+  return cookies().get("refresh_token");
+}
+
 export function setRefreshTokenCookie(refreshToken: string) {
   const expiryDate = new Date();
   expiryDate.setDate(expiryDate.getDate() + refreshTokenExpiresInDays);

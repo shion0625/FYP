@@ -6,13 +6,12 @@ const URL = `${process.env.NEXT_PUBLIC_API_URL}/auth/login/`;
 export async function POST(req: NextRequest) {
   const json = await req.json();
 
-  console.log(json)
+  console.log(json);
   // GoのAPIを呼び出す
   const response = await axios.post(URL, json);
 
   // アクセストークンを取得
-  const accessToken = response.headers["access_token"];
-  const refreshToken = response.headers["refresh_token"];
+  const { accessToken, refreshToken } = response.data.data;
 
   // Cookieにアクセストークンを設定
   setAccessTokenCookie(accessToken);

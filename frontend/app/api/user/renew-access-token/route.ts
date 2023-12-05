@@ -11,8 +11,7 @@ export async function POST(req: NextRequest) {
   const response = await axios.post(URL, json);
 
   // アクセストークンを取得
-  const accessToken = response.headers["access_token"];
-  console.log("accessToken ", accessToken);
+  const accessToken = response.data.data;
   // Cookieにアクセストークンを設定
   setAccessTokenCookie(accessToken);
 
