@@ -24,11 +24,8 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ data }) => {
   const pathname = usePathname();
   const sidebar = useSidebar();
-  if (!data || data.length === 0) {
-    return <div>No categories available</div>;
-  }
 
-  const categories = data.map((category) => ({
+  const categories = data?.map((category) => ({
     href: `/category/${category.id}`,
     label: category.name,
     active: pathname === `/category/${category.id}`,
@@ -91,11 +88,18 @@ const Sidebar: React.FC<SidebarProps> = ({ data }) => {
                     );
                   }}
                 >
-                  {categories.map((category) => (
-                    <SidebarFlow.Item key={category.href} href={category.href}>
-                      {category.label}
-                    </SidebarFlow.Item>
-                  ))}
+                  {categories ? (
+                    categories.map((category) => (
+                      <SidebarFlow.Item
+                        key={category.href}
+                        href={category.href}
+                      >
+                        {category.label}
+                      </SidebarFlow.Item>
+                    ))
+                  ) : (
+                    <div>No categories available</div>
+                  )}
                 </SidebarFlow.Collapse>
                 <SidebarFlow.Item href="#" icon={HiInbox}>
                   Inbox
