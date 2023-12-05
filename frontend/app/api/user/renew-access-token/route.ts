@@ -3,6 +3,8 @@ import axios from "axios";
 import { cookies } from "next/headers";
 
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/auth/renew-access-token`;
+const COOKIE_SECURE =
+  process.env.NEXT_PUBLIC_COOKIE_SECURE == "1" ? true : false;
 
 export async function POST(req: NextRequest) {
   const json = await req.json();
@@ -20,6 +22,7 @@ export async function POST(req: NextRequest) {
     httpOnly: true,
     path: "/",
     sameSite: "strict",
+    secure: COOKIE_SECURE,
   });
 
   // レスポンスを送信

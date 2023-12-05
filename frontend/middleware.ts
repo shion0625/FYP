@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { cookies } from "next/headers";
 
 export function middleware(req: NextRequest) {
   const response = NextResponse.next();
 
   // ユーザーのログイン状態をチェックするロジックを追加
-  const accessToken = req.headers;
+  const cookiesList = cookies();
+  const hasAccessToken = cookiesList.has("access_token");
   if (
-    (!accessToken && req.nextUrl.pathname.startsWith("/cart")) ||
+    (!hasAccessToken && req.nextUrl.pathname.startsWith("/cart")) ||
     req.nextUrl.pathname.startsWith("/admin")
   ) {
     // ログインしていないユーザーをログインページにリダイレクト
