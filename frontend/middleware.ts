@@ -18,11 +18,8 @@ export function middleware(req: NextRequest) {
 
   if (req.nextUrl.pathname.startsWith("/api")) {
     if (handlingAccessToken()) {
-      console.log("hi");
       return res;
     }
-    console.log("gooo");
-
     return res;
   }
   return res;
