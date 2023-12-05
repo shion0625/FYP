@@ -8,13 +8,13 @@ import {
   HiIdentification,
 } from "react-icons/hi";
 import Link from "next/link";
-import { UseSignIn } from "@/actions/user";
-import { signInSchema } from "@/schema/user";
+import { UseSignUp } from "@/actions/user";
+import { signUpSchema } from "@/schema/user";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-hot-toast";
 
-const SignInView = () => {
+const SignUpView = () => {
   const {
     register,
     handleSubmit,
@@ -32,14 +32,14 @@ const SignInView = () => {
       confirmPassword: "",
       agree: false,
     },
-    resolver: yupResolver(signInSchema),
+    resolver: yupResolver(signUpSchema),
   });
 
-  const { signIn } = UseSignIn();
+  const { signUp } = UseSignUp();
 
   const onSubmit = async (data: any) => {
     try {
-      const response = await signIn({
+      const response = await signUp({
         ...data,
         age: parseInt(data.age),
       });
@@ -238,4 +238,4 @@ const SignInView = () => {
   );
 };
 
-export default SignInView;
+export default SignUpView;

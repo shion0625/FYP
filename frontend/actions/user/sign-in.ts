@@ -15,22 +15,22 @@ interface Body {
   confirmPassword: string;
 }
 
-interface UseSignInReturn {
-  signIn: (body: Body) => Promise<Response<any>>;
+interface UseSignUpReturn {
+  signUp: (body: Body) => Promise<Response<any>>;
   isError: any;
 }
 
-export const UseSignIn = (): UseSignInReturn => {
+export const UseSignUp = (): UseSignUpReturn => {
   const { data, error, mutate } = useSWR(URL);
 
-  const signIn = async (body: Body): Promise<Response<any>> => {
+  const signUp = async (body: Body): Promise<Response<any>> => {
     const response = await axiosPostFetcher(URL, body);
     mutate(response, false); // Update the local data immediately, but disable revalidation
     return response.data;
   };
 
   return {
-    signIn,
+    signUp,
     isError: error,
   };
 };

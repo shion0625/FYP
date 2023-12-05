@@ -110,11 +110,11 @@ const Sidebar: React.FC<SidebarProps> = ({ data }) => {
                 <SidebarFlow.Item href="#" icon={HiShoppingBag}>
                   Products
                 </SidebarFlow.Item>
-                <SidebarFlow.Item href="#" icon={HiArrowSmRight}>
-                  Sign In
+                <SidebarFlow.Item href="/user/login" icon={HiArrowSmRight}>
+                  login
                 </SidebarFlow.Item>
-                <SidebarFlow.Item href="#" icon={HiTable}>
-                  Sign Up
+                <SidebarFlow.Item href="/user/signup" icon={HiTable}>
+                  Sign up
                 </SidebarFlow.Item>
               </SidebarFlow.ItemGroup>
             </SidebarFlow.Items>

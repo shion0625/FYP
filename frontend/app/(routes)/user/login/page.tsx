@@ -4,7 +4,7 @@ import LoginInView from "@/components/views/login";
 export const revalidate = 0;
 
 
-const SignInPage = () => {
+const LoginPage = () => {
   return (
     <Container>
       <LoginInView />
@@ -12,4 +12,4 @@ const SignInPage = () => {
   );
 };
 
-export default SignInPage;
+export default LoginPage;
