@@ -150,36 +150,25 @@ func (a *AuthHandler) setupTokenAndResponse(ctx echo.Context, tokenUser token.Us
 	authorizationValue := authorizationType + " " + accessToken
 	ctx.Response().Header().Set(authorizationHeaderKey, authorizationValue)
 	ctx.Response().Header().Set("access_token", accessToken)
-
-	ctx.SetCookie(&http.Cookie{
-		Name:     "refresh_token",
-		Value:    refreshToken,
-		HttpOnly: true,
-		SameSite: http.SameSiteNoneMode, // これを変更
-		Secure:   false,
-	})
-
-	ctx.SetCookie(&http.Cookie{
-		Name:     "access_token",
-		Value:    accessToken,
-		HttpOnly: true,
-		Secure:   true,
-	})
+	ctx.Response().Header().Set("refresh_token", refreshToken)
 
 	response.SuccessResponse(ctx, http.StatusOK, "Successfully logged in", nil)
 }
 
 func (a *AuthHandler) renewAccessToken(tokenUser token.UserType) echo.HandlerFunc {
 	return func(ctx echo.Context) error {
-		cookie, err := ctx.Cookie("refresh_token")
-		if err != nil {
-			response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
+		var body request.RefreshToken
+
+		if err := ctx.Bind(&body); err != nil {
+			response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, body)
 
 			return nil
 		}
 
-		body := request.RefreshToken{
-			RefreshToken: cookie.Value,
+		if err := ctx.Validate(body); err != nil {
+			response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+			return nil
 		}
 
 		refreshSession, err := a.authUseCase.VerifyAndGetRefreshTokenSession(ctx, body.RefreshToken, tokenUser)
@@ -219,12 +208,8 @@ func (a *AuthHandler) renewAccessToken(tokenUser token.UserType) echo.HandlerFun
 		authorizationValue := authorizationType + " " + accessToken
 		ctx.Response().Header().Set(authorizationHeaderKey, authorizationValue)
 		ctx.Response().Header().Set("access_token", accessToken)
-		ctx.SetCookie(&http.Cookie{
-			Name:     "access_token",
-			Value:    accessToken,
-			HttpOnly: true,
-		})
-		response.SuccessResponse(ctx, http.StatusOK, "Successfully generated access token using refresh token", nil)
+
+		response.SuccessResponse(ctx, http.StatusOK, "Successfully generated access token using refresh token", accessToken)
 
 		return nil
 	}

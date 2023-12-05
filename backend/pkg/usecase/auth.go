@@ -20,8 +20,8 @@ const (
 )
 
 const (
-	AccessTokenDuration  = time.Minute * 20
-	RefreshTokenDuration = time.Hour * 24 * 7
+	AccessTokenDuration  = time.Minute * 25   // 25Minutes
+	RefreshTokenDuration = time.Hour*24*7 + 1 //  7 days+ 1hour
 )
 
 type authUseCase struct {
