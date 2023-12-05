@@ -6,23 +6,21 @@ const COOKIE_SECURE =
 const accessTokenExpiresInMinutes = 20;
 
 export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
-
+  let res = NextResponse.next();
   if (
     req.nextUrl.pathname.startsWith("/cart") ||
     req.nextUrl.pathname.startsWith("/admin")
   ) {
-    if (await handlingAccessToken(res)) {
+    res = await handlingAccessToken(res);
+    if (res.ok) {
       return res;
     }
     // ログインしていないユーザーをログインページにリダイレクト
     return NextResponse.redirect(new URL("/user/login", req.url));
   }
 
-  if (req.nextUrl.pathname.startsWith("/api")) {
-    if (await handlingAccessToken(res)) {
-      return res;
-    }
+  if (req.nextUrl.pathname.startsWith("/api/cart")) {
+    res = await handlingAccessToken(res);
     return res;
   }
   return res;
@@ -34,16 +32,22 @@ export const config = {
 
 const handlingAccessToken = async (
   response: NextResponse<unknown>
-): Promise<boolean> => {
+): Promise<NextResponse<unknown>> => {
   // ユーザーのログイン状態をチェックするロジックを追加
   const cookiesList = cookies();
   const hasAccessToken = cookiesList.has("access_token");
   const hasRefreshToken = cookiesList.has("refresh_token");
   if (hasAccessToken) {
-    return true;
+    return response;
   }
   if (!hasRefreshToken) {
-    return false;
+    return NextResponse.json(
+      {
+        error: "Session has expired \n please login",
+        message: "refreshToken is not exist",
+      },
+      { status: 401 }
+    );
   }
 
   const refreshToken = cookiesList.get("refresh_token");
@@ -75,8 +79,13 @@ const handlingAccessToken = async (
       expires: expiryDate,
     });
   } catch (error) {
-    console.log(error);
-    return false;
+    return NextResponse.json(
+      {
+        error: "Internal Server Error",
+        message: "renew access token is failed",
+      },
+      { status: 500 }
+    );
   }
-  return true;
+  return response;
 };
