@@ -78,6 +78,7 @@ func CreateOrderDomain(db *gorm.DB, options ...func(*domain.ShopOrder)) error {
 	// ShopOrderVariation domain
 	shopOrderVariation := domain.ShopOrderVariation{
 		ShopOrderID:       order.ID,
+		ProductItemID:     productItem.ID,
 		VariationID:       variation.ID,
 		VariationOptionID: variationOption.ID,
 	}

@@ -21,15 +21,15 @@ export function setAccessTokenCookie(accessToken: string) {
 }
 
 export function getAccessTokenCookie() {
-  return cookies().get("access_token");
+  return cookies().get("access_token")?.value;
 }
 
-export function hasAccessTokenCookie():boolean {
+export function hasAccessTokenCookie(): boolean {
   return cookies().has("access_token");
 }
 
 export function getRefreshTokenCookie() {
-  return cookies().get("refresh_token");
+  return cookies().get("refresh_token")?.value;
 }
 
 export function setRefreshTokenCookie(refreshToken: string) {

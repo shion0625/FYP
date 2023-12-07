@@ -30,6 +30,8 @@ type ShopOrderVariation struct {
 	ID                uint            `gorm:"primaryKey;unique" json:"id"`
 	ShopOrderID       uint            `gorm:"not null"          json:"shopOrderId"`
 	ShopOrder         ShopOrder       `json:"-"`
+	ProductItemID     uint            `gorm:"not null"          json:"productItemId"`
+	ProductItem       ProductItem     `json:"-"`
 	VariationID       uint            `gorm:"not null"          json:"variationId"`
 	Variation         Variation       `json:"-"`
 	VariationOptionID uint            `gorm:"not null"          json:"variationOptionId"`

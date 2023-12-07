@@ -141,6 +141,7 @@ func (p *productUseCase) FindAllProducts(ctx echo.Context, pagination request.Pa
 	for i := range products {
 		url, err := p.cloudService.GetFileUrl(ctx, products[i].Image)
 		if err != nil {
+			fmt.Println(err)
 			continue
 		}
 

@@ -13,7 +13,7 @@ func GetParamID(ctx echo.Context, key string) (*uint, error) {
 	IDStr := ctx.QueryParam(key)
 
 	if IDStr == "" {
-		return nil, ErrInvalidParam
+		return nil, nil
 	}
 
 	ID, err := ParseStringToUint32(IDStr)

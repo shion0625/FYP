@@ -54,7 +54,7 @@ func (c *orderDatabase) UpdateProductItemStock(ctx echo.Context, productItemID u
 	}
 
 	newStock = productItem.QtyInStock - purchaseQuantity
-	err = c.DB.Model(&productItem).Update("qty_in_stock", newStock).Error
+	err = c.DB.Table("product_items").Where("id = ?", productItem.ID).Update("qty_in_stock", newStock).Error
 
 	return newStock, err
 }
@@ -83,24 +83,25 @@ func (c *orderDatabase) SaveOrder(ctx echo.Context, payOrder request.PayOrder) e
 			Count:         productItemInfo.Count,
 		}
 		shopOrderProductItems = append(shopOrderProductItems, shopOrderProductItem)
+
+		shopOrderVariations := make([]domain.ShopOrderVariation, 0, len(*productItemInfo.VariationValues))
+
+		for _, variationValue := range *productItemInfo.VariationValues {
+			shopOrderVariation := domain.ShopOrderVariation{
+				ShopOrderID:       shopOrder.ID,
+				ProductItemID:     productItemInfo.ProductItemID,
+				VariationID:       variationValue.VariationID,
+				VariationOptionID: variationValue.VariationOptionID,
+			}
+			shopOrderVariations = append(shopOrderVariations, shopOrderVariation)
+		}
+
+		if err := c.DB.Create(&shopOrderVariations).Error; err != nil {
+			return err
+		}
 	}
 
 	if err := c.DB.Create(&shopOrderProductItems).Error; err != nil {
-		return err
-	}
-
-	shopOrderVariations := make([]domain.ShopOrderVariation, 0, len(*payOrder.VariationValue))
-
-	for _, variationValue := range *payOrder.VariationValue {
-		shopOrderVariation := domain.ShopOrderVariation{
-			ShopOrderID:       shopOrder.ID,
-			VariationID:       variationValue.VariationID,
-			VariationOptionID: variationValue.VariationOptionID,
-		}
-		shopOrderVariations = append(shopOrderVariations, shopOrderVariation)
-	}
-
-	if err := c.DB.Create(&shopOrderVariations).Error; err != nil {
 		return err
 	}
 

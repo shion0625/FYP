@@ -39,6 +39,12 @@ export interface ProductItem {
   images: string[];
 }
 
+export interface ProductItemInfo {
+  productItemId: number;
+  variationValues: ProductVariationValue[];
+  count: number;
+}
+
 export interface ProductVariationValue {
   variationId: number;
   name: string;

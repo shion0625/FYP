@@ -1,27 +1,28 @@
-'use client';
+"use client";
 
-import axios from 'axios';
-import { useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
-import Button from '@/components/ui/button';
-import Currency from '@/components/ui/currency';
-import useCart from '@/hooks/use-cart';
+import Button from "@/components/ui/button";
+import Currency from "@/components/ui/currency";
+import useCart from "@/hooks/use-cart";
 import { toast } from "react-hot-toast";
+import { UsePurchase } from "@/actions/cart/purchase";
 
 const Summary = () => {
   const searchParams = useSearchParams();
   const items = useCart((state) => state.items);
   const removeAll = useCart((state) => state.removeAll);
+  const { purchaseOrder } = UsePurchase();
 
   useEffect(() => {
-    if (searchParams.get('success')) {
-      toast.success('Payment completed.');
+    if (searchParams.get("success")) {
+      toast.success("Payment completed.");
       removeAll();
     }
 
-    if (searchParams.get('canceled')) {
-      toast.error('Something went wrong.');
+    if (searchParams.get("canceled")) {
+      toast.error("Something went wrong.");
     }
   }, [searchParams, removeAll]);
 
@@ -30,11 +31,24 @@ const Summary = () => {
   }, 0);
 
   const onCheckout = async () => {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/checkout`, {
-      productIds: items.map((item) => item.id),
-    });
-
-    window.location = response.data.url;
+    const convertProductItemInfo = items.map((item) => ({
+      productItemId: item.id,
+      variationValues: item.variationValues,
+      count: item.count || 0, // countがundefinedの場合は0とする
+    }));
+    try {
+      const response = await purchaseOrder({
+        userId: "016e5917-938b-4168-bc37-3da46f9f8343",
+        addressId: 11,
+        productItemInfo: convertProductItemInfo,
+        totalFee: totalPrice,
+        paymentMethodID: 11,
+      });
+      toast.success(response.message);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.data);
+    }
   };
 
   return (

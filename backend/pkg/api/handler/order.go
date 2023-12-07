@@ -39,5 +39,7 @@ func (o *OrderHandler) PayOrder(ctx echo.Context) error {
 		return fmt.Errorf("failed to PayOrder: %w", err)
 	}
 
+	response.SuccessResponse(ctx, http.StatusOK, "Successfully purchase order", nil)
+
 	return nil
 }

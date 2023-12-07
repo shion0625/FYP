@@ -28,10 +28,8 @@ const LoginView = () => {
       const response = await login({
         ...data,
       });
-      console.log(response)
       toast.success(response.message);
     } catch (error: any) {
-      console.log(error);
 
       toast.error(error.response.data.error);
     }

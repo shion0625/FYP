@@ -96,5 +96,5 @@ type OfferProduct struct {
 
 // no need database.
 type ServiceAccount struct {
-	PrivateKey string `json:"privateKey"`
+	PrivateKey string `json:"private_key"`
 }

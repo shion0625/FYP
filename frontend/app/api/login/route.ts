@@ -6,7 +6,6 @@ const URL = `${process.env.NEXT_PUBLIC_API_URL}/auth/login/`;
 export async function POST(req: NextRequest) {
   const json = await req.json();
 
-  console.log(json);
   // GoのAPIを呼び出す
   const response = await axios.post(URL, json);
 
