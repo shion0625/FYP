@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import useSidebar from '@/hooks/use-sidebar';
 import Container from '@/components/ui/container';
-import NavbarActions from '@/components/navbar-actions';
+import NavbarActions from '@/components/layout/navbar-actions';
 import HamburgerMenu from '@/components/ui/hamburger-button';
 export const revalidate = 0;
 

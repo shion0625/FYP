@@ -1,7 +1,7 @@
 'use client';
 
 import usePreviewModal from '@/hooks/use-preview-modal';
-import ProductItemDetail from '@/components/product-item-detail';
+import ProductItemDetail from '@/components/product/product-item-detail';
 import Modal from '@/components/ui/modal';
 import Gallery from '@/components/gallery';
 import { Button } from 'flowbite-react';

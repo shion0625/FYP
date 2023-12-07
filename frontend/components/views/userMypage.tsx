@@ -1,7 +1,7 @@
 'use client';
 import { useGetProduct } from '@/actions/product';
 import LoadingSkeleton from '@/components/ui/loading-skeleton';
-import ProductWrapper from '@/components/product-list-wrapper';
+import ProductWrapper from '@/components/product/product-list-wrapper';
 import dynamic from 'next/dynamic';
 import NoResults from '@/components/ui/no-results';
 

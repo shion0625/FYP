@@ -1,7 +1,7 @@
 'use client';
 import { useGetProduct } from '@/actions/product';
 import Info from '@/components/info';
-import ProductWrapper from '@/components/product-list-wrapper';
+import ProductWrapper from '@/components/product/product-list-wrapper';
 import NoResults from '@/components/ui/no-results';
 
 interface ProductIDViewProps {

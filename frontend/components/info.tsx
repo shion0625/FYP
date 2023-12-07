@@ -2,7 +2,7 @@
 
 import { Product } from '@/types';
 import Currency from '@/components/ui/currency';
-import ProductItemList from '@/components/product-item-list';
+import ProductItemList from '@/components/product/product-item-list';
 import { useGetProductItems } from '@/actions/product';
 import NoResults from '@/components/ui/no-results';
 import { toast } from 'react-hot-toast';
