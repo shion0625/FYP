@@ -1,7 +1,7 @@
-import axios from "axios";
+import axios from 'axios';
 
 export const axiosFetcher = async (url: string) => {
-  const accessToken = localStorage.getItem("accessToken");
+  const accessToken = localStorage.getItem('accessToken');
   return axios
     .get(url, {
       headers: {
@@ -12,7 +12,7 @@ export const axiosFetcher = async (url: string) => {
 };
 
 export const axiosPostFetcher = async (url: string, data?: any) => {
-  const accessToken = localStorage.getItem("accessToken");
+  const accessToken = localStorage.getItem('accessToken');
   return axios
     .post(url, data, {
       headers: {

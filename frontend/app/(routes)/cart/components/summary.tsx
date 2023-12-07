@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
-import Button from "@/components/ui/button";
-import Currency from "@/components/ui/currency";
-import useCart from "@/hooks/use-cart";
-import { toast } from "react-hot-toast";
-import { UsePurchase } from "@/actions/cart/purchase";
+import Button from '@/components/ui/button';
+import Currency from '@/components/ui/currency';
+import useCart from '@/hooks/use-cart';
+import { toast } from 'react-hot-toast';
+import { UsePurchase } from '@/actions/cart/purchase';
 
 const Summary = () => {
   const searchParams = useSearchParams();
@@ -16,13 +16,13 @@ const Summary = () => {
   const { purchaseOrder } = UsePurchase();
 
   useEffect(() => {
-    if (searchParams.get("success")) {
-      toast.success("Payment completed.");
+    if (searchParams.get('success')) {
+      toast.success('Payment completed.');
       removeAll();
     }
 
-    if (searchParams.get("canceled")) {
-      toast.error("Something went wrong.");
+    if (searchParams.get('canceled')) {
+      toast.error('Something went wrong.');
     }
   }, [searchParams, removeAll]);
 
@@ -38,16 +38,15 @@ const Summary = () => {
     }));
     try {
       const response = await purchaseOrder({
-        userId: "016e5917-938b-4168-bc37-3da46f9f8343",
+        userId: '016e5917-938b-4168-bc37-3da46f9f8343',
         addressId: 11,
         productItemInfo: convertProductItemInfo,
         totalFee: totalPrice,
         paymentMethodID: 11,
       });
       toast.success(response.message);
-    } catch (error: any) {
-      console.log(error);
-      toast.error(error.data);
+    } catch (error: unknown) {
+      toast.error('failed to purchase');
     }
   };
 
@@ -60,11 +59,7 @@ const Summary = () => {
           <Currency value={totalPrice} />
         </div>
       </div>
-      <Button
-        onClick={onCheckout}
-        disabled={items.length === 0}
-        className="w-full mt-6"
-      >
+      <Button onClick={onCheckout} disabled={items.length === 0} className="w-full mt-6">
         Checkout
       </Button>
     </div>

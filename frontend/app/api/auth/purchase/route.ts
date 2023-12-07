@@ -1,15 +1,15 @@
-import type { NextRequest } from "next/server";
+import type { NextRequest } from 'next/server';
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/order/purchase`;
 
-import { getAccessTokenCookie } from "@/utils/cookie";
+import { getAccessTokenCookie } from '@/utils/cookie';
 export async function POST(req: NextRequest) {
   const json = await req.json();
   const accessToken = getAccessTokenCookie();
   // GoのAPIを呼び出す
   const response = await fetch(URL, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify(json),

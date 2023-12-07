@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import NextImage from "next/image";
-import { Tab } from "@headlessui/react";
+import NextImage from 'next/image';
+import { Tab } from '@headlessui/react';
 
-import GalleryTab from "./gallery-tab";
+import GalleryTab from './gallery-tab';
 
 interface GalleryProps {
   id: string;

@@ -1,18 +1,16 @@
 // import useSWR from "swr";
 // import { axiosFetcher } from "@/actions/fecher";
-import axios from "axios";
-import { Response, Category } from "@/types";
+import axios from 'axios';
+import { Response, Category } from '@/types';
 
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/categories/`;
 
 interface UseGetProductItemsReturn {
   categories?: Response<Category[]>;
-  isError: any;
+  isError: unknown;
 }
 
-export const getCategories = async (): Promise<
-  UseGetProductItemsReturn["categories"]
-> => {
+export const getCategories = async (): Promise<UseGetProductItemsReturn['categories']> => {
   const res = await axios.get(URL);
   return res.data;
 };

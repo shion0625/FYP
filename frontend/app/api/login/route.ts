@@ -1,5 +1,5 @@
-import type { NextRequest } from "next/server";
-import { setAccessTokenCookie, setRefreshTokenCookie } from "@/utils/cookie";
+import type { NextRequest } from 'next/server';
+import { setAccessTokenCookie, setRefreshTokenCookie } from '@/utils/cookie';
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/auth/login/`;
 
 export async function POST(req: NextRequest) {
@@ -7,9 +7,9 @@ export async function POST(req: NextRequest) {
 
   // Call the Go API
   const response = await fetch(URL, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(json),
   });

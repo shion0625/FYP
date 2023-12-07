@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import NextImage from "next/image";
-import { useRouter } from "next/navigation";
+import NextImage from 'next/image';
+import { useRouter } from 'next/navigation';
 
-import { Product } from "@/types";
-import Currency from "@/components/ui/currency";
+import { Product } from '@/types';
+import Currency from '@/components/ui/currency';
 
 interface ProductCard {
   data: Product;

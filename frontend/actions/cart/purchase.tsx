@@ -1,6 +1,6 @@
-import useSWR from "swr";
-import { axiosPostFetcher } from "@/actions/fetcher";
-import { Response, ProductVariationValue, ProductItemInfo } from "@/types";
+import useSWR from 'swr';
+import { axiosPostFetcher } from '@/actions/fetcher';
+import { Response, ProductItemInfo } from '@/types';
 
 const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/purchase`;
 
@@ -14,11 +14,11 @@ export interface Body {
 
 interface UsePurchaseReturn {
   purchaseOrder: (body: Body) => Promise<Response<unknown>>;
-  isError: any;
+  isError: unknown;
 }
 
 export const UsePurchase = (): UsePurchaseReturn => {
-  const { data, error, mutate } = useSWR(URL);
+  const { error, mutate } = useSWR(URL);
 
   const purchaseOrder = async (body: Body): Promise<Response<unknown>> => {
     const response = await axiosPostFetcher(URL, body);

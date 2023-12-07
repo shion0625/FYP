@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useGetProducts } from "@/actions/product";
-import ProductList from "@/components/product-list";
-import NoResults from "@/components/ui/no-results";
+import { useGetProducts } from '@/actions/product';
+import ProductList from '@/components/product-list';
+import NoResults from '@/components/ui/no-results';
 
 interface categoryIdViewsProps {
   categoryId: string;

@@ -1,10 +1,10 @@
-import dynamic from "next/dynamic";
-import LoadingSkeleton from "@/components/ui/loading-skeleton";
+import dynamic from 'next/dynamic';
+import LoadingSkeleton from '@/components/ui/loading-skeleton';
 
-export function getDynamicComponent<P = {}>(
+export function getDynamicComponent<P = object>(
   c: string,
   count?: number,
-  type?: "productCard" | "productCardItem"
+  type?: 'productCard' | 'productCardItem'
 ) {
   return dynamic<P>(() => import(`@/components/${c}`), {
     ssr: false,

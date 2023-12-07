@@ -1,4 +1,4 @@
-import { ProductVariationValue } from "@/types";
+import { ProductVariationValue } from '@/types';
 
 interface VariationProps {
   name: string;
@@ -21,8 +21,8 @@ const Variation: React.FC<VariationProps> = ({
           key={i}
           className={`mr-2 p-2 rounded-full border ${
             selectedValue?.value === productVariationValue.value
-              ? "bg-blue-500 text-white"
-              : "bg-white"
+              ? 'bg-blue-500 text-white'
+              : 'bg-white'
           }`}
           onClick={() => onSelect(productVariationValue)}
         >

@@ -1,14 +1,9 @@
-"use client";
+'use client';
 
-import { ProductItem, ProductVariationValue } from "@/types";
-import Currency from "@/components/ui/currency";
-import usePreviewModal from "@/hooks/use-preview-modal";
-
-import { useGetProductItems } from "@/actions/product";
-import NoResults from "@/components/ui/no-results";
-import { toast } from "react-hot-toast";
-import React, { useState, useMemo, useEffect } from "react";
-import Variation from "@/components/variation";
+import { ProductItem, ProductVariationValue } from '@/types';
+import Currency from '@/components/ui/currency';
+import React from 'react';
+import Variation from '@/components/variation';
 
 export const revalidate = 0;
 
@@ -52,9 +47,7 @@ const ProductItemDetail: React.FC<ProductItemDetailProps> = ({
             name={name}
             productVariationValues={variationsMap[name]}
             selectedValue={selectedValues[name]}
-            onSelect={(value) =>
-              setSelectedValues((prev) => ({ ...prev, [name]: value }))
-            }
+            onSelect={(value) => setSelectedValues((prev) => ({ ...prev, [name]: value }))}
           />
         ))}
       </div>

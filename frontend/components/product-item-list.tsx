@@ -1,7 +1,7 @@
-import { ProductItem } from "@/types";
+import { ProductItem } from '@/types';
 
-import NoResults from "@/components/ui/no-results";
-import ProductItemCard from "@/components/ui/product-item-card";
+import NoResults from '@/components/ui/no-results';
+import ProductItemCard from '@/components/ui/product-item-card';
 
 interface ProductListProps {
   title: string;

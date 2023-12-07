@@ -1,37 +1,36 @@
-"use client";
-import { Label, TextInput, Button } from "flowbite-react";
-import { HiLockClosed, HiMail } from "react-icons/hi";
-import { UseLogin } from "@/actions/user";
-import { loginSchema } from "@/schema/user";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { toast } from "react-hot-toast";
+'use client';
+import { Label, TextInput, Button } from 'flowbite-react';
+import { HiLockClosed, HiMail } from 'react-icons/hi';
+import { UseLogin, LoginBody } from '@/actions/user';
+import { loginSchema } from '@/schema/user';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { toast } from 'react-hot-toast';
 
 const LoginView = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    mode: "onBlur",
+  } = useForm<LoginBody>({
+    mode: 'onBlur',
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
     resolver: yupResolver(loginSchema),
   });
 
   const { login } = UseLogin();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: LoginBody) => {
     try {
       const response = await login({
         ...data,
       });
       toast.success(response.message);
-    } catch (error: any) {
-
-      toast.error(error.response.data.error);
+    } catch (error: unknown) {
+      toast.error('failed to login');
     }
   };
 
@@ -53,8 +52,8 @@ const LoginView = () => {
             type="email"
             icon={HiMail}
             placeholder="name@flowbite.com"
-            color={errors.email ? "failure" : undefined}
-            {...register("email", { required: true })}
+            color={errors.email ? 'failure' : undefined}
+            {...register('email', { required: true })}
           />
         </div>
         <div className="block mb-3">
@@ -72,8 +71,8 @@ const LoginView = () => {
             type="password"
             icon={HiLockClosed}
             placeholder="password"
-            color={errors.password ? "failure" : undefined}
-            {...register("password", { required: true })}
+            color={errors.password ? 'failure' : undefined}
+            {...register('password', { required: true })}
           />
         </div>
 

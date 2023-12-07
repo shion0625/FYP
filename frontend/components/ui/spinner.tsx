@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Spinner as SpinnerFlow } from "flowbite-react";
+import { Spinner as SpinnerFlow } from 'flowbite-react';
 
 const Spinner = () => {
   return (

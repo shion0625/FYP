@@ -1,6 +1,6 @@
-"use client";
-import type { CustomFlowbiteTheme } from "flowbite-react";
-import { Sidebar as SidebarFlow } from "flowbite-react";
+'use client';
+import type { CustomFlowbiteTheme } from 'flowbite-react';
+import { Sidebar as SidebarFlow } from 'flowbite-react';
 import {
   HiArrowSmRight,
   HiChartPie,
@@ -10,12 +10,12 @@ import {
   HiShoppingBag,
   HiTable,
   HiUser,
-} from "react-icons/hi";
-import { twMerge } from "tailwind-merge";
-import { Flowbite } from "flowbite-react";
-import { Category } from "@/types";
-import { usePathname } from "next/navigation";
-import useSidebar from "@/hooks/use-sidebar";
+} from 'react-icons/hi';
+import { twMerge } from 'tailwind-merge';
+import { Flowbite } from 'flowbite-react';
+import { Category } from '@/types';
+import { usePathname } from 'next/navigation';
+import useSidebar from '@/hooks/use-sidebar';
 
 interface SidebarProps {
   data?: Category[] | null;
@@ -35,25 +35,25 @@ const Sidebar: React.FC<SidebarProps> = ({ data }) => {
     sidebar: {
       collapse: {
         button:
-          "group flex w-full items-center rounded-lg p-2 text-base font-normal text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700",
+          'group flex w-full items-center rounded-lg p-2 text-base font-normal text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700',
         icon: {
-          base: "h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white",
+          base: 'h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white',
           open: {
-            off: "",
-            on: "text-gray-900",
+            off: '',
+            on: 'text-gray-900',
           },
         },
         label: {
-          base: "ml-3 flex-1 whitespace-nowrap text-left",
+          base: 'ml-3 flex-1 whitespace-nowrap text-left',
           icon: {
-            base: "h-6 w-6 transition ease-in-out delay-0",
+            base: 'h-6 w-6 transition ease-in-out delay-0',
             open: {
-              on: "rotate-180",
-              off: "",
+              on: 'rotate-180',
+              off: '',
             },
           },
         },
-        list: "space-y-2 py-2",
+        list: 'space-y-2 py-2',
       },
     },
   };
@@ -74,26 +74,19 @@ const Sidebar: React.FC<SidebarProps> = ({ data }) => {
                   icon={HiShoppingBag}
                   label="Category"
                   renderChevronIcon={(theme, open) => {
-                    const IconComponent = open
-                      ? HiOutlineMinusSm
-                      : HiOutlinePlusSm;
+                    const IconComponent = open ? HiOutlineMinusSm : HiOutlinePlusSm;
 
                     return (
                       <IconComponent
                         aria-hidden
-                        className={twMerge(
-                          theme?.label?.icon?.open?.[open ? "on" : "off"]
-                        )}
+                        className={twMerge(theme?.label?.icon?.open?.[open ? 'on' : 'off'])}
                       />
                     );
                   }}
                 >
                   {categories ? (
                     categories.map((category) => (
-                      <SidebarFlow.Item
-                        key={category.href}
-                        href={category.href}
-                      >
+                      <SidebarFlow.Item key={category.href} href={category.href}>
                         {category.label}
                       </SidebarFlow.Item>
                     ))

@@ -55,7 +55,7 @@ export interface ProductVariationValue {
 export interface Response<T> {
   status: boolean;
   message: string;
-  error?: any;
+  error?: unknown;
   data: T | null;
 }
 export interface TokenResponse {

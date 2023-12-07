@@ -1,11 +1,11 @@
-"use client";
-import { useGetProduct } from "@/actions/product";
-import LoadingSkeleton from "@/components/ui/loading-skeleton";
-import ProductWrapper from "@/components/product-list-wrapper";
-import dynamic from "next/dynamic";
-import NoResults from "@/components/ui/no-results";
+'use client';
+import { useGetProduct } from '@/actions/product';
+import LoadingSkeleton from '@/components/ui/loading-skeleton';
+import ProductWrapper from '@/components/product-list-wrapper';
+import dynamic from 'next/dynamic';
+import NoResults from '@/components/ui/no-results';
 
-const DynamicLazyInfo = dynamic(() => import("@/components/info"), {
+const DynamicLazyInfo = dynamic(() => import('@/components/info'), {
   ssr: false,
   loading: () => <LoadingSkeleton />,
 });
@@ -21,11 +21,7 @@ const ProductIDView: React.FC<ProductIDViewProps> = ({ productId }) => {
     <div className="px-4 py-10 sm:px-6 lg:px-8">
       <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
         {/* <ErrorBoundary> */}
-        {product && product.data ? (
-          <DynamicLazyInfo data={product.data} />
-        ) : (
-          <NoResults />
-        )}
+        {product && product.data ? <DynamicLazyInfo data={product.data} /> : <NoResults />}
         {/* </ErrorBoundary> */}
       </div>
       <hr className="my-10" />

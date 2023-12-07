@@ -1,9 +1,9 @@
-"use client";
-import Link from "next/link";
-import useSidebar from "@/hooks/use-sidebar";
-import Container from "@/components/ui/container";
-import NavbarActions from "@/components/navbar-actions";
-import HamburgerMenu from "@/components/ui/hamburger-button";
+'use client';
+import Link from 'next/link';
+import useSidebar from '@/hooks/use-sidebar';
+import Container from '@/components/ui/container';
+import NavbarActions from '@/components/navbar-actions';
+import HamburgerMenu from '@/components/ui/hamburger-button';
 export const revalidate = 0;
 
 const Navbar = () => {

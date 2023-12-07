@@ -1,12 +1,10 @@
-import NextImage from "next/image";
-import { toast } from "react-hot-toast";
-import { X } from "lucide-react";
+import { X } from 'lucide-react';
 
-import IconButton from "@/components/ui/icon-button";
-import Currency from "@/components/ui/currency";
-import useCart from "@/hooks/use-cart";
-import { ProductItem } from "@/types";
-import Gallery from "@/components/gallery";
+import IconButton from '@/components/ui/icon-button';
+import Currency from '@/components/ui/currency';
+import useCart from '@/hooks/use-cart';
+import { ProductItem } from '@/types';
+import Gallery from '@/components/gallery';
 
 interface CartItemProps {
   data: ProductItem;
@@ -35,10 +33,7 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
 
           <div className="mt-1 flex text-sm">
             {data.variationValues.map((variation) => (
-              <p
-                key={data.name + variation.variationId}
-                className="text-gray-500"
-              >
+              <p key={data.name + variation.variationId} className="text-gray-500">
                 {variation.name}: {variation.value}
               </p>
             ))}

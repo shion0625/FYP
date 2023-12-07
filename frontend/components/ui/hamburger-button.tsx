@@ -1,17 +1,13 @@
-import { Button } from "flowbite-react";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { RxCross1 } from "react-icons/rx";
+import { Button } from 'flowbite-react';
+import { GiHamburgerMenu } from 'react-icons/gi';
+import { RxCross1 } from 'react-icons/rx';
 
 interface HamburgerProps {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
 }
-const HamburgerMenu: React.FC<HamburgerProps> = ({
-  isOpen,
-  onOpen,
-  onClose,
-}) => {
+const HamburgerMenu: React.FC<HamburgerProps> = ({ isOpen, onOpen, onClose }) => {
   return (
     <>
       {isOpen ? (

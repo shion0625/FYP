@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import usePreviewModal from "@/hooks/use-preview-modal";
-import ProductItemDetail from "@/components/product-item-detail";
-import Modal from "@/components/ui/modal";
-import Gallery from "@/components/gallery";
-import Button from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
-import useCart from "@/hooks/use-cart";
-import { MouseEventHandler } from "react";
-import { ProductItem, ProductVariationValue } from "@/types";
-import React, { useState, useMemo, useEffect } from "react";
+import usePreviewModal from '@/hooks/use-preview-modal';
+import ProductItemDetail from '@/components/product-item-detail';
+import Modal from '@/components/ui/modal';
+import Gallery from '@/components/gallery';
+import Button from '@/components/ui/button';
+import { ShoppingCart } from 'lucide-react';
+import useCart from '@/hooks/use-cart';
+import { MouseEventHandler } from 'react';
+import { ProductVariationValue } from '@/types';
+import React, { useState, useMemo, useEffect } from 'react';
 
 const PreviewModal = () => {
   const previewModal = usePreviewModal();
@@ -20,9 +20,7 @@ const PreviewModal = () => {
   const names = useMemo(
     () =>
       productItem && productItem.variationValues
-        ? Array.from(
-            new Set(productItem.variationValues.map((item) => item.name))
-          )
+        ? Array.from(new Set(productItem.variationValues.map((item) => item.name)))
         : [],
     [productItem?.variationValues]
   );
@@ -49,18 +47,20 @@ const PreviewModal = () => {
 
   // useEffectを使用して、valuesMapが更新されたときにselectedValuesを更新します
   useEffect(() => {
-    const initialSelectedValues = Object.keys(valuesMap).reduce((acc, key) => {
-      acc[key] = valuesMap[key][0] || null;
-      return acc;
-    }, {} as { [key: string]: ProductVariationValue | null });
+    const initialSelectedValues = Object.keys(valuesMap).reduce(
+      (acc, key) => {
+        acc[key] = valuesMap[key][0] || null;
+        return acc;
+      },
+      {} as { [key: string]: ProductVariationValue | null }
+    );
 
     setSelectedValues(initialSelectedValues);
   }, [valuesMap]);
 
   // selectedValuesを配列に変換
   const selectedValuesArray = useMemo(
-    () =>
-      Object.values(selectedValues).filter(Boolean) as ProductVariationValue[],
+    () => Object.values(selectedValues).filter(Boolean) as ProductVariationValue[],
     [selectedValues]
   );
 
@@ -92,10 +92,7 @@ const PreviewModal = () => {
           />
         </div>
       </div>
-      <Button
-        className="flex items-center gap-x-2 mx-auto mt-2"
-        onClick={onAddToCart}
-      >
+      <Button className="flex items-center gap-x-2 mx-auto mt-2" onClick={onAddToCart}>
         Add To Cart
         <ShoppingCart />
       </Button>

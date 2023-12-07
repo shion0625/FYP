@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import Container from "@/components/ui/container";
-import { getDynamicComponent } from "@/lib/dynamic-component";
+import Container from '@/components/ui/container';
+import { getDynamicComponent } from '@/lib/dynamic-component';
 
 export const revalidate = 0;
 
@@ -10,8 +10,10 @@ interface CategoryIdPageProps {
     categoryId: string;
   };
 }
-const DynamicLazyCategoryID =
-  getDynamicComponent<CategoryIdPageProps["params"]>("views/categoryID", 8);
+const DynamicLazyCategoryID = getDynamicComponent<CategoryIdPageProps['params']>(
+  'views/categoryID',
+  8
+);
 
 const CategoryIdPage = ({ params }: CategoryIdPageProps) => {
   return (

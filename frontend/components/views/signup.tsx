@@ -1,18 +1,12 @@
-"use client";
-import { Label, TextInput, Button, Checkbox } from "flowbite-react";
-import {
-  HiUser,
-  HiLockClosed,
-  HiMail,
-  HiPhone,
-  HiIdentification,
-} from "react-icons/hi";
-import Link from "next/link";
-import { UseSignUp } from "@/actions/user";
-import { signUpSchema } from "@/schema/user";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { toast } from "react-hot-toast";
+'use client';
+import { Label, TextInput, Button, Checkbox } from 'flowbite-react';
+import { HiUser, HiLockClosed, HiMail, HiPhone, HiIdentification } from 'react-icons/hi';
+import Link from 'next/link';
+import { UseSignUp, SignUpBody } from '@/actions/user';
+import { signUpSchema } from '@/schema/user';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { toast } from 'react-hot-toast';
 
 const SignUpView = () => {
   const {
@@ -20,16 +14,16 @@ const SignUpView = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    mode: "onBlur", // バリデーションチェックのトリガー（フォーカスを外した時）
+    mode: 'onBlur', // バリデーションチェックのトリガー（フォーカスを外した時）
     defaultValues: {
-      userName: "",
-      firstName: "",
-      lastName: "",
+      userName: '',
+      firstName: '',
+      lastName: '',
       age: 0,
-      email: "",
-      phone: "",
-      password: "",
-      confirmPassword: "",
+      email: '',
+      phone: '',
+      password: '',
+      confirmPassword: '',
       agree: false,
     },
     resolver: yupResolver(signUpSchema),
@@ -37,15 +31,14 @@ const SignUpView = () => {
 
   const { signUp } = UseSignUp();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: SignUpBody) => {
     try {
       const response = await signUp({
         ...data,
-        age: parseInt(data.age),
       });
       toast.success(response.message);
-    } catch (error: any) {
-      toast.error(error.response.data.error);
+    } catch (error: unknown) {
+      toast.error('failed to signUp');
     }
   };
 
@@ -68,8 +61,8 @@ const SignUpView = () => {
               type="text"
               icon={HiUser}
               placeholder="Kwame"
-              color={errors.firstName ? "failure" : undefined}
-              {...register("firstName", { required: true })}
+              color={errors.firstName ? 'failure' : undefined}
+              {...register('firstName', { required: true })}
             />
           </div>
           <div className=" block col-span-1">
@@ -87,8 +80,8 @@ const SignUpView = () => {
               type="text"
               icon={HiUser}
               placeholder="Nkrumah"
-              color={errors.lastName ? "failure" : undefined}
-              {...register("lastName", { required: true })}
+              color={errors.lastName ? 'failure' : undefined}
+              {...register('lastName', { required: true })}
             />
           </div>
         </div>
@@ -108,8 +101,8 @@ const SignUpView = () => {
               type="text"
               icon={HiUser}
               placeholder="Username"
-              color={errors.userName ? "failure" : undefined}
-              {...register("userName", { required: true })}
+              color={errors.userName ? 'failure' : undefined}
+              {...register('userName', { required: true })}
             />
           </div>
           <div className="block col-span-1">
@@ -127,8 +120,8 @@ const SignUpView = () => {
               type="number"
               icon={HiIdentification}
               placeholder="20"
-              color={errors.age ? "failure" : undefined}
-              {...register("age", { required: true })}
+              color={errors.age ? 'failure' : undefined}
+              {...register('age', { required: true })}
             />
           </div>
         </div>
@@ -147,8 +140,8 @@ const SignUpView = () => {
             type="email"
             icon={HiMail}
             placeholder="name@flowbite.com"
-            color={errors.email ? "failure" : undefined}
-            {...register("email", { required: true })}
+            color={errors.email ? 'failure' : undefined}
+            {...register('email', { required: true })}
           />
         </div>
         <div className="block mb-3">
@@ -166,8 +159,8 @@ const SignUpView = () => {
             type="tel"
             icon={HiPhone}
             placeholder="07012345678"
-            color={errors.phone ? "failure" : undefined}
-            {...register("phone", { required: true })}
+            color={errors.phone ? 'failure' : undefined}
+            {...register('phone', { required: true })}
           />
         </div>
         <div className="block mb-3">
@@ -185,8 +178,8 @@ const SignUpView = () => {
             type="password"
             icon={HiLockClosed}
             placeholder="password"
-            color={errors.password ? "failure" : undefined}
-            {...register("password", { required: true })}
+            color={errors.password ? 'failure' : undefined}
+            {...register('password', { required: true })}
           />
         </div>
         <div className="block mb-3">
@@ -204,8 +197,8 @@ const SignUpView = () => {
             type="password"
             icon={HiLockClosed}
             placeholder="confirm Password"
-            color={errors.confirmPassword ? "failure" : undefined}
-            {...register("confirmPassword", { required: true })}
+            color={errors.confirmPassword ? 'failure' : undefined}
+            {...register('confirmPassword', { required: true })}
           />
         </div>
         <div className="block mb-3">
@@ -218,13 +211,10 @@ const SignUpView = () => {
             />
           )}
           <div className="flex items-center gap-2 mb-3">
-            <Checkbox id="agree" {...register("agree", { required: true })} />
+            <Checkbox id="agree" {...register('agree', { required: true })} />
             <Label htmlFor="agree" className="flex">
               I agree with the&nbsp;
-              <Link
-                href="#"
-                className="text-cyan-600 hover:underline dark:text-cyan-500"
-              >
+              <Link href="#" className="text-cyan-600 hover:underline dark:text-cyan-500">
                 terms and conditions
               </Link>
             </Label>

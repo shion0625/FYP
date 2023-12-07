@@ -1,7 +1,7 @@
-import qs from "query-string";
-import useSWR from "swr";
-import { axiosFetcher } from "@/actions/fetcher";
-import { Response, Product } from "@/types";
+import qs from 'query-string';
+import useSWR from 'swr';
+import { axiosFetcher } from '@/actions/fetcher';
+import { Response, Product } from '@/types';
 
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/products/`;
 
@@ -12,7 +12,7 @@ interface Query {
 
 interface UseGetProductsReturn {
   products: Response<Product[]> | undefined;
-  isError: any;
+  isError: unknown;
 }
 
 export const useGetProducts = (query: Query): UseGetProductsReturn => {
@@ -24,13 +24,9 @@ export const useGetProducts = (query: Query): UseGetProductsReturn => {
     },
   });
 
-  const { data, error } = useSWR<UseGetProductsReturn["products"]>(
-    url,
-    axiosFetcher,
-    {
-      suspense: true,
-    }
-  );
+  const { data, error } = useSWR<UseGetProductsReturn['products']>(url, axiosFetcher, {
+    suspense: true,
+  });
 
   return {
     products: data,

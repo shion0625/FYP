@@ -1,6 +1,6 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
-import { ProductItem, ProductVariationValue } from "@/types";
+import { ProductItem, ProductVariationValue } from '@/types';
 
 interface PreviewModalStore {
   isOpen: boolean;

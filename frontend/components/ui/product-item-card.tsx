@@ -1,19 +1,15 @@
 // frontend/components/product-item-card.tsx
-import { ProductItem } from "@/types";
-import Currency from "@/components/ui/currency";
-import Gallery from "@/components/gallery";
-import usePreviewModal from "@/hooks/use-preview-modal";
-import useCart from "@/hooks/use-cart";
-import IconButton from "@/components/ui/icon-button";
-import { Expand, ShoppingCart } from "lucide-react";
-import { MouseEventHandler } from "react";
+import { ProductItem } from '@/types';
+import Currency from '@/components/ui/currency';
+import Gallery from '@/components/gallery';
+import usePreviewModal from '@/hooks/use-preview-modal';
+import { MouseEventHandler } from 'react';
 
 interface ProductItemCardProps {
   data: ProductItem;
 }
 
 const ProductItemCard: React.FC<ProductItemCardProps> = ({ data }) => {
-  const cart = useCart();
   const previewModal = usePreviewModal();
   const onPreview: MouseEventHandler<HTMLElement> = (event) => {
     event.stopPropagation();

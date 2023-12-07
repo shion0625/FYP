@@ -1,8 +1,7 @@
-"use client";
+'use client';
 
-import Container from "@/components/ui/container";
-import { getDynamicComponent } from "@/lib/dynamic-component";
-import LoadingSkeleton from "@/components/ui/loading-skeleton";
+import Container from '@/components/ui/container';
+import { getDynamicComponent } from '@/lib/dynamic-component';
 
 interface ProductPageProps {
   params: {
@@ -10,10 +9,10 @@ interface ProductPageProps {
   };
 }
 
-const DynamicLazyProductID = getDynamicComponent<ProductPageProps["params"]>(
-  "views/productID",
+const DynamicLazyProductID = getDynamicComponent<ProductPageProps['params']>(
+  'views/productID',
   8,
-  "productCardItem"
+  'productCardItem'
 );
 
 const ProductPage: React.FC<ProductPageProps> = ({ params }) => {

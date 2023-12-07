@@ -1,10 +1,10 @@
-import useSWR from "swr";
-import { axiosPostFetcher } from "@/actions/fetcher";
-import { Response } from "@/types";
+import useSWR from 'swr';
+import { axiosPostFetcher } from '@/actions/fetcher';
+import { Response } from '@/types';
 
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/auth/sign-in/`;
 
-interface Body {
+export interface SignUpBody {
   userName: string;
   firstName: string;
   lastName: string;
@@ -16,14 +16,14 @@ interface Body {
 }
 
 interface UseSignUpReturn {
-  signUp: (body: Body) => Promise<Response<any>>;
-  isError: any;
+  signUp: (body: SignUpBody) => Promise<Response<null>>;
+  isError: unknown;
 }
 
 export const UseSignUp = (): UseSignUpReturn => {
-  const { data, error, mutate } = useSWR(URL);
+  const { error, mutate } = useSWR(URL);
 
-  const signUp = async (body: Body): Promise<Response<any>> => {
+  const signUp = async (body: SignUpBody): Promise<Response<null>> => {
     const response = await axiosPostFetcher(URL, body);
     mutate(response, false); // Update the local data immediately, but disable revalidation
     return response.data;
