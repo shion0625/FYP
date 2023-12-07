@@ -34,12 +34,12 @@
             "position": "before"
           },
           {
-            "pattern": "{@/app/**,@/providers/**,@/libs/**,@/actions/**}",
+            "pattern": "{@/app/**,@/providers/**,@/libs/**}",
             "group": "internal",
             "position": "before"
           },
           {
-            "pattern": "{@/components/**,@/pages/**}",
+            "pattern": "{@/components/**,@/pages/**,@/actions/**,@/utils/**}",
             "group": "internal",
             "position": "before"
           },

@@ -2,7 +2,6 @@
 import dynamic from 'next/dynamic';
 
 import { useGetProduct } from '@/actions/product';
-
 import ProductWrapper from '@/components/product/product-list-wrapper';
 import LoadingSkeleton from '@/components/ui/loading-skeleton';
 import NoResults from '@/components/ui/no-results';

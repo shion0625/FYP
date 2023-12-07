@@ -1,6 +1,5 @@
 'use client';
 import { useGetProducts } from '@/actions/product';
-
 import ProductList from '@/components/product/product-list';
 import NoResults from '@/components/ui/no-results';
 
