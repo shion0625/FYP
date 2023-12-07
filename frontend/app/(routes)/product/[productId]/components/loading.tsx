@@ -58,7 +58,7 @@ export const ProductItemCardSkelton = () => {
   );
 };
 
-export const ProductItemCardListSkeleton = ({ count = 4 }) => {
+export const Loading = ({ count = 4 }) => {
   return (
     <div className="px-4 py-10 sm:px-6 lg:px-8">
       <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">

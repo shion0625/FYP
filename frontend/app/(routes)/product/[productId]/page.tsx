@@ -2,6 +2,7 @@
 
 import Container from '@/components/ui/container';
 import { getDynamicComponent } from '@/lib/dynamic-component';
+import { Loading } from './components/loading';
 
 interface ProductPageProps {
   params: {
@@ -11,8 +12,7 @@ interface ProductPageProps {
 
 const DynamicLazyProductID = getDynamicComponent<ProductPageProps['params']>(
   'views/productID',
-  8,
-  'productCardItem'
+  <Loading count={16} />
 );
 
 const ProductPage: React.FC<ProductPageProps> = ({ params }) => {

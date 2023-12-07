@@ -1,13 +1,9 @@
 import dynamic from 'next/dynamic';
 import LoadingSkeleton from '@/components/ui/loading-skeleton';
 
-export function getDynamicComponent<P = object>(
-  c: string,
-  count?: number,
-  type?: 'productCard' | 'productCardItem'
-) {
+export function getDynamicComponent<P = object>(c: string, children: React.ReactNode) {
   return dynamic<P>(() => import(`@/components/${c}`), {
     ssr: false,
-    loading: () => <LoadingSkeleton count={count} type={type} />,
+    loading: () => <LoadingSkeleton>{children}</LoadingSkeleton>,
   });
 }

@@ -4,7 +4,7 @@ import usePreviewModal from '@/hooks/use-preview-modal';
 import ProductItemDetail from '@/components/product-item-detail';
 import Modal from '@/components/ui/modal';
 import Gallery from '@/components/gallery';
-import Button from '@/components/ui/button';
+import { Button } from 'flowbite-react';
 import { ShoppingCart } from 'lucide-react';
 import useCart from '@/hooks/use-cart';
 import { MouseEventHandler } from 'react';
@@ -92,7 +92,7 @@ const PreviewModal = () => {
           />
         </div>
       </div>
-      <Button className="flex items-center gap-x-2 mx-auto mt-2" onClick={onAddToCart}>
+      <Button color="dark" className="flex items-center gap-x-2 mx-auto mt-2" onClick={onAddToCart}>
         Add To Cart
         <ShoppingCart />
       </Button>

@@ -2,7 +2,7 @@
 
 import Container from '@/components/ui/container';
 import { getDynamicComponent } from '@/lib/dynamic-component';
-
+import { Loading } from './components/loading';
 export const revalidate = 0;
 
 interface CategoryIdPageProps {
@@ -12,7 +12,7 @@ interface CategoryIdPageProps {
 }
 const DynamicLazyCategoryID = getDynamicComponent<CategoryIdPageProps['params']>(
   'views/categoryID',
-  8
+  <Loading count={16} />
 );
 
 const CategoryIdPage = ({ params }: CategoryIdPageProps) => {
