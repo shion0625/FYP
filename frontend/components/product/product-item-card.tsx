@@ -1,9 +1,11 @@
-// frontend/components/product-item-card.tsx
-import { ProductItem } from '@/types';
-import Currency from '@/components/ui/currency';
-import Gallery from '@/components/gallery';
-import usePreviewModal from '@/hooks/use-preview-modal';
+// Frontend/components/product-item-card.tsx
 import { MouseEventHandler } from 'react';
+
+import Gallery from '@/components/gallery';
+import Currency from '@/components/ui/currency';
+
+import usePreviewModal from '@/hooks/use-preview-modal';
+import { ProductItem } from '@/types';
 
 interface ProductItemCardProps {
   data: ProductItem;

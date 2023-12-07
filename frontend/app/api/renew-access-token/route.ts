@@ -1,5 +1,6 @@
-import type { NextRequest } from 'next/server';
 import { setAccessTokenCookie } from '@/utils/cookie';
+
+import type { NextRequest } from 'next/server';
 
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/auth/renew-access-token`;
 

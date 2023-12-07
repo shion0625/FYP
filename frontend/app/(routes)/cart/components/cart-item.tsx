@@ -1,10 +1,13 @@
+import React from 'react';
+
 import { X } from 'lucide-react';
 
-import IconButton from '@/components/ui/icon-button';
+import Gallery from '@/components/gallery';
 import Currency from '@/components/ui/currency';
+import IconButton from '@/components/ui/icon-button';
+
 import useCart from '@/hooks/use-cart';
 import { ProductItem } from '@/types';
-import Gallery from '@/components/gallery';
 
 interface CartItemProps {
   data: ProductItem;

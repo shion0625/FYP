@@ -1,31 +1,35 @@
 'use client';
 
-import usePreviewModal from '@/hooks/use-preview-modal';
-import ProductItemDetail from '@/components/product/product-item-detail';
-import Modal from '@/components/ui/modal';
-import Gallery from '@/components/gallery';
+import { MouseEventHandler } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+
 import { Button } from 'flowbite-react';
 import { ShoppingCart } from 'lucide-react';
+
+import Gallery from '@/components/gallery';
+import ProductItemDetail from '@/components/product/product-item-detail';
+import Modal from '@/components/ui/modal';
+
 import useCart from '@/hooks/use-cart';
-import { MouseEventHandler } from 'react';
+import usePreviewModal from '@/hooks/use-preview-modal';
 import { ProductVariationValue } from '@/types';
-import React, { useState, useMemo, useEffect } from 'react';
 
 const PreviewModal = () => {
   const previewModal = usePreviewModal();
   const productItem = usePreviewModal((state) => state.data);
   const cart = useCart();
 
-  // nameの配列（重複なし）
+  // Nameの配列（重複なし）
   const names = useMemo(
     () =>
       productItem && productItem.variationValues
         ? Array.from(new Set(productItem.variationValues.map((item) => item.name)))
         : [],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [productItem?.variationValues]
   );
 
-  // valueのmap配列(keyがname)
+  // Valueのmap配列(keyがname)
   const valuesMap = useMemo(
     () =>
       productItem?.variationValues?.reduce(
@@ -45,7 +49,7 @@ const PreviewModal = () => {
     [key: string]: ProductVariationValue | null;
   }>({});
 
-  // useEffectを使用して、valuesMapが更新されたときにselectedValuesを更新します
+  // UseEffectを使用して、valuesMapが更新されたときにselectedValuesを更新します
   useEffect(() => {
     const initialSelectedValues = Object.keys(valuesMap).reduce(
       (acc, key) => {
@@ -58,7 +62,7 @@ const PreviewModal = () => {
     setSelectedValues(initialSelectedValues);
   }, [valuesMap]);
 
-  // selectedValuesを配列に変換
+  // SelectedValuesを配列に変換
   const selectedValuesArray = useMemo(
     () => Object.values(selectedValues).filter(Boolean) as ProductVariationValue[],
     [selectedValues]
@@ -66,11 +70,12 @@ const PreviewModal = () => {
 
   const onAddToCart: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.stopPropagation();
-    if (selectedValuesArray && productItem)
+    if (selectedValuesArray && productItem) {
       cart.addItem({
         ...productItem,
         variationValues: selectedValuesArray,
       });
+    }
   };
 
   if (!productItem) {

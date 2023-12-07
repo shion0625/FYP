@@ -11,12 +11,10 @@ const LoadingSkeleton: React.FC<loadingSkeletonProps> = ({
   baseColor = '#ebebeb',
   highlightColor = '#f5f5f5',
   children,
-}) => {
-  return (
-    <SkeletonTheme baseColor={baseColor} highlightColor={highlightColor}>
-      {children}
-    </SkeletonTheme>
-  );
-};
+}) => (
+  <SkeletonTheme baseColor={baseColor} highlightColor={highlightColor}>
+    {children}
+  </SkeletonTheme>
+);
 
 export default LoadingSkeleton;

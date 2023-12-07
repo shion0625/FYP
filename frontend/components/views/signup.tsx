@@ -1,12 +1,15 @@
 'use client';
-import { Label, TextInput, Button, Checkbox } from 'flowbite-react';
-import { HiUser, HiLockClosed, HiMail, HiPhone, HiIdentification } from 'react-icons/hi';
-import Link from 'next/link';
-import { UseSignUp, SignUpBody } from '@/actions/user';
-import { signUpSchema } from '@/schema/user';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
+
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Label, TextInput, Button, Checkbox } from 'flowbite-react';
+import Link from 'next/link';
+import { HiUser, HiLockClosed, HiMail, HiPhone, HiIdentification } from 'react-icons/hi';
+
+import { UseSignUp, SignUpBody } from '@/actions/user';
+
+import { signUpSchema } from '@/schema/user';
 
 const SignUpView = () => {
   const {

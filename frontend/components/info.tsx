@@ -1,11 +1,14 @@
 'use client';
 
-import { Product } from '@/types';
-import Currency from '@/components/ui/currency';
-import ProductItemList from '@/components/product/product-item-list';
-import { useGetProductItems } from '@/actions/product';
-import NoResults from '@/components/ui/no-results';
 import { toast } from 'react-hot-toast';
+
+import { useGetProductItems } from '@/actions/product';
+
+import ProductItemList from '@/components/product/product-item-list';
+import Currency from '@/components/ui/currency';
+import NoResults from '@/components/ui/no-results';
+
+import { Product } from '@/types';
 
 export const revalidate = 0;
 

@@ -1,6 +1,6 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "import"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -12,6 +12,44 @@
     "node": true
   },
   "rules": {
-    // ここにカスタムルールを追加します
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          ["parent", "sibling"],
+          "object",
+          "type",
+          "index"
+        ],
+        "newlines-between": "always",
+        "pathGroupsExcludedImportTypes": ["builtin"],
+        "alphabetize": { "order": "asc", "caseInsensitive": true },
+        "pathGroups": [
+          {
+            "pattern": "{react**,next**}",
+            "group": "external",
+            "position": "before"
+          },
+          {
+            "pattern": "{@/app/**,@/providers/**,@/libs/**,@/actions/**}",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "{@/components/**,@/pages/**}",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "{@/types/**,@/schema/**}",
+            "group": "index",
+            "position": "after"
+          }
+        ]
+      }
+    ]
   }
 }

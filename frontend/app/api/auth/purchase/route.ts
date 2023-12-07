@@ -1,7 +1,9 @@
+import { getAccessTokenCookie } from '@/utils/cookie';
+
 import type { NextRequest } from 'next/server';
+
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/order/purchase`;
 
-import { getAccessTokenCookie } from '@/utils/cookie';
 export async function POST(req: NextRequest) {
   const json = await req.json();
   const accessToken = getAccessTokenCookie();

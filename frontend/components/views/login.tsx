@@ -1,11 +1,14 @@
 'use client';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
+
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Label, TextInput, Button } from 'flowbite-react';
 import { HiLockClosed, HiMail } from 'react-icons/hi';
+
 import { UseLogin, LoginBody } from '@/actions/user';
+
 import { loginSchema } from '@/schema/user';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { toast } from 'react-hot-toast';
 
 const LoginView = () => {
   const {

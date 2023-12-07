@@ -1,13 +1,16 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { toast } from 'react-hot-toast';
 
 import { Button } from 'flowbite-react';
-import Currency from '@/components/ui/currency';
-import useCart from '@/hooks/use-cart';
-import { toast } from 'react-hot-toast';
+import { useSearchParams } from 'next/navigation';
+
 import { UsePurchase } from '@/actions/cart/purchase';
+
+import Currency from '@/components/ui/currency';
+
+import useCart from '@/hooks/use-cart';
 
 const Summary = () => {
   const searchParams = useSearchParams();
@@ -26,15 +29,13 @@ const Summary = () => {
     }
   }, [searchParams, removeAll]);
 
-  const totalPrice = items.reduce((total, item) => {
-    return total + Number(item.price);
-  }, 0);
+  const totalPrice = items.reduce((total, item) => total + Number(item.price), 0);
 
   const onCheckout = async () => {
     const convertProductItemInfo = items.map((item) => ({
       productItemId: item.id,
       variationValues: item.variationValues,
-      count: item.count || 0, // countがundefinedの場合は0とする
+      count: item.count || 0, // Countがundefinedの場合は0とする
     }));
     try {
       const response = await purchaseOrder({

@@ -1,6 +1,7 @@
 'use client';
 
 import { useGetProducts } from '@/actions/product';
+
 import ProductList from '@/components/product/product-list';
 import NoResults from '@/components/ui/no-results';
 
@@ -10,7 +11,7 @@ interface categoryIdViewsProps {
 
 const CategoryIdView: React.FC<categoryIdViewsProps> = ({ categoryId }) => {
   const { products } = useGetProducts({
-    categoryId: categoryId,
+    categoryId,
   });
 
   return (

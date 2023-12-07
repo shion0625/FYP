@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
+
 import { Urbanist } from 'next/font/google';
+
+import { getCategories } from '@/actions/category';
+import ModalProvider from '@/providers/modal-provider';
+import ToastProvider from '@/providers/toast-provider';
 
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
-import ModalProvider from '@/providers/modal-provider';
-import ToastProvider from '@/providers/toast-provider';
 import Sidebar from '@/components/layout/sidebar';
-import { getCategories } from '@/actions/category';
 
 import './globals.css';
 
