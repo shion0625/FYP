@@ -16,7 +16,6 @@ interface UseLoginReturn {
 
 export const UseLogin = (): UseLoginReturn => {
   const { error, mutate } = useSWR(URL);
-
   const login = async (body: LoginBody): Promise<Response<TokenResponse>> => {
     const response = await axiosPostFetcher(URL, body);
     mutate(response, false);

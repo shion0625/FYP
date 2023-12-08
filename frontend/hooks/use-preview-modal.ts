@@ -1,5 +1,5 @@
-import { ProductItem } from '@/types';
 import { create } from 'zustand';
+import { ProductItem } from '@/types';
 
 interface PreviewModalStore {
   isOpen: boolean;

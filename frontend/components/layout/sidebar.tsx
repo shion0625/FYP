@@ -13,9 +13,9 @@ import {
   HiUser,
 } from 'react-icons/hi';
 import { twMerge } from 'tailwind-merge';
+import type { CustomFlowbiteTheme } from 'flowbite-react';
 import useSidebar from '@/hooks/use-sidebar';
 import { Category } from '@/types';
-import type { CustomFlowbiteTheme } from 'flowbite-react';
 
 interface SidebarProps {
   data?: Category[] | null;
@@ -67,8 +67,8 @@ const Sidebar: React.FC<SidebarProps> = ({ data }) => {
           >
             <SidebarFlow.Items>
               <SidebarFlow.ItemGroup>
-                <SidebarFlow.Item href="#" icon={HiChartPie}>
-                  Dashboard
+                <SidebarFlow.Item href="/user/myPage" icon={HiChartPie}>
+                  myPage
                 </SidebarFlow.Item>
                 <SidebarFlow.Collapse
                   icon={HiShoppingBag}

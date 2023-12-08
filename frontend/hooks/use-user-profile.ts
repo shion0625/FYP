@@ -1,18 +1,22 @@
 import { create } from 'zustand';
-import { User, Address } from '@/types';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface UserProfileStore {
-  user?: User;
-  addressList: Address[];
-  setUser: (data: User) => void;
-  setAddressList: (data: Address[]) => void;
+  userId: string;
+  setUserId: (data: string) => void;
 }
 
-const useUserProfile = create<UserProfileStore>((set) => ({
-  user: undefined,
-  setUser: (data: User) => set({ user: data }),
-  addressList: [],
-  setAddressList: (data: Address[]) => set({ addressList: data }),
-}));
+const useUserProfile = create(
+  persist<UserProfileStore>(
+    (set) => ({
+      userId: '',
+      setUserId: (userId: string) => set({ userId }),
+    }),
+    {
+      name: 'user-storage',
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);
 
 export default useUserProfile;

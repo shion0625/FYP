@@ -6,6 +6,7 @@ import { Label, TextInput, Button } from 'flowbite-react';
 import { HiLockClosed, HiMail } from 'react-icons/hi';
 import { UseLogin, LoginBody } from '@/actions/user';
 import { loginSchema } from '@/schema/user';
+import useUserProfile from '@/hooks/use-user-profile';
 
 const LoginView = () => {
   const {
@@ -24,12 +25,15 @@ const LoginView = () => {
   const { login } = UseLogin();
 
   const onSubmit = async (data: LoginBody) => {
+    let response;
     try {
-      const response = await login({
+      response = await login({
         ...data,
       });
-      console.log(response.data?.userId);
       toast.success(response.message);
+      if (response?.data?.userId) {
+        useUserProfile.getState().setUserId(response.data?.userId);
+      }
     } catch (error: unknown) {
       toast.error('failed to login');
     }
