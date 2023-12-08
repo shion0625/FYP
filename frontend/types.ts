@@ -87,5 +87,5 @@ export interface Response<T> {
 }
 export interface TokenResponse {
   accessToken: string;
-  userId: string
+  userId: string;
 }

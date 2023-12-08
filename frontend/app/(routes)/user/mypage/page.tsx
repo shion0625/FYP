@@ -1,12 +1,14 @@
 'use client';
+import { getDynamicComponent } from '@/lib/dynamic-component';
 import Container from '@/components/ui/container';
-import MyPageView from '@/components/views/mypage';
 
 export const revalidate = 0;
 
+const DynamicLazyMyPage = getDynamicComponent('views/mypage', <></>);
+
 const MyPage = () => (
   <Container>
-    <MyPageView />
+    <DynamicLazyMyPage />
   </Container>
 );
 

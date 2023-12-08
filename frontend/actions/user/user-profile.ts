@@ -1,21 +1,32 @@
+import qs from 'query-string';
 import useSWR from 'swr';
 import { axiosFetcher } from '@/actions/fetcher';
-import { Response, ProductItem } from '@/types';
+import { Response, User } from '@/types';
 
-const URL = `${process.env.NEXT_PUBLIC_API_URL}/products`;
+const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/user-profile`;
 
-interface UseGetProductItemsReturn {
-  productItems: Response<ProductItem[]> | undefined;
+interface Query {
+  userId: string;
+}
+
+interface UseGetProfileReturn {
+  userProfile: Response<User> | undefined;
   isError: unknown;
 }
 
-export const useGetProfile = (id: number): UseGetProductItemsReturn => {
-  const { data, error } = useSWR<Response<ProductItem[]>>(`${URL}/${id}/items/`, axiosFetcher, {
+export const useGetProfile = (query: Query): UseGetProfileReturn => {
+  const url = qs.stringifyUrl({
+    url: URL,
+    query: {
+      userId: query.userId,
+    },
+  });
+  const { data, error } = useSWR<UseGetProfileReturn['userProfile']>(url, axiosFetcher, {
     suspense: true,
   });
 
   return {
-    productItems: data,
+    userProfile: data,
     isError: error,
   };
 };

@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-interface UserProfileStore {
+interface UserIdStore {
   userId: string;
   setUserId: (data: string) => void;
 }
 
-const useUserProfile = create(
-  persist<UserProfileStore>(
+const useUserId = create(
+  persist<UserIdStore>(
     (set) => ({
       userId: '',
       setUserId: (userId: string) => set({ userId }),
@@ -19,4 +19,4 @@ const useUserProfile = create(
   )
 );
 
-export default useUserProfile;
+export default useUserId;
