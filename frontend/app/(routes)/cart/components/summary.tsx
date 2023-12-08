@@ -1,29 +1,15 @@
 'use client';
 
-import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { Button } from 'flowbite-react';
-import { useSearchParams } from 'next/navigation';
 import { UsePurchase } from '@/actions/cart/purchase';
 import Currency from '@/components/ui/currency';
 import useCart from '@/hooks/use-cart';
 
 const Summary = () => {
-  const searchParams = useSearchParams();
   const items = useCart((state) => state.items);
   const removeAll = useCart((state) => state.removeAll);
   const { purchaseOrder } = UsePurchase();
-
-  useEffect(() => {
-    if (searchParams.get('success')) {
-      toast.success('Payment completed.');
-      removeAll();
-    }
-
-    if (searchParams.get('canceled')) {
-      toast.error('Something went wrong.');
-    }
-  }, [searchParams, removeAll]);
 
   const totalPrice = items.reduce((total, item) => total + Number(item.price), 0);
 
@@ -42,6 +28,7 @@ const Summary = () => {
         paymentMethodID: 11,
       });
       toast.success(response.message);
+      removeAll();
     } catch (error: unknown) {
       toast.error('failed to purchase');
     }
