@@ -44,7 +44,7 @@
             "position": "before"
           },
           {
-            "pattern": "{@/components/**,@/pages/**,@/actions/**,@/utils/**}",
+            "pattern": "{@/components/**,@/pages/**,@/actions/**,@/utils/**,@/hooks/**}",
             "group": "internal",
             "position": "before"
           },
