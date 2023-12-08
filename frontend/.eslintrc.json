@@ -24,7 +24,7 @@
           "type",
           "index"
         ],
-        "newlines-between": "always",
+        "newlines-between": "never",
         "pathGroupsExcludedImportTypes": ["builtin"],
         "alphabetize": { "order": "asc", "caseInsensitive": true },
         "pathGroups": [
@@ -34,7 +34,12 @@
             "position": "before"
           },
           {
-            "pattern": "{@/app/**,@/providers/**,@/libs/**}",
+            "pattern": "swr",
+            "group": "external",
+            "position": "after"
+          },
+          {
+            "pattern": "{@/app/**,@/providers/**,@/lib/**}",
             "group": "internal",
             "position": "before"
           },
@@ -45,7 +50,7 @@
           },
           {
             "pattern": "{@/types/**,@/schema/**}",
-            "group": "index",
+            "group": "type",
             "position": "after"
           }
         ]

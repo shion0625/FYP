@@ -1,3 +1,31 @@
+export interface User {
+  id: string;
+  googleImage: string;
+  firstName: string;
+  lastName: string;
+  age: number;
+  email: string;
+  userName: string;
+  phone: string;
+  blockStatus: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Address {
+  id: number;
+  name: string;
+  phoneNumber: string;
+  house: string;
+  area: string;
+  landMark: string;
+  city: string;
+  pincode: number;
+  countryId: number;
+  countryName: string;
+  isDefault?: boolean;
+}
+
 export interface Billboard {
   id: string;
   label: string;
@@ -60,4 +88,5 @@ export interface Response<T> {
 }
 export interface TokenResponse {
   accessToken: string;
+  userId: string
 }

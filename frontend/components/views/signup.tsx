@@ -1,14 +1,11 @@
 'use client';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Label, TextInput, Button, Checkbox } from 'flowbite-react';
 import Link from 'next/link';
 import { HiUser, HiLockClosed, HiMail, HiPhone, HiIdentification } from 'react-icons/hi';
-
 import { UseSignUp, SignUpBody } from '@/actions/user';
-
 import { signUpSchema } from '@/schema/user';
 
 const SignUpView = () => {

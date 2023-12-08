@@ -1,9 +1,7 @@
 // Frontend/components/product-item-card.tsx
 import { MouseEventHandler } from 'react';
-
 import Gallery from '@/components/gallery';
 import Currency from '@/components/ui/currency';
-
 import usePreviewModal from '@/hooks/use-preview-modal';
 import { ProductItem } from '@/types';
 

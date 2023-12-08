@@ -1,12 +1,13 @@
 'use client';
 import Container from '@/components/ui/container';
-import SignUPView from '@/components/views/signup';
+import MyPageView from '@/components/views/mypage';
+
 export const revalidate = 0;
 
-const SignUpPage = () => (
+const MyPage = () => (
   <Container>
-    <SignUPView />
+    <MyPageView />
   </Container>
 );
 
-export default SignUpPage;
+export default MyPage;

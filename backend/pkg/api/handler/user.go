@@ -38,7 +38,21 @@ func (u *UserHandler) GetProfile(ctx echo.Context) error {
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved user details", user)
+	responseUser := response.User{
+		ID:          user.ID,
+		GoogleImage: user.GoogleImage,
+		FirstName:   user.FirstName,
+		LastName:    user.LastName,
+		Age:         user.Age,
+		Email:       user.Email,
+		UserName:    user.UserName,
+		Phone:       user.Phone,
+		BlockStatus: user.BlockStatus,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+	}
+
+	response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved user details", responseUser)
 
 	return nil
 }

@@ -1,5 +1,4 @@
 import { getAccessTokenCookie } from '@/utils/cookie';
-
 import type { NextRequest } from 'next/server';
 
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/order/purchase`;

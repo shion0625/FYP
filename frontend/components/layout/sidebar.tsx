@@ -13,10 +13,8 @@ import {
   HiUser,
 } from 'react-icons/hi';
 import { twMerge } from 'tailwind-merge';
-
 import useSidebar from '@/hooks/use-sidebar';
 import { Category } from '@/types';
-
 import type { CustomFlowbiteTheme } from 'flowbite-react';
 
 interface SidebarProps {

@@ -1,11 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-
 import { Button } from 'flowbite-react';
 import { ShoppingBag } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-
 import useCart from '@/hooks/use-cart';
 
 const NavbarActions = () => {

@@ -4,7 +4,7 @@ import "time"
 
 // user details response.
 type User struct {
-	ID          uint      `copier:"must"      json:"id"`
+	ID          string    `copier:"must"      json:"id"`
 	GoogleImage string    `json:"googleImage"`
 	FirstName   string    `copier:"must"      json:"firstName"`
 	LastName    string    `copier:"must"      json:"lastName"`

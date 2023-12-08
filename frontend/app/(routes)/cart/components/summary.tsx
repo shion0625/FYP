@@ -2,13 +2,10 @@
 
 import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-
 import { Button } from 'flowbite-react';
 import { useSearchParams } from 'next/navigation';
-
 import { UsePurchase } from '@/actions/cart/purchase';
 import Currency from '@/components/ui/currency';
-
 import useCart from '@/hooks/use-cart';
 
 const Summary = () => {

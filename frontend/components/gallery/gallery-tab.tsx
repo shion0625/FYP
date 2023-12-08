@@ -1,6 +1,5 @@
 import { Tab } from '@headlessui/react';
 import NextImage from 'next/image';
-
 import { cn } from '@/lib/tailwind';
 
 interface GalleryTabProps {

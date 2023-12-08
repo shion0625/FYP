@@ -1,6 +1,5 @@
 import ProductItemCard from '@/components/product/product-item-card';
 import NoResults from '@/components/ui/no-results';
-
 import { ProductItem } from '@/types';
 
 interface ProductListProps {

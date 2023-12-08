@@ -154,6 +154,7 @@ func (a *AuthHandler) setupTokenAndResponse(ctx echo.Context, tokenUser token.Us
 	tokenRes := response.TokenResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
+		UserID:       userID,
 	}
 	response.SuccessResponse(ctx, http.StatusOK, "Successfully logged in", tokenRes)
 }

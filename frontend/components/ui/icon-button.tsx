@@ -1,5 +1,4 @@
 import { MouseEventHandler } from 'react';
-
 import { cn } from '@/lib/tailwind';
 
 interface IconButtonProps {

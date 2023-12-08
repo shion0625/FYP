@@ -2,14 +2,11 @@
 
 import { MouseEventHandler } from 'react';
 import React, { useState, useMemo, useEffect } from 'react';
-
 import { Button } from 'flowbite-react';
 import { ShoppingCart } from 'lucide-react';
-
 import Gallery from '@/components/gallery';
 import ProductItemDetail from '@/components/product/product-item-detail';
 import Modal from '@/components/ui/modal';
-
 import useCart from '@/hooks/use-cart';
 import usePreviewModal from '@/hooks/use-preview-modal';
 import { ProductVariationValue } from '@/types';
