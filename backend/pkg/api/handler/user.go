@@ -207,3 +207,62 @@ func (u *UserHandler) UpdateAddress(ctx echo.Context) error {
 
 	return nil
 }
+
+func (u *UserHandler) GetAllPaymentMethods(ctx echo.Context) error {
+	userID, err := utils.GetUserIdFromContext(ctx)
+	if err != nil {
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "GetAllPaymentMethods", err, nil)
+
+		return nil
+	}
+
+	paymentMethod, err := u.userUseCase.FindPaymentMethods(ctx, userID)
+	if err != nil {
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "GetAllPaymentMethods", err, nil)
+
+		return nil
+	}
+
+	if len(paymentMethod) == 0 {
+		response.SuccessResponse(ctx, http.StatusOK, "No addresses found", nil)
+
+		return nil
+	}
+
+	response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all user addresses", paymentMethod)
+
+	return nil
+}
+
+func (u *UserHandler) SavePaymentMethod(ctx echo.Context) error {
+	userID, err := utils.GetUserIdFromContext(ctx)
+	if err != nil {
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+
+		return nil
+	}
+
+	var body request.PaymentMethod
+
+	if err := ctx.Bind(&body); err != nil {
+		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
+
+		return nil
+	}
+
+	if err := ctx.Validate(body); err != nil {
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+		return nil
+	}
+
+	if err := u.userUseCase.SavePaymentMethod(ctx, userID, body); err != nil {
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to update user address", err, nil)
+
+		return nil
+	}
+
+	response.SuccessResponse(ctx, http.StatusOK, "successfully addresses updated", body)
+
+	return nil
+}

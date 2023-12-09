@@ -30,9 +30,6 @@ type UserRepository interface {
 	SaveUserAddress(ctx echo.Context, userAdress domain.UserAddress) error
 	UpdateUserAddress(ctx echo.Context, userAddress domain.UserAddress) error
 
-	// //wishlist
-	// FindWishListItem(ctx echo.Context, productID, userID string) (domain.WishList, error)
-	// FindAllWishListItemsByUserID(ctx echo.Context, userID string) ([]response.WishListItem, error)
-	// SaveWishListItem(ctx echo.Context, wishList domain.WishList) error
-	// RemoveWishListItem(ctx echo.Context, userID string, productItemID uint) error
+	FindAllPaymentMethodsByUserID(ctx echo.Context, userID string) ([]response.PaymentMethod, error)
+	SavePaymentMethod(ctx echo.Context, paymentMethod domain.PaymentMethod) (uint, error)
 }

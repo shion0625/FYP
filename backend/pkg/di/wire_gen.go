@@ -31,7 +31,7 @@ func InitializeApi(cfg *config.Config) (*api.ServerHTTP, error) {
 	authRepository := repository.NewAuthRepository(gormDB)
 	authUseCase := usecase.NewAuthUseCase(userRepository, tokenService, authRepository)
 	authHandler := handler.NewAuthHandler(authUseCase, cfg)
-	userUseCase := usecase.NewUserUseCase(userRepository)
+	userUseCase := usecase.NewUserUseCase(cfg, userRepository)
 	userHandler := handler.NewUserHandler(userUseCase)
 	productRepository := repository.NewProductRepository(gormDB)
 	cloudService, err := cloud.NewGCPCloudService(cfg)

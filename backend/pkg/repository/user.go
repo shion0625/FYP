@@ -207,3 +207,24 @@ func (c *userDatabase) UpdateUserAddress(ctx echo.Context, userAddress domain.Us
 
 	return nil
 }
+
+func (c *userDatabase) FindAllPaymentMethodsByUserID(ctx echo.Context, userID string) (paymentMethods []response.PaymentMethod, err error) {
+	err = c.DB.
+		Table("payment_methods").
+		Select("id, credit_number").
+		Where("user_id = ?", userID).
+		Scan(&paymentMethods).Error
+
+	return paymentMethods, err
+}
+
+func (c *userDatabase) SavePaymentMethod(ctx echo.Context, paymentMethod domain.PaymentMethod) (paymentMethodID uint, err error) {
+	paymentMethod.CreatedAt = time.Now()
+	result := c.DB.Create(&paymentMethod)
+
+	if result.Error != nil {
+		return paymentMethodID, errors.New("failed to insert address on database")
+	}
+
+	return paymentMethod.ID, nil
+}

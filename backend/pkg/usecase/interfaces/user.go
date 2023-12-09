@@ -16,8 +16,6 @@ type UserUseCase interface {
 	UpdateAddress(ctx echo.Context, addressBody request.EditAddress, userID string) error
 	FindAddresses(ctx echo.Context, userID string) ([]response.Address, error) // to get all address of a user
 
-	// // wishlist
-	// SaveToWishList(ctx echo.Context, wishList domain.WishList) error
-	// RemoveFromWishList(ctx echo.Context, userID, productItemID string) error
-	// FindAllWishListItems(ctx echo.Context, userID string) ([]response.WishListItem, error)
+	FindPaymentMethods(ctx echo.Context, userID string) ([]response.PaymentMethod, error)
+	SavePaymentMethod(ctx echo.Context, userID string, paymentMethod request.PaymentMethod) error
 }

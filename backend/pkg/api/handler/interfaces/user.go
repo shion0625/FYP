@@ -9,4 +9,7 @@ type UserHandler interface {
 	SaveAddress(ctx echo.Context) error
 	GetAllAddresses(ctx echo.Context) error
 	UpdateAddress(ctx echo.Context) error
+
+	SavePaymentMethod(ctx echo.Context) error
+	GetAllPaymentMethods(ctx echo.Context) error
 }

@@ -4,11 +4,13 @@ import (
 	"time"
 
 	"github.com/brianvoe/gofakeit/v6"
+	"github.com/shion0625/FYP/backend/pkg/config"
 	"github.com/shion0625/FYP/backend/pkg/domain"
+	"github.com/shion0625/FYP/backend/pkg/utils"
 	"gorm.io/gorm"
 )
 
-func CreateUserDomain(db *gorm.DB, options ...func(*domain.User)) error {
+func CreateUserDomain(db *gorm.DB, cfg *config.Config, options ...func(*domain.User)) error {
 	const (
 		MinAge          = 20
 		MaxAge          = 80
@@ -76,11 +78,13 @@ func CreateUserDomain(db *gorm.DB, options ...func(*domain.User)) error {
 		return err
 	}
 
+	creditNumber := gofakeit.CreditCardNumber(nil)
 	// PaymentMethod domain
 	paymentMethod := domain.PaymentMethod{
-		CreditNumber: gofakeit.CreditCardNumber(nil),
+		CreditNumber: utils.Encrypt(creditNumber, user.ID +cfg.CreditCardKey),
 		Cvv:          gofakeit.CreditCardCvv(),
 		UserId:       user.ID,
+		CardCompany:  utils.GetCardIssuer(creditNumber),
 		CreatedAt:    gofakeit.Date(),
 		UpdatedAt:    gofakeit.Date(),
 	}
@@ -103,9 +107,9 @@ func CreateUserDomain(db *gorm.DB, options ...func(*domain.User)) error {
 	return nil
 }
 
-func CreateUsersDomain(db *gorm.DB, count int) error {
+func CreateUsersDomain(db *gorm.DB, count int, cfg *config.Config) error {
 	for i := 0; i < count; i++ {
-		if err := CreateUserDomain(db); err != nil {
+		if err := CreateUserDomain(db, cfg); err != nil {
 			return err
 		}
 	}

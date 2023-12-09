@@ -3,6 +3,7 @@ package seeds
 import (
 	"fmt"
 
+	"github.com/shion0625/FYP/backend/pkg/config"
 	"gorm.io/gorm"
 )
 
@@ -14,13 +15,13 @@ const (
 )
 
 // You can add the specified seed here.
-func All(db *gorm.DB) []Seed {
+func All(db *gorm.DB, cfg *config.Config) []Seed {
 	return []Seed{
 		{
 			Name: "RandomCreateUserDomain",
 			Run: func(tx *gorm.DB) error {
 				err := tx.Transaction(func(tx2 *gorm.DB) error {
-					return CreateUsersDomain(tx2, UserCount)
+					return CreateUsersDomain(tx2, UserCount, cfg)
 				})
 				if err != nil {
 					return fmt.Errorf("failed to create user domain: %w", err)

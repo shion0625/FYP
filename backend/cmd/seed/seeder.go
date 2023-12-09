@@ -24,7 +24,7 @@ func main() {
 		log.Fatalf("\x1b[31mFailed to begin transaction: %s \x1b[0m", tx.Error)
 	}
 
-	for _, seed := range seeds.All(tx) {
+	for _, seed := range seeds.All(tx, cfg) {
 		if err := seed.Run(tx); err != nil {
 			tx.Rollback()
 			log.Fatalf("\x1b[31mFailed '%s', failed with error: %s \x1b[0m", seed.Name, err)

@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/request"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/response"
+	"github.com/shion0625/FYP/backend/pkg/config"
 	"github.com/shion0625/FYP/backend/pkg/domain"
 	"github.com/shion0625/FYP/backend/pkg/repository/interfaces"
 	service "github.com/shion0625/FYP/backend/pkg/usecase/interfaces"
@@ -19,12 +20,14 @@ import (
 const bcryptCost = 10
 
 type userUserCase struct {
-	userRepo interfaces.UserRepository
+	userRepo      interfaces.UserRepository
+	creditCardKey string
 }
 
-func NewUserUseCase(userRepo interfaces.UserRepository) service.UserUseCase {
+func NewUserUseCase(cfg *config.Config, userRepo interfaces.UserRepository) service.UserUseCase {
 	return &userUserCase{
-		userRepo: userRepo,
+		userRepo:      userRepo,
+		creditCardKey: cfg.CreditCardKey,
 	}
 }
 
@@ -153,4 +156,33 @@ func (u *userUserCase) FindAddresses(ctx echo.Context, userID string) (addresses
 	}
 
 	return addresses, nil
+}
+
+func (u *userUserCase) FindPaymentMethods(ctx echo.Context, userID string) (paymentMethods []response.PaymentMethod, err error) {
+	paymentMethods, err = u.userRepo.FindAllPaymentMethodsByUserID(ctx, userID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find payment method: %w", err)
+	}
+
+	for i, method := range paymentMethods {
+		creditNumberDecrypted := utils.Decrypt(method.CreditNumber, userID+u.creditCardKey)
+		paymentMethods[i].CreditNumber = creditNumberDecrypted[len(creditNumberDecrypted)-4:]
+	}
+
+	return paymentMethods, nil
+}
+
+// to add new product.
+func (u *userUserCase) SavePaymentMethod(ctx echo.Context, userID string, paymentMethod request.PaymentMethod) error {
+	_, err := u.userRepo.SavePaymentMethod(ctx, domain.PaymentMethod{
+		CreditNumber: utils.Encrypt(paymentMethod.CreditNumber, userID+u.creditCardKey),
+		Cvv:          paymentMethod.Cvv,
+		UserId:       userID,
+		CardCompany:  utils.GetCardIssuer(paymentMethod.CreditNumber),
+	})
+	if err != nil {
+		return fmt.Errorf("failed to save product: %w", err)
+	}
+
+	return nil
 }

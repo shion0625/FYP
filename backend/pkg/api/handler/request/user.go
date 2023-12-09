@@ -38,8 +38,6 @@ type EditUser struct {
 }
 
 type PaymentMethod struct {
-	ID           uint   `gorm:"primaryKey;not null" json:"id"`
 	CreditNumber string `gorm:"unique;not null"     json:"creditNumber"`
 	Cvv          string `gorm:"not null"            json:"cvv"`
-	UserId       string `gorm:"not null"            json:"userId"`
 }
