@@ -1,12 +1,11 @@
 'use client';
 import { Card } from 'flowbite-react';
 import { UseGetMyPage } from '@/app/(routes)/user/myPage/hooks/get-mypage';
+import CardIcon from '@/components/ui/credit-cards';
 import NoResults from '@/components/ui/no-results';
 
 const MyPageView = () => {
   const { userProfile, userAddressList, userPaymentMethod } = UseGetMyPage();
-  console.log(userPaymentMethod);
-
   return (
     <div className="space-y-10 pb-10">
       {userProfile && userProfile.data ? (
@@ -88,17 +87,20 @@ const MyPageView = () => {
       )}
       {userPaymentMethod && userPaymentMethod.data ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-center bg-white shadow-lg rounded-lg p-10">
-          {userPaymentMethod.data.map((paymentMethod) => (
-            <Card key={paymentMethod.id}>
-              <p>
-                <span className="font-bold">Card ID:</span> {paymentMethod.id}
-              </p>
-              <p>
-                <span className="font-bold">Card Number:</span> **** **** ****{' '}
-                {paymentMethod.creditNumber}
-              </p>
-            </Card>
-          ))}
+          {userPaymentMethod.data.map((paymentMethod) => {
+            return (
+              <Card key={paymentMethod.id}>
+                <p>
+                  <CardIcon cardCompany={paymentMethod.cardCompany} />
+                  <span className="font-bold">Card ID:</span> {paymentMethod.id}
+                </p>
+                <p>
+                  <span className="font-bold">Card Number:</span> **** **** ****{' '}
+                  {paymentMethod.creditNumber}
+                </p>
+              </Card>
+            );
+          })}
         </div>
       ) : (
         <NoResults />

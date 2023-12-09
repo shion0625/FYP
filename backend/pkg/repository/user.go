@@ -211,7 +211,7 @@ func (c *userDatabase) UpdateUserAddress(ctx echo.Context, userAddress domain.Us
 func (c *userDatabase) FindAllPaymentMethodsByUserID(ctx echo.Context, userID string) (paymentMethods []response.PaymentMethod, err error) {
 	err = c.DB.
 		Table("payment_methods").
-		Select("id, credit_number").
+		Select("id, credit_number", "card_company").
 		Where("user_id = ?", userID).
 		Scan(&paymentMethods).Error
 
