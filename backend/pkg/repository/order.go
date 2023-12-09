@@ -61,10 +61,10 @@ func (c *orderDatabase) UpdateProductItemStock(ctx echo.Context, productItemID u
 	return newStock, err
 }
 
-func (c *orderDatabase) SaveOrder(ctx echo.Context, payOrder request.PayOrder) error {
+func (c *orderDatabase) SaveOrder(ctx echo.Context, userID string, payOrder request.PayOrder) error {
 	// Create a new ShopOrder from the PayOrder request
 	shopOrder := domain.ShopOrder{
-		UserID:          payOrder.UserID,
+		UserID:          userID,
 		OrderDate:       time.Now(),
 		OrderTotalPrice: payOrder.TotalFee,
 		AddressID:       payOrder.AddressID,
@@ -110,9 +110,9 @@ func (c *orderDatabase) SaveOrder(ctx echo.Context, payOrder request.PayOrder) e
 	return nil
 }
 
-func (c *orderDatabase) PayOrder(ctx echo.Context, payOrder request.PayOrder) error {
+func (c *orderDatabase) PayOrder(ctx echo.Context, paymentMethodID uint) error {
 	paymentMethod := domain.PaymentMethod{
-		ID: payOrder.PaymentMethodID,
+		ID: paymentMethodID,
 	}
 
 	if err := c.DB.First(&paymentMethod).Error; err != nil {

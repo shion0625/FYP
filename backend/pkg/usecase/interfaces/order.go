@@ -7,6 +7,6 @@ import (
 )
 
 type OrderUseCase interface {
-	PayOrder(ctx echo.Context, product request.PayOrder) error
-	GetAllShopOrders(ctx echo.Context, userId string, pagination request.Pagination) ([]response.Order, error)
+	GetAllShopOrders(ctx echo.Context, userID string, pagination request.Pagination) ([]response.Order, error)
+	PayOrder(ctx echo.Context, userID string, product request.PayOrder) error
 }

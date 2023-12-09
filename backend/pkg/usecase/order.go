@@ -22,7 +22,7 @@ func NewOrderUseCase(
 	}
 }
 
-func (o *orderUseCase) PayOrder(ctx echo.Context, payOrder request.PayOrder) error {
+func (o *orderUseCase) PayOrder(ctx echo.Context, userID string, payOrder request.PayOrder) error {
 	if err := o.orderRepo.Transactions(ctx,
 		func(repo repoInterfaces.OrderRepository) error {
 			for _, itemInfo := range payOrder.ProductItemInfo {
@@ -32,11 +32,11 @@ func (o *orderUseCase) PayOrder(ctx echo.Context, payOrder request.PayOrder) err
 				}
 			}
 
-			if err := repo.PayOrder(ctx, payOrder); err != nil {
+			if err := repo.PayOrder(ctx, payOrder.PaymentMethodID); err != nil {
 				return fmt.Errorf(": %w", err)
 			}
 
-			if err := repo.SaveOrder(ctx, payOrder); err != nil {
+			if err := repo.SaveOrder(ctx, userID, payOrder); err != nil {
 				return fmt.Errorf(": %w", err)
 			}
 

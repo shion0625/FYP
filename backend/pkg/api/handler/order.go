@@ -23,6 +23,13 @@ func NewOrderHandler(orderUsecase usecaseInterface.OrderUseCase) interfaces.Orde
 }
 
 func (o *OrderHandler) PayOrder(ctx echo.Context) error {
+	userID, err := utils.GetUserIdFromContext(ctx)
+	if err != nil {
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user id", err, nil)
+
+		return nil
+	}
+
 	var body request.PayOrder
 	if err := ctx.Bind(&body); err != nil {
 		response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
@@ -36,7 +43,7 @@ func (o *OrderHandler) PayOrder(ctx echo.Context) error {
 		return nil
 	}
 
-	if err := o.orderUseCase.PayOrder(ctx, body); err != nil {
+	if err := o.orderUseCase.PayOrder(ctx, userID, body); err != nil {
 		return fmt.Errorf("failed to PayOrder: %w", err)
 	}
 
