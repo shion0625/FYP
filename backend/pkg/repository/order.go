@@ -2,10 +2,12 @@ package repository
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/request"
+	"github.com/shion0625/FYP/backend/pkg/api/handler/response"
 	"github.com/shion0625/FYP/backend/pkg/domain"
 	"github.com/shion0625/FYP/backend/pkg/repository/interfaces"
 	"gorm.io/gorm"
@@ -124,4 +126,67 @@ func (c *orderDatabase) PayOrder(ctx echo.Context, payOrder request.PayOrder) er
 	}
 
 	return nil
+}
+
+func (o *orderDatabase) GetShopOrders(ctx echo.Context, userID string, pagination request.Pagination) (orders []response.Order, err error) {
+	limit := pagination.Count
+	offset := (pagination.PageNumber - 1) * limit
+
+	var shopOrders []domain.ShopOrder
+	err = o.DB.Debug().Preload("Address").Preload("PaymentMethod").Table("shop_orders").Limit(int(limit)).Offset(int(offset)).Where("user_id= ?", userID).Find(&shopOrders).Error
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Print(&shopOrders)
+
+	for _, shopOrder := range shopOrders {
+		var productItemInfos []response.ProductItemInfo
+
+		var shopOrderProductItems []domain.ShopOrderProductItem
+		if err := o.DB.Debug().Where("shop_order_id = ?", shopOrder.ID).Find(&shopOrderProductItems).Error; err != nil {
+			return nil, err
+		}
+
+		for _, productItem := range shopOrderProductItems {
+			var variationValues []response.VariationValues
+
+			var shopOrderVariations []domain.ShopOrderVariation
+			if err := o.DB.Debug().Where("shop_order_id = ? AND product_item_id = ?", shopOrder.ID, productItem.ProductItemID).Find(&shopOrderVariations).Error; err != nil {
+				return nil, err
+			}
+
+			for _, variation := range shopOrderVariations {
+				variationValues = append(variationValues, response.VariationValues{
+					VariationID:       variation.VariationID,
+					Name:              variation.Variation.Name,
+					VariationOptionID: variation.VariationOptionID,
+					Value:             variation.VariationOption.Value,
+				})
+			}
+
+			productItemInfos = append(productItemInfos, response.ProductItemInfo{
+				ProductItemID:   productItem.ProductItemID,
+				Count:           productItem.Count,
+				VariationValues: &variationValues,
+			})
+		}
+
+		orders = append(orders, response.Order{
+			UserID:          shopOrder.UserID,
+			ShopOrderId:     strconv.Itoa(int(shopOrder.ID)),
+			ProductItemInfo: productItemInfos,
+			Address: response.Address{
+				ID:   shopOrder.Address.ID,
+				Name: shopOrder.Address.Name,
+			},
+			TotalFee: shopOrder.OrderTotalPrice,
+			PaymentMethod: response.PaymentMethod{
+				ID:           shopOrder.PaymentMethod.ID,
+				CreditNumber: shopOrder.PaymentMethod.CreditNumber,
+			},
+		})
+	}
+
+	return
 }

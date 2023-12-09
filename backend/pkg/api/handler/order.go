@@ -9,6 +9,7 @@ import (
 	"github.com/shion0625/FYP/backend/pkg/api/handler/request"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/response"
 	usecaseInterface "github.com/shion0625/FYP/backend/pkg/usecase/interfaces"
+	"github.com/shion0625/FYP/backend/pkg/utils"
 )
 
 type OrderHandler struct {
@@ -40,6 +41,35 @@ func (o *OrderHandler) PayOrder(ctx echo.Context) error {
 	}
 
 	response.SuccessResponse(ctx, http.StatusOK, "Successfully purchase order", nil)
+
+	return nil
+}
+
+func (o *OrderHandler) GetOrderHistory(ctx echo.Context) error {
+	pagination := request.GetPagination(ctx)
+
+	userID, err := utils.GetUserIdFromContext(ctx)
+	fmt.Print(userID)
+	if err != nil {
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user id", err, nil)
+
+		return nil
+	}
+
+	orderHistories, err := o.orderUseCase.GetAllShopOrders(ctx, userID, pagination)
+	if err != nil {
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to update user address", err, nil)
+
+		return nil
+	}
+
+	if len(orderHistories) == 0 {
+		response.SuccessResponse(ctx, http.StatusOK, "No shopOrders found", nil)
+
+		return nil
+	}
+
+	response.SuccessResponse(ctx, http.StatusOK, "successfully addresses updated", orderHistories)
 
 	return nil
 }

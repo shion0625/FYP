@@ -48,8 +48,8 @@ func (u *UserHandler) GetProfile(ctx echo.Context) error {
 		UserName:    user.UserName,
 		Phone:       user.Phone,
 		BlockStatus: user.BlockStatus,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
+		CreatedAt:   user.CreatedAt,
+		UpdatedAt:   user.UpdatedAt,
 	}
 
 	response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved user details", responseUser)

@@ -22,7 +22,7 @@ func GetPagination(ctx echo.Context) Pagination {
 		Count:      defaultPageCount,
 	}
 
-	num, err := strconv.ParseUint(ctx.QueryParam("page_number"), 10, 64)
+	num, err := strconv.ParseUint(ctx.QueryParam("pageNumber"), 10, 64)
 	if err == nil {
 		pagination.PageNumber = num
 	}

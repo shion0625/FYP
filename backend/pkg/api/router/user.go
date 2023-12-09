@@ -63,6 +63,7 @@ func UserRoutes(api *echo.Group, middleware middleware.Middleware, authHandler h
 		// order
 		order := api.Group("/order")
 		{
+			order.GET("/", orderHandler.GetOrderHistory)
 			order.POST("/purchase", orderHandler.PayOrder)
 		}
 	}

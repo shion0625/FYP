@@ -5,6 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/request"
+	"github.com/shion0625/FYP/backend/pkg/api/handler/response"
 	repoInterfaces "github.com/shion0625/FYP/backend/pkg/repository/interfaces"
 	"github.com/shion0625/FYP/backend/pkg/usecase/interfaces"
 )
@@ -45,4 +46,14 @@ func (o *orderUseCase) PayOrder(ctx echo.Context, payOrder request.PayOrder) err
 	}
 
 	return nil
+}
+
+func (o *orderUseCase) GetAllShopOrders(ctx echo.Context, userID string, pagination request.Pagination) (orderHistory []response.Order, err error) {
+
+	orderHistory, err = o.orderRepo.GetShopOrders(ctx, userID, pagination)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find addresses: %w", err)
+	}
+
+	return orderHistory, nil
 }

@@ -36,3 +36,10 @@ type EditUser struct {
 	Password        string `json:"password"        validate:"required"`
 	ConfirmPassword string `json:"confirmPassword" validate:"required,eqfield=Password"`
 }
+
+type PaymentMethod struct {
+	ID           uint      `gorm:"primaryKey;not null" json:"id"`
+	CreditNumber string    `gorm:"unique;not null"     json:"creditNumber"`
+	Cvv          string    `gorm:"not null"            json:"cvv"`
+	UserId       string    `gorm:"not null"            json:"userId"`
+}

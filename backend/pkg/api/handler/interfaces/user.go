@@ -9,7 +9,4 @@ type UserHandler interface {
 	SaveAddress(ctx echo.Context) error
 	GetAllAddresses(ctx echo.Context) error
 	UpdateAddress(ctx echo.Context) error
-	// SaveToWishList(ctx echo.Context)
-	// RemoveFromWishList(ctx echo.Context)
-	// GetWishList(ctx echo.Context)
 }
