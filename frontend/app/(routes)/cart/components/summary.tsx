@@ -1,8 +1,9 @@
 'use client';
-
+import React, { useRef } from 'react';
 import { toast } from 'react-hot-toast';
-import { Button } from 'flowbite-react';
+import { Button, Card } from 'flowbite-react';
 import { UsePurchase } from '@/actions/cart/purchase';
+import { useGetAllAddresses } from '@/actions/user/user-address';
 import Currency from '@/components/ui/currency';
 import useCart from '@/hooks/use-cart';
 
@@ -10,8 +11,15 @@ const Summary = () => {
   const items = useCart((state) => state.items);
   const removeAll = useCart((state) => state.removeAll);
   const { purchaseOrder } = UsePurchase();
+  const { userAddressList } = useGetAllAddresses();
 
   const totalPrice = items.reduce((total, item) => total + Number(item.price), 0);
+
+  const clickedAddressId = useRef(0);
+
+  const handleCardClick = (id: number) => {
+    clickedAddressId.current = id;
+  };
 
   const onCheckout = async () => {
     const convertProductItemInfo = items.map((item) => ({
@@ -21,7 +29,7 @@ const Summary = () => {
     }));
     try {
       const response = await purchaseOrder({
-        addressId: 11,
+        addressId: clickedAddressId.current,
         productItemInfo: convertProductItemInfo,
         totalFee: totalPrice,
         paymentMethodID: 11,
@@ -42,6 +50,26 @@ const Summary = () => {
           <Currency value={totalPrice} />
         </div>
       </div>
+      {userAddressList && userAddressList.data ? (
+        <div className="grid grid-cols-1 items-center bg-white shadow-lg rounded-lg p-10">
+          {userAddressList.data.map((address, index) => (
+            <Card key={index} onClick={() => handleCardClick(address.id)}>
+              <h2 className="text-2xl mb-4 font-semibold">{address.name}</h2>
+              <p className="space-y-2 text-gray-700">
+                {address.house}
+                <br />
+                {address.city},{address.area}, {address.pincode}
+                <br />
+                {address.countryName}
+                <br />
+                TEL: {address.phoneNumber}
+              </p>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <></>
+      )}
       <Button onClick={onCheckout} disabled={items.length === 0} className="w-full mt-6">
         Checkout
       </Button>

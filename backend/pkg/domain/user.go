@@ -34,8 +34,8 @@ type Address struct {
 	ID          uint      `gorm:"primaryKey;unique" json:"id"`
 	Name        string    `gorm:"not null"          json:"name"`
 	PhoneNumber string    `gorm:"not null"          json:"phoneNumber"`
-	House       string    `gorm:"not null"          json:"house"`
-	Area        string    `gorm:"not null"          json:"area"`
+	House       string    `gorm:"not null"          json:"house"` // address line
+	Area        string    `gorm:"not null"          json:"area"`  // state
 	LandMark    string    `gorm:"not null"          json:"landMark"`
 	City        string    `gorm:"not null"          json:"city"`
 	Pincode     uint      `gorm:"not null"          json:"pincode"`

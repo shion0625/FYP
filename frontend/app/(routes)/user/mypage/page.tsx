@@ -7,9 +7,11 @@ export const revalidate = 0;
 const DynamicLazyMyPage = getDynamicComponent('views/mypage', <></>);
 
 const MyPage = () => (
-  <Container>
-    <DynamicLazyMyPage />
-  </Container>
+  <div className="bg-white">
+    <Container>
+      <DynamicLazyMyPage />
+    </Container>
+  </div>
 );
 
 export default MyPage;

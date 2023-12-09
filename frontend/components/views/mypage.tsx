@@ -1,13 +1,10 @@
 'use client';
 import { Card } from 'flowbite-react';
-import { useGetAllAddresses } from '@/actions/user/user-address';
-import { useGetProfile } from '@/actions/user/user-profile';
+import { UseGetMyPage } from '@/app/(routes)/user/myPage/hooks/get-mypage';
 import NoResults from '@/components/ui/no-results';
 
 const MyPageView = () => {
-  const { userProfile } = useGetProfile();
-  const { userAddressList } = useGetAllAddresses();
-  console.log(userAddressList);
+  const { userProfile, userAddressList } = UseGetMyPage();
 
   return (
     <div className="space-y-10 pb-10">
