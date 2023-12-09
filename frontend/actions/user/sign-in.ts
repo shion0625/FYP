@@ -1,6 +1,6 @@
+import useSWR from 'swr';
 import { axiosPostFetcher } from '@/actions/fetcher';
 import { Response } from '@/types';
-import useSWR from 'swr';
 
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/auth/sign-in/`;
 

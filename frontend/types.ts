@@ -89,3 +89,8 @@ export interface TokenResponse {
   accessToken: string;
   userId: string;
 }
+
+export interface PaymentMethod {
+  id: number;
+  creditNumber: string;
+}
