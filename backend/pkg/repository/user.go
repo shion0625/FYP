@@ -21,7 +21,6 @@ func NewUserRepository(db *gorm.DB) interfaces.UserRepository {
 }
 
 func (c *userDatabase) FindUserByUserID(ctx echo.Context, userID string) (user domain.User, err error) {
-	fmt.Print(userID)
 	err = c.DB.Where("id = ?", userID).First(&user).Error
 
 	return user, err
@@ -48,7 +47,7 @@ func (c *userDatabase) FindUserByPhoneNumber(ctx echo.Context, phoneNumber strin
 func (c *userDatabase) FindUserByUserNameEmailOrPhone(ctx echo.Context,
 	userDetails domain.User,
 ) (user domain.User, err error) {
-	err = c.DB.Debug().Where("user_name = ? OR email = ? OR phone = ?",
+	err = c.DB.Where("user_name = ? OR email = ? OR phone = ?",
 		userDetails.UserName, userDetails.Email, userDetails.Phone).Find(&user).Error
 
 	return user, err
@@ -68,8 +67,6 @@ func (c *userDatabase) SaveUser(ctx echo.Context, user domain.User) (userID stri
 		CreatedAt:   time.Now(),
 	}
 	result := c.DB.Create(&user)
-	fmt.Print(user.ID)
-	fmt.Print(result.Error)
 
 	return user.ID, result.Error
 }

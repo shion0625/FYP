@@ -142,6 +142,7 @@ func (p *productUseCase) FindAllProducts(ctx echo.Context, pagination request.Pa
 		url, err := p.cloudService.GetFileUrl(ctx, products[i].Image)
 		if err != nil {
 			fmt.Println(err)
+			
 			continue
 		}
 
@@ -408,8 +409,6 @@ func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) (
 				imageUrls := make([]string, len(images))
 
 				for j := range images {
-					fmt.Println(images[j])
-
 					url, err := p.cloudService.GetFileUrl(ctx, images[j])
 					if err != nil {
 						errChan <- fmt.Errorf("failed to get image url from could service: %w", err)

@@ -133,8 +133,7 @@ func (o *orderDatabase) GetShopOrders(ctx echo.Context, userID string, paginatio
 	offset := (pagination.PageNumber - 1) * limit
 
 	var shopOrders []domain.ShopOrder
-	err = o.DB.Debug().Preload("Address").Preload("PaymentMethod").Table("shop_orders").Limit(int(limit)).Offset(int(offset)).Where("user_id= ?", userID).Find(&shopOrders).Error
-	if err != nil {
+	if err := o.DB.Preload("Address").Preload("PaymentMethod").Table("shop_orders").Limit(int(limit)).Offset(int(offset)).Where("user_id= ?", userID).Find(&shopOrders).Error; err != nil {
 		return nil, err
 	}
 
@@ -144,7 +143,7 @@ func (o *orderDatabase) GetShopOrders(ctx echo.Context, userID string, paginatio
 		var productItemInfos []response.ProductItemInfo
 
 		var shopOrderProductItems []domain.ShopOrderProductItem
-		if err := o.DB.Debug().Where("shop_order_id = ?", shopOrder.ID).Find(&shopOrderProductItems).Error; err != nil {
+		if err := o.DB.Where("shop_order_id = ?", shopOrder.ID).Find(&shopOrderProductItems).Error; err != nil {
 			return nil, err
 		}
 
@@ -152,7 +151,7 @@ func (o *orderDatabase) GetShopOrders(ctx echo.Context, userID string, paginatio
 			var variationValues []response.VariationValues
 
 			var shopOrderVariations []domain.ShopOrderVariation
-			if err := o.DB.Debug().Where("shop_order_id = ? AND product_item_id = ?", shopOrder.ID, productItem.ProductItemID).Find(&shopOrderVariations).Error; err != nil {
+			if err := o.DB.Where("shop_order_id = ? AND product_item_id = ?", shopOrder.ID, productItem.ProductItemID).Find(&shopOrderVariations).Error; err != nil {
 				return nil, err
 			}
 
@@ -188,5 +187,6 @@ func (o *orderDatabase) GetShopOrders(ctx echo.Context, userID string, paginatio
 		})
 	}
 
+	//nolint:nakedret
 	return
 }

@@ -1,7 +1,7 @@
 package response
 
 type Order struct {
-	UserID          string `json:"userId"`
+	UserID          string            `json:"userId"`
 	ShopOrderId     string            `json:"shopOrderId"`
 	ProductItemInfo []ProductItemInfo `json:"productItemInfo"`
 	Address         Address           `json:"address"`

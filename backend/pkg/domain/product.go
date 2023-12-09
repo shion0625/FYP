@@ -96,5 +96,6 @@ type OfferProduct struct {
 
 // no need database.
 type ServiceAccount struct {
+	//nolint:tagliatelle
 	PrivateKey string `json:"private_key"`
 }

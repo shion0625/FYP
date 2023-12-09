@@ -49,7 +49,6 @@ func (o *orderUseCase) PayOrder(ctx echo.Context, payOrder request.PayOrder) err
 }
 
 func (o *orderUseCase) GetAllShopOrders(ctx echo.Context, userID string, pagination request.Pagination) (orderHistory []response.Order, err error) {
-
 	orderHistory, err = o.orderRepo.GetShopOrders(ctx, userID, pagination)
 	if err != nil {
 		return nil, fmt.Errorf("failed to find addresses: %w", err)

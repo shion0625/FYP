@@ -49,7 +49,6 @@ func (o *OrderHandler) GetOrderHistory(ctx echo.Context) error {
 	pagination := request.GetPagination(ctx)
 
 	userID, err := utils.GetUserIdFromContext(ctx)
-	fmt.Print(userID)
 	if err != nil {
 		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user id", err, nil)
 
