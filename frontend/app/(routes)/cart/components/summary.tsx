@@ -21,7 +21,6 @@ const Summary = () => {
     }));
     try {
       const response = await purchaseOrder({
-        userId: '016e5917-938b-4168-bc37-3da46f9f8343',
         addressId: 11,
         productItemInfo: convertProductItemInfo,
         totalFee: totalPrice,

@@ -3,12 +3,10 @@ import { Card } from 'flowbite-react';
 import { useGetAllAddresses } from '@/actions/user/user-address';
 import { useGetProfile } from '@/actions/user/user-profile';
 import NoResults from '@/components/ui/no-results';
-import useUserId from '@/hooks/use-user-profile';
 
 const MyPageView = () => {
-  const userId = useUserId();
-  const { userProfile } = useGetProfile({ userId: userId.userId });
-  const { userAddressList } = useGetAllAddresses({ userId: userId.userId });
+  const { userProfile } = useGetProfile();
+  const { userAddressList } = useGetAllAddresses();
   console.log(userAddressList);
 
   return (

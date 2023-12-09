@@ -5,7 +5,6 @@ import { Response, ProductItemInfo } from '@/types';
 const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/purchase`;
 
 export interface Body {
-  userId: string;
   addressId: number;
   productItemInfo: ProductItemInfo[];
   totalFee: number;

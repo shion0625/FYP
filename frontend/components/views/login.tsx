@@ -5,7 +5,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Label, TextInput, Button } from 'flowbite-react';
 import { HiLockClosed, HiMail } from 'react-icons/hi';
 import { UseLogin, LoginBody } from '@/actions/user';
-import useUserProfile from '@/hooks/use-user-profile';
 import { loginSchema } from '@/schema/user';
 
 const LoginView = () => {
@@ -31,9 +30,6 @@ const LoginView = () => {
         ...data,
       });
       toast.success(response.message);
-      if (response?.data?.userId) {
-        useUserProfile.getState().setUserId(response.data?.userId);
-      }
     } catch (error: unknown) {
       toast.error('failed to login');
     }

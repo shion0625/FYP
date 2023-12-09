@@ -6,9 +6,8 @@ import { Response, Address } from '@/types';
 const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/user-address`;
 
 interface Query {
-  userId: string;
-  pageNumber: number;
-  count: number;
+  pageNumber?: number;
+  count?: number;
 }
 
 interface UseGetOrderHistoryReturn {
@@ -20,7 +19,8 @@ export const useGetOrderHistory = (query: Query): UseGetOrderHistoryReturn => {
   const url = qs.stringifyUrl({
     url: URL,
     query: {
-      userId: query.userId,
+      pageNumber: query.pageNumber,
+      count: query.count
     },
   });
   const { data, error } = useSWR<UseGetOrderHistoryReturn['userAddressList']>(url, axiosFetcher, {
