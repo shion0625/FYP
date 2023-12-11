@@ -5,6 +5,7 @@ import { Button, Card } from 'flowbite-react';
 import { UsePurchase } from '@/actions/cart/purchase';
 import { UsePaymentMethod } from '@/actions/user/payment-method';
 import { UseUserAddresses } from '@/actions/user/user-address';
+import CardIcon from '@/components/ui/credit-cards';
 import Currency from '@/components/ui/currency';
 import useCart from '@/hooks/use-cart';
 import { Address, PaymentMethod } from '@/types';
@@ -32,7 +33,6 @@ const Summary = () => {
     };
     fetchData();
   }, []);
-  console.log(responseData);
 
   const totalPrice = items.reduce((total, item) => total + Number(item.price), 0);
 
@@ -71,10 +71,14 @@ const Summary = () => {
           <Currency value={totalPrice} />
         </div>
       </div>
-      {responseData.userAddress && responseData.userAddress ? (
-        <div className="grid grid-cols-1 items-center bg-white shadow-lg rounded-lg p-10">
-          {responseData.userAddress.map((address, index) => (
-            <Card key={index} onClick={() => handleCardClick(address.id)}>
+      <div className="grid grid-cols-1 items-center bg-white shadow-lg rounded-lg p-10 my-4">
+        <div className="p-5 border-dashed border-2 border-gray-500 cursor-pointer hover:bg-gray-200 transition-colors duration-200 ease-in-out">
+          add address
+        </div>
+        {responseData.userAddress &&
+          responseData.userAddress.length > 0 &&
+          responseData.userAddress.map((address, index) => (
+            <Card className="mt-4" key={index} onClick={() => handleCardClick(address.id)}>
               <h2 className="text-2xl mb-4 font-semibold">{address.name}</h2>
               <p className="space-y-2 text-gray-700">
                 {address.house}
@@ -87,10 +91,26 @@ const Summary = () => {
               </p>
             </Card>
           ))}
+      </div>
+      <div className="grid grid-cols-1 items-center bg-white shadow-lg rounded-lg p-10 mb-4">
+        <div className="p-5 border-dashed border-2 border-gray-500 cursor-pointer hover:bg-gray-200 transition-colors duration-200 ease-in-out">
+          add payment method
         </div>
-      ) : (
-        <>住所の追加</>
-      )}
+        {responseData.paymentMethod &&
+          responseData.paymentMethod.length > 0 &&
+          responseData.paymentMethod.map((paymentMethod) => (
+            <Card key={paymentMethod.id}>
+              <p>
+                <CardIcon cardCompany={paymentMethod.cardCompany} />
+                <span className="font-bold">Card ID:</span> {paymentMethod.id}
+              </p>
+              <p>
+                <span className="font-bold">Card Number:</span> **** **** ****{' '}
+                {paymentMethod.creditNumber}
+              </p>
+            </Card>
+          ))}
+      </div>
       <Button onClick={onCheckout} disabled={items.length === 0} className="w-full mt-6">
         Checkout
       </Button>
