@@ -34,8 +34,9 @@ const MyPageView = () => {
       )}
       {userAddressList && userAddressList.data ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-center bg-white shadow-lg rounded-lg p-10">
-          {userAddressList.data.map((address, index) => (
-            <Card key={index}>
+          <Card></Card>
+          {userAddressList.data.map((address) => (
+            <Card key={address.id}>
               <h2 className="text-2xl mb-4 font-semibold">{`Address ${address.id}`}</h2>
               <ul className="space-y-2 text-gray-700">
                 <li>

@@ -1,21 +1,40 @@
 import useSWR from 'swr';
-import { axiosFetcher } from '@/actions/fetcher';
-import { Response, Address } from '@/types';
+import { axiosFetcher, axiosPostFetcher } from '@/actions/fetcher';
+import { Address } from '@/types';
 
 const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/user-address`;
 
-interface UseGetAllAddressesReturn {
-  userAddressList: Response<Address[]> | undefined;
+export interface AddressBody {
+  street: string;
+  city: string;
+  state: string;
+  zip: string;
+}
+
+interface UseUserAddressesReturn {
+  getUserAddress: () => Promise<Address[]>;
+  saveUserAddress: (body: AddressBody) => Promise<null>;
   isError: unknown;
 }
 
-export const useGetAllAddresses = (): UseGetAllAddressesReturn => {
-  const { data, error } = useSWR<UseGetAllAddressesReturn['userAddressList']>(URL, axiosFetcher, {
-    suspense: true,
-  });
+export const UseUserAddresses = (): UseUserAddressesReturn => {
+  const { error, mutate } = useSWR(URL);
+
+  const saveUserAddress = async (body: AddressBody): Promise<null> => {
+    const response = await axiosPostFetcher(URL, body);
+    mutate(response, false); // Update the local data immediately, but disable revalidation
+    return response.data;
+  };
+
+  const getUserAddress = async (): Promise<Address[]> => {
+    const response = await axiosFetcher(URL);
+    mutate(response, false); // Update the local data immediately, but disable revalidation
+    return response.data;
+  };
 
   return {
-    userAddressList: data,
+    getUserAddress,
+    saveUserAddress,
     isError: error,
   };
 };

@@ -1,17 +1,38 @@
 'use client';
-import React, { useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { toast } from 'react-hot-toast';
 import { Button, Card } from 'flowbite-react';
 import { UsePurchase } from '@/actions/cart/purchase';
-import { useGetAllAddresses } from '@/actions/user/user-address';
+import { UsePaymentMethod } from '@/actions/user/payment-method';
+import { UseUserAddresses } from '@/actions/user/user-address';
 import Currency from '@/components/ui/currency';
 import useCart from '@/hooks/use-cart';
+import { Address, PaymentMethod } from '@/types';
 
+interface DataState {
+  paymentMethod: PaymentMethod[];
+  userAddress: Address[];
+}
 const Summary = () => {
   const items = useCart((state) => state.items);
   const removeAll = useCart((state) => state.removeAll);
   const { purchaseOrder } = UsePurchase();
-  const { userAddressList } = useGetAllAddresses();
+  const { getUserAddress } = UseUserAddresses();
+  const { getPaymentMethod } = UsePaymentMethod();
+  const [responseData, setData] = useState<DataState>({
+    paymentMethod: [],
+    userAddress: [],
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const paymentMethod = await getPaymentMethod();
+      const userAddress = await getUserAddress();
+      setData({ paymentMethod, userAddress });
+    };
+    fetchData();
+  }, []);
+  console.log(responseData);
 
   const totalPrice = items.reduce((total, item) => total + Number(item.price), 0);
 
@@ -50,9 +71,9 @@ const Summary = () => {
           <Currency value={totalPrice} />
         </div>
       </div>
-      {userAddressList && userAddressList.data ? (
+      {responseData.userAddress && responseData.userAddress ? (
         <div className="grid grid-cols-1 items-center bg-white shadow-lg rounded-lg p-10">
-          {userAddressList.data.map((address, index) => (
+          {responseData.userAddress.map((address, index) => (
             <Card key={index} onClick={() => handleCardClick(address.id)}>
               <h2 className="text-2xl mb-4 font-semibold">{address.name}</h2>
               <p className="space-y-2 text-gray-700">
@@ -68,7 +89,7 @@ const Summary = () => {
           ))}
         </div>
       ) : (
-        <></>
+        <>住所の追加</>
       )}
       <Button onClick={onCheckout} disabled={items.length === 0} className="w-full mt-6">
         Checkout
