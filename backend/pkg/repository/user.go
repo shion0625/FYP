@@ -12,6 +12,10 @@ import (
 	"gorm.io/gorm"
 )
 
+type result struct {
+	Exist string `gorm:"column:exist"`
+}
+
 type userDatabase struct {
 	DB *gorm.DB
 }
@@ -74,9 +78,8 @@ func (c *userDatabase) SaveUser(ctx echo.Context, user domain.User) (userID stri
 func (c *userDatabase) FindAllAddressByUserID(ctx echo.Context, userID string) (addresses []response.Address, err error) {
 	err = c.DB.
 		Table("user_addresses").
-		Select("addresses.id, addresses.house, addresses.name, addresses.phone_number, addresses.area, addresses.land_mark, addresses.city, addresses.pincode, addresses.country_id, countries.country_name, user_addresses.is_default").
+		Select("addresses.id, addresses.house, addresses.name, addresses.phone_number, addresses.area, addresses.land_mark, addresses.city, addresses.pincode, addresses.country_name, user_addresses.is_default").
 		Joins("JOIN addresses ON user_addresses.address_id = addresses.id").
-		Joins("JOIN countries ON addresses.country_id = countries.id").
 		Where("user_addresses.user_id = ?", userID).
 		Scan(&addresses).Error
 
@@ -84,8 +87,7 @@ func (c *userDatabase) FindAllAddressByUserID(ctx echo.Context, userID string) (
 }
 
 func (c *userDatabase) IsAddressAlreadyExistForUser(ctx echo.Context, address domain.Address, userID string) (exist bool, err error) {
-
-	err = c.DB.
+	err = c.DB.Table("user_addresses").
 		Select("CASE WHEN addresses.id != 0 THEN 'T' ELSE 'F' END AS exist").
 		Joins("INNER JOIN user_addresses ON addresses.id = user_addresses.address_id").
 		Where("addresses.name = ? AND addresses.house = ? AND addresses.land_mark = ? AND addresses.pincode = ? AND user_addresses.user_id = ?", address.Name, address.House, address.LandMark, address.Pincode, userID).
@@ -148,7 +150,7 @@ func (c *userDatabase) UpdateAddress(ctx echo.Context, address domain.Address) e
 		"land_mark":    address.LandMark,
 		"city":         address.City,
 		"pincode":      address.Pincode,
-		"country_name":   address.CountryName,
+		"country_name": address.CountryName,
 		"updated_at":   time.Now(),
 	}).Error; err != nil {
 		return errors.New("failed to update the address for edit address")

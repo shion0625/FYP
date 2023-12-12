@@ -9,15 +9,15 @@ interface CardIconProps {
 const CardIcon: React.FC<CardIconProps> = ({ cardCompany }) => {
   switch (cardCompany) {
     case 'Visa':
-      return <FaCcVisa/>;
+      return <FaCcVisa />;
     case 'MasterCard':
-      return <FaCcMastercard/>;
+      return <FaCcMastercard />;
     case 'American Express':
-      return <FaCcAmex/>;
+      return <FaCcAmex />;
     case 'Discover':
-      return <FaCcDiscover/>;
+      return <FaCcDiscover />;
     case 'Diners Club':
-      return <FaCcDinersClub/>;
+      return <FaCcDinersClub />;
     default:
       return <></>; // default icon
   }

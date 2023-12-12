@@ -1,6 +1,5 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-
 import type { NextRequest } from 'next/server';
 
 const COOKIE_SECURE = process.env.NEXT_PUBLIC_COOKIE_SECURE === '1';
@@ -52,17 +51,19 @@ const handlingAccessToken = async (
       }),
     });
     const data = await res.json();
-    const expiryDate = new Date();
-    expiryDate.setMinutes(expiryDate.getMinutes() + accessTokenExpiresInMinutes);
-    response.cookies.set({
-      name: 'access_token',
-      value: data.data,
-      httpOnly: true,
-      path: '/',
-      sameSite: 'strict',
-      secure: COOKIE_SECURE,
-      expires: expiryDate,
-    });
+    if (data.data) {
+      const expiryDate = new Date();
+      expiryDate.setMinutes(expiryDate.getMinutes() + accessTokenExpiresInMinutes);
+      response.cookies.set({
+        name: 'access_token',
+        value: data.data,
+        httpOnly: true,
+        path: '/',
+        sameSite: 'strict',
+        secure: COOKIE_SECURE,
+        expires: expiryDate,
+      });
+    }
   } catch (error) {
     return respondWithInternalServerError();
   }

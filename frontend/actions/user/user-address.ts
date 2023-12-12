@@ -5,10 +5,14 @@ import { Address } from '@/types';
 const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/user-address`;
 
 export interface AddressBody {
-  street: string;
+  name: string;
+  area: string;
   city: string;
-  state: string;
-  zip: string;
+  countryName: string;
+  house: string;
+  landMark: string;
+  phoneNumber: string;
+  pincode: string;
 }
 
 interface UseUserAddressesReturn {

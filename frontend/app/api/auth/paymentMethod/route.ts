@@ -3,7 +3,6 @@ import type { NextRequest } from 'next/server';
 
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/account/payment-method`;
 
-
 export async function GET() {
   const accessToken = getAccessTokenCookie();
   // GoのAPIを呼び出す

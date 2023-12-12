@@ -20,7 +20,7 @@ export const useGetOrderHistory = (query: Query): UseGetOrderHistoryReturn => {
     url: URL,
     query: {
       pageNumber: query.pageNumber,
-      count: query.count
+      count: query.count,
     },
   });
   const { data, error } = useSWR<UseGetOrderHistoryReturn['userAddressList']>(url, axiosFetcher, {

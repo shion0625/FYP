@@ -88,10 +88,9 @@ export const addressSchema = yup.object().shape({
     .required('Phone number is required')
     .matches(/^\+[1-9]\d{1,14}$/, 'Must be a valid E.164 format for phone number'),
   house: yup.string().required('House is required'),
-  area: yup.string(),
+  area: yup.string().required('area is required'),
   landMark: yup.string().required('Landmark is required'),
-  city: yup.string(),
+  city: yup.string().required('city is required'),
   pincode: yup.string().required('Pincode is required'),
   countryName: yup.string().required('Country name is required'),
-  isDefault: yup.boolean(),
 });
