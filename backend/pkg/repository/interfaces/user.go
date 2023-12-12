@@ -19,7 +19,6 @@ type UserRepository interface {
 	// UpdateBlockStatus(ctx echo.Context, userID string, blockStatus bool) error
 
 	// //address
-	// FindCountryByID(ctx echo.Context, countryID uint) (domain.Country, error)
 	// FindAddressByID(ctx echo.Context, addressID uint) (response.Address, error)
 	IsAddressIDExist(ctx echo.Context, addressID uint) (exist bool, err error)
 	IsAddressAlreadyExistForUser(ctx echo.Context, address domain.Address, userID string) (bool, error)

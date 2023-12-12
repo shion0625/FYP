@@ -83,14 +83,6 @@ func (u *userUserCase) SaveAddress(ctx echo.Context, userID string, address doma
 		return fmt.Errorf("given address already exist for user")
 	}
 
-	// //this address not exist then create it
-	// country, err := u.userRepo.FindCountryByID(ctx, address.CountryID)
-	// if err != nil {
-	// 	return err
-	// } else if country.ID == 0 {
-	// 	return errors.New("invalid country id")
-	// }
-
 	// save the address on database
 	addressID, err := u.userRepo.SaveAddress(ctx, address)
 	if err != nil {

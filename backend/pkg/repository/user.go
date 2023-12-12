@@ -84,12 +84,11 @@ func (c *userDatabase) FindAllAddressByUserID(ctx echo.Context, userID string) (
 }
 
 func (c *userDatabase) IsAddressAlreadyExistForUser(ctx echo.Context, address domain.Address, userID string) (exist bool, err error) {
-	address.CountryID = 1 // hardcoded !!!! should change
 
 	err = c.DB.
 		Select("CASE WHEN addresses.id != 0 THEN 'T' ELSE 'F' END AS exist").
 		Joins("INNER JOIN user_addresses ON addresses.id = user_addresses.address_id").
-		Where("addresses.name = ? AND addresses.house = ? AND addresses.land_mark = ? AND addresses.pincode = ? AND addresses.country_id = ? AND user_addresses.user_id = ?", address.Name, address.House, address.LandMark, address.Pincode, address.CountryID, userID).
+		Where("addresses.name = ? AND addresses.house = ? AND addresses.land_mark = ? AND addresses.pincode = ? AND user_addresses.user_id = ?", address.Name, address.House, address.LandMark, address.Pincode, userID).
 		First(&exist).Error
 
 	return exist, err
@@ -141,7 +140,6 @@ func (c *userDatabase) SaveUserAddress(ctx echo.Context, userAddress domain.User
 }
 
 func (c *userDatabase) UpdateAddress(ctx echo.Context, address domain.Address) error {
-	address.CountryID = 1 // hardcoded !!!! should change
 	if err := c.DB.Model(&address).Where("id = ?", address.ID).Updates(map[string]interface{}{
 		"name":         address.Name,
 		"phone_number": address.PhoneNumber,
@@ -150,7 +148,7 @@ func (c *userDatabase) UpdateAddress(ctx echo.Context, address domain.Address) e
 		"land_mark":    address.LandMark,
 		"city":         address.City,
 		"pincode":      address.Pincode,
-		"country_id":   address.CountryID,
+		"country_name":   address.CountryName,
 		"updated_at":   time.Now(),
 	}).Error; err != nil {
 		return errors.New("failed to update the address for edit address")

@@ -28,7 +28,6 @@ type Address struct {
 	LandMark    string `json:"landMark"`
 	City        string `json:"city"`
 	Pincode     uint   `json:"pincode"`
-	CountryID   uint   `json:"countryId"`
 	CountryName string `json:"countryName"`
 
 	IsDefault *bool `json:"isDefault"`

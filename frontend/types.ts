@@ -20,7 +20,6 @@ export interface Address {
   landMark: string;
   city: string;
   pincode: number;
-  countryId: number;
   countryName: string;
   isDefault?: boolean;
 }

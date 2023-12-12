@@ -26,7 +26,6 @@ func ConnectDatabase(cfg *config.Config) (*gorm.DB, error) {
 
 		// user
 		domain.User{},
-		domain.Country{},
 		domain.Address{},
 		domain.UserAddress{},
 		domain.PaymentMethod{},

@@ -39,15 +39,9 @@ type Address struct {
 	LandMark    string    `gorm:"not null"          json:"landMark"`
 	City        string    `gorm:"not null"          json:"city"`
 	Pincode     string    `gorm:"not null"          json:"pincode"`
-	CountryID   uint      `gorm:"not null"          json:"countryId"`
-	Country     Country   `json:"-"`
+	CountryName string      `gorm:"not null"          json:"countryName"`
 	CreatedAt   time.Time `gorm:"not null"          json:"createdAt"`
 	UpdatedAt   time.Time `json:"updatedAt"`
-}
-
-type Country struct {
-	ID          uint   `gorm:"primaryKey;unique;" json:"id"`
-	CountryName string `gorm:"unique;not null"    json:"countryName"`
 }
 
 type PaymentMethod struct {

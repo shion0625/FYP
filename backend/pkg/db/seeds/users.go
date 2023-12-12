@@ -44,13 +44,6 @@ func CreateUserDomain(db *gorm.DB, cfg *config.Config, options ...func(*domain.U
 		return err
 	}
 
-	country := domain.Country{
-		CountryName: gofakeit.Country(),
-	}
-	if err := db.Create(&country).Error; err != nil {
-		return err
-	}
-
 	address := domain.Address{
 		Name:        gofakeit.Street(),
 		PhoneNumber: gofakeit.Phone(),
@@ -59,8 +52,7 @@ func CreateUserDomain(db *gorm.DB, cfg *config.Config, options ...func(*domain.U
 		LandMark:    gofakeit.Street(),
 		City:        gofakeit.City(),
 		Pincode:     fmt.Sprint(gofakeit.Number(MinPincode, MaxPincode)),
-		CountryID:   country.ID,
-		Country:     country,
+		CountryName: gofakeit.Country(),
 		CreatedAt:   gofakeit.Date(),
 		UpdatedAt:   gofakeit.Date(),
 	}
