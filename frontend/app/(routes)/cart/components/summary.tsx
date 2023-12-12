@@ -74,7 +74,10 @@ const Summary = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 items-center bg-white shadow-lg rounded-lg p-10 my-4">
-        <Button color="white" className="p-5 border-dashed border-2 border-gray-500 cursor-pointer hover:bg-gray-200 transition-colors duration-200 ease-in-out">
+        <Button
+          color="white"
+          className="p-5 border-dashed border-2 border-gray-500 cursor-pointer hover:bg-gray-200 transition-colors duration-200 ease-in-out"
+        >
           add address
         </Button>
         {responseData.userAddress &&
@@ -85,11 +88,13 @@ const Summary = () => {
               <p className="space-y-2 text-gray-700">
                 {address.house}
                 <br />
-                {address.city},{address.area}, {address.pincode}
+                {address.city}, {address.area}, {address.pincode}
                 <br />
                 {address.countryName}
                 <br />
                 TEL: {address.phoneNumber}
+                <br />
+                landMark: {address.landMark}
               </p>
             </Card>
           ))}

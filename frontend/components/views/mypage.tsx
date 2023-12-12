@@ -34,52 +34,20 @@ const MyPageView = () => {
       )}
       {userAddressList && userAddressList.data ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-center bg-white shadow-lg rounded-lg p-10">
-          <Card></Card>
           {userAddressList.data.map((address) => (
-            <Card key={address.id}>
-              <h2 className="text-2xl mb-4 font-semibold">{`Address ${address.id}`}</h2>
-              <ul className="space-y-2 text-gray-700">
-                <li>
-                  <p>
-                    <span className="font-bold">Name:</span> {address.name}
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    <span className="font-bold">Area:</span> {address.area}
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    <span className="font-bold">City:</span> {address.city}
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    <span className="font-bold">Country:</span> {address.countryName}
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    <span className="font-bold">House:</span> {address.house}
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    <span className="font-bold">Landmark:</span> {address.landMark}
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    <span className="font-bold">Phone Number:</span> {address.phoneNumber}
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    <span className="font-bold">Pincode:</span> {address.pincode}
-                  </p>
-                </li>
-              </ul>
+            <Card className="mt-4" key={address.id}>
+              <h2 className="text-2xl mb-4 font-semibold">{address.name}</h2>
+              <p className="space-y-2 text-gray-700">
+                {address.house}
+                <br />
+                {address.city},{address.area}, {address.pincode}
+                <br />
+                {address.countryName}
+                <br />
+                TEL: {address.phoneNumber}
+                <br />
+                landMark: {address.landMark}
+              </p>
             </Card>
           ))}
         </div>

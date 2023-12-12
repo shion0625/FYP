@@ -8,8 +8,8 @@ type Address struct {
 	Area        string `json:"area"`
 	LandMark    string `json:"landMark"    validate:"required"`
 	City        string `json:"city"`
-	Pincode     uint   `json:"pincode"     validate:"required"`
-	CountryID   uint   `json:"countryId"   validate:"required,number,gte=1"`
+	Pincode     string `json:"pincode"     validate:"required"`
+	CountryName string `json:"countryName" validate:"required"`
 	IsDefault   *bool  `json:"isDefault"`
 }
 
@@ -21,8 +21,8 @@ type EditAddress struct {
 	Area        string `json:"area"`
 	LandMark    string `json:"landMark"    validate:"required"`
 	City        string `json:"city"`
-	Pincode     uint   `json:"pincode"     validate:"required"`
-	CountryID   uint   `json:"countryId"   validate:"required,number,gte=1"`
+	Pincode     string `json:"pincode"     validate:"required"`
+	CountryName string `json:"countryName" validate:"required"`
 	IsDefault   *bool  `json:"isDefault"`
 }
 

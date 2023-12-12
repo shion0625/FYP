@@ -38,7 +38,7 @@ type Address struct {
 	Area        string    `gorm:"not null"          json:"area"`  // state
 	LandMark    string    `gorm:"not null"          json:"landMark"`
 	City        string    `gorm:"not null"          json:"city"`
-	Pincode     uint      `gorm:"not null"          json:"pincode"`
+	Pincode     string    `gorm:"not null"          json:"pincode"`
 	CountryID   uint      `gorm:"not null"          json:"countryId"`
 	Country     Country   `json:"-"`
 	CreatedAt   time.Time `gorm:"not null"          json:"createdAt"`

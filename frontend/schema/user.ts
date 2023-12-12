@@ -76,3 +76,22 @@ export const creditCardSchema = yup.object().shape({
     .required('CVC is required')
     .matches(/^[0-9]{3,4}$/, 'Must be a valid CVC number'),
 });
+
+export const addressSchema = yup.object().shape({
+  name: yup
+    .string()
+    .required('Name is required')
+    .min(2, 'Name must be at least 2 characters')
+    .max(100, "Name can't be longer than 100 characters"),
+  phoneNumber: yup
+    .string()
+    .required('Phone number is required')
+    .matches(/^\+[1-9]\d{1,14}$/, 'Must be a valid E.164 format for phone number'),
+  house: yup.string().required('House is required'),
+  area: yup.string(),
+  landMark: yup.string().required('Landmark is required'),
+  city: yup.string(),
+  pincode: yup.string().required('Pincode is required'),
+  countryName: yup.string().required('Country name is required'),
+  isDefault: yup.boolean(),
+});
