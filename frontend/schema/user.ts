@@ -55,3 +55,24 @@ export const loginSchema = yup.object().shape({
     .min(5, 'Password must be at least 5 characters')
     .max(30, "Password can't be longer than 30 characters"),
 });
+
+export const creditCardSchema = yup.object().shape({
+  number: yup
+    .string()
+    .required('Card number is required')
+    .matches(/^[0-9]{13,16}$/, 'Card number must be 13 to 16 digits'),
+  name: yup
+    .string()
+    .required('Name is required')
+    .matches(/^[a-zA-Z ]*$/, 'Only alphabets are allowed for name')
+    .min(2, 'Name must be at least 2 characters')
+    .max(50, "Name can't be longer than 50 characters"),
+  expiry: yup
+    .string()
+    .required('Expiry date is required')
+    .matches(/^(0[1-9]|1[0-2])([0-9]{4}|[0-9]{2})$/, 'Must be a valid MMYY format for expiry date'),
+  cvc: yup
+    .string()
+    .required('CVC is required')
+    .matches(/^[0-9]{3,4}$/, 'Must be a valid CVC number'),
+});

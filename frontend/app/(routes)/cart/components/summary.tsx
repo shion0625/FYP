@@ -5,6 +5,8 @@ import { Button, Card } from 'flowbite-react';
 import { UsePurchase } from '@/actions/cart/purchase';
 import { UsePaymentMethod } from '@/actions/user/payment-method';
 import { UseUserAddresses } from '@/actions/user/user-address';
+import CreditCardsForm from '@/components/credit-cards-form';
+import BackdropModal from '@/components/ui/backdrop-modal';
 import CardIcon from '@/components/ui/credit-cards';
 import Currency from '@/components/ui/currency';
 import useCart from '@/hooks/use-cart';
@@ -72,9 +74,9 @@ const Summary = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 items-center bg-white shadow-lg rounded-lg p-10 my-4">
-        <div className="p-5 border-dashed border-2 border-gray-500 cursor-pointer hover:bg-gray-200 transition-colors duration-200 ease-in-out">
+        <Button color="white" className="p-5 border-dashed border-2 border-gray-500 cursor-pointer hover:bg-gray-200 transition-colors duration-200 ease-in-out">
           add address
-        </div>
+        </Button>
         {responseData.userAddress &&
           responseData.userAddress.length > 0 &&
           responseData.userAddress.map((address, index) => (
@@ -93,9 +95,13 @@ const Summary = () => {
           ))}
       </div>
       <div className="grid grid-cols-1 items-center bg-white shadow-lg rounded-lg p-10 mb-4">
-        <div className="p-5 border-dashed border-2 border-gray-500 cursor-pointer hover:bg-gray-200 transition-colors duration-200 ease-in-out">
-          add payment method
-        </div>
+        <BackdropModal
+          buttonClassName="p-5 border-dashed border-2 border-gray-500 cursor-pointer hover:bg-gray-200 transition-colors duration-200 ease-in-out"
+          buttonText="add payment method"
+          headerText="Add Payment Method"
+        >
+          <CreditCardsForm />
+        </BackdropModal>
         {responseData.paymentMethod &&
           responseData.paymentMethod.length > 0 &&
           responseData.paymentMethod.map((paymentMethod) => (
