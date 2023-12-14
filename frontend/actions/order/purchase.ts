@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { axiosPostFetcher } from '@/actions/fetcher';
 import { Response, ProductItemInfo } from '@/types';
 
-const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/purchase`;
+const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/order/purchase`;
 
 export interface Body {
   addressId: number;
