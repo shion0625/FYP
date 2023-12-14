@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { toast } from 'react-hot-toast';
 import { Button, Card } from 'flowbite-react';
+import { useRouter } from 'next/navigation';
 import { UsePurchase } from '@/actions/order/purchase';
 import { UsePaymentMethod } from '@/actions/user/payment-method';
 import { UseUserAddresses } from '@/actions/user/user-address';
@@ -17,6 +18,7 @@ interface DataState {
   userAddress: Address[];
 }
 const Summary = () => {
+  const router = useRouter();
   const items = useCart((state) => state.items);
   const removeAll = useCart((state) => state.removeAll);
   const { purchaseOrder } = UsePurchase();
@@ -78,6 +80,7 @@ const Summary = () => {
         <Button
           color="white"
           className="p-5 border-dashed border-2 border-gray-500 cursor-pointer hover:bg-gray-200 transition-colors duration-200 ease-in-out"
+          onClick={() => router.push('/user/address/add')}
         >
           add address
         </Button>
