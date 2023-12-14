@@ -3,11 +3,11 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Label, TextInput, Button } from 'flowbite-react';
-import { UseUserAddresses, AddressBody, AddressSchema } from '@/actions/user/user-address';
+import { UseUserAddress, AddressBody, AddressSchema } from '@/actions/user/user-address';
 import { CardTitle, CardDescription, CardHeader, CardContent, Card } from '@/components/ui/card';
 
 const AddressView = () => {
-  const { saveUserAddress } = UseUserAddresses();
+  const { saveUserAddress } = UseUserAddress();
   const {
     register,
     handleSubmit,
@@ -29,8 +29,7 @@ const AddressView = () => {
 
   const onSubmit = async (data: AddressBody) => {
     try {
-      const response = await saveUserAddress(data);
-      console.log('front', response);
+      await saveUserAddress(data);
       toast.success('success to add address');
     } catch (error: unknown) {
       toast.error('failed to add address');

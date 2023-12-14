@@ -1,3 +1,4 @@
+import qs from 'query-string';
 import * as yup from 'yup';
 import useSWR from 'swr';
 import { axiosFetcher, axiosPostFetcher, axiosPutFetcher } from '@/actions/fetcher';
@@ -34,13 +35,14 @@ export interface AddressBody extends yup.InferType<typeof AddressSchema> {}
 export interface UpdateAddressBody extends yup.InferType<typeof UpdateAddressSchema> {}
 
 interface UseUserAddressesReturn {
-  getUserAddress: () => Promise<Address[]>;
+  getUserAddress: (id: string) => Promise<Address>;
+  getUserAddresses: () => Promise<Address[]>;
   saveUserAddress: (body: AddressBody) => Promise<null>;
   updateUserAddress: (body: UpdateAddressBody) => Promise<null>;
   isError: unknown;
 }
 
-export const UseUserAddresses = (): UseUserAddressesReturn => {
+export const UseUserAddress = (): UseUserAddressesReturn => {
   const { error, mutate } = useSWR(URL);
 
   const saveUserAddress = async (body: AddressBody): Promise<null> => {
@@ -49,20 +51,34 @@ export const UseUserAddresses = (): UseUserAddressesReturn => {
     return response.data;
   };
 
-  const getUserAddress = async (): Promise<Address[]> => {
-    const response = await axiosFetcher(URL);
+  const getUserAddresses = async (): Promise<Address[]> => {
+    const response = await axiosFetcher(`${URL}es`);
     mutate(response, false); // Update the local data immediately, but disable revalidation
     return response.data;
   };
 
   const updateUserAddress = async (body: UpdateAddressBody): Promise<null> => {
+    console.log('fwae');
     const response = await axiosPutFetcher(URL, body);
+    mutate(response, false); // Update the local data immediately, but disable revalidation
+    return response.data;
+  };
+
+  const getUserAddress = async (id: string): Promise<Address> => {
+    const url = qs.stringifyUrl({
+      url: URL,
+      query: {
+        address_id: id,
+      },
+    });
+    const response = await axiosFetcher(url);
     mutate(response, false); // Update the local data immediately, but disable revalidation
     return response.data;
   };
 
   return {
     getUserAddress,
+    getUserAddresses,
     saveUserAddress,
     updateUserAddress,
     isError: error,

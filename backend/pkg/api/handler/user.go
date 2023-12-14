@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/jinzhu/copier"
@@ -161,6 +162,36 @@ func (u *UserHandler) GetAllAddresses(ctx echo.Context) error {
 
 	if addresses == nil {
 		response.SuccessResponse(ctx, http.StatusOK, "No addresses found", nil)
+
+		return nil
+	}
+
+	response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all user addresses", addresses)
+
+	return nil
+}
+
+func (u *UserHandler) GetAddressById(ctx echo.Context) error {
+	userID, err := utils.GetUserIdFromContext(ctx)
+	if err != nil {
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+
+		return nil
+	}
+
+	addressIDStr := ctx.Param("address_id")
+	fmt.Print(addressIDStr)
+
+	addressID, err := utils.ParseStringToUint32(addressIDStr)
+	if err != nil {
+		response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
+
+		return fmt.Errorf("ParseStringToUint32 error: %w", err)
+	}
+
+	addresses, err := u.userUseCase.FindAddress(ctx, userID, addressID)
+	if err != nil {
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get user addresses", err, nil)
 
 		return nil
 	}

@@ -40,8 +40,7 @@ const CreditCardsForm = () => {
 
   const onSubmit = async (data: PaymentMethodBody) => {
     try {
-      const response = await savePaymentMethod(data);
-      console.log(response);
+      await savePaymentMethod(data);
       toast.success('success to add address');
     } catch (error: unknown) {
       toast.error('failed to add address');

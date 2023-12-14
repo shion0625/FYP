@@ -23,6 +23,7 @@ type UserRepository interface {
 	IsAddressIDExist(ctx echo.Context, addressID uint) (exist bool, err error)
 	IsAddressAlreadyExistForUser(ctx echo.Context, address domain.Address, userID string) (bool, error)
 	FindAllAddressByUserID(ctx echo.Context, userID string) ([]response.Address, error)
+	FindAddressByUserIDAndAddressID(ctx echo.Context, userID string, addressID uint) (domain.Address, error)
 	SaveAddress(ctx echo.Context, address domain.Address) (addressID uint, err error)
 	UpdateAddress(ctx echo.Context, address domain.Address) error
 	// // address join table

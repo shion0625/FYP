@@ -19,7 +19,7 @@ export interface Address {
   area: string;
   landMark: string;
   city: string;
-  pincode: number;
+  pincode: string;
   countryName: string;
   isDefault?: boolean;
 }

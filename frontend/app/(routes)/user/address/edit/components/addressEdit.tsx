@@ -1,33 +1,47 @@
 'use client';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Label, TextInput, Button } from 'flowbite-react';
+import { useSearchParams } from 'next/navigation';
 import {
-  UseUserAddresses,
-  AddressBody,
+  UseUserAddress,
   UpdateAddressBody,
   UpdateAddressSchema,
 } from '@/actions/user/user-address';
 import { CardTitle, CardDescription, CardHeader, CardContent, Card } from '@/components/ui/card';
 
 const AddressView = () => {
-  const { saveUserAddress } = UseUserAddresses();
+  const searchParams = useSearchParams();
+  const address_id = searchParams.get('address_id') || '';
+  const { updateUserAddress, getUserAddress } = UseUserAddress();
 
+  const [userAddress, setUserAddress] = useState<UpdateAddressBody>();
+
+  useEffect(() => {
+    console.log('jhihi');
+    getUserAddress(address_id).then((address) => {
+      setUserAddress(address);
+      reset(address); // userAddressが更新されたときにフォームのデフォルト値を更新
+    });
+  }, [address_id]);
+
+  console.log('userAddress', userAddress);
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<UpdateAddressBody>({
     mode: 'onBlur',
-    defaultValues: {},
+    defaultValues: { ...userAddress },
     resolver: yupResolver(UpdateAddressSchema),
   });
 
-  const onSubmit = async (data: AddressBody) => {
+  const onSubmit = async (data: UpdateAddressBody) => {
     try {
-      const response = await saveUserAddress(data);
-      console.log('front', response);
+      await updateUserAddress(data);
       toast.success('success to add address');
     } catch (error: unknown) {
       toast.error('failed to add address');

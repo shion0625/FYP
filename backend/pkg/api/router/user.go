@@ -54,9 +54,10 @@ func UserRoutes(api *echo.Group, middleware middleware.Middleware, authHandler h
 			account.GET("/", userHandler.GetProfile)
 			account.PUT("/", userHandler.UpdateProfile)
 
-			account.GET("/address", userHandler.GetAllAddresses) // to show all address and // show countries
-			account.POST("/address", userHandler.SaveAddress)    // to add a new address
-			account.PUT("/address", userHandler.UpdateAddress)   // to edit address
+			account.GET("/addresses", userHandler.GetAllAddresses)
+			account.GET("/address/:address_id", userHandler.GetAddressById)
+			account.POST("/address", userHandler.SaveAddress)  // to add a new address
+			account.PUT("/address", userHandler.UpdateAddress) // to edit address
 			account.POST("/payment-method",
 				userHandler.SavePaymentMethod)
 			account.GET("/payment-method",

@@ -47,7 +47,10 @@ const MyUserView = () => {
         {userAddressList?.data &&
           userAddressList.data.length > 0 &&
           userAddressList.data.map((address) => (
-            <Card key={address.id}>
+            <Card
+              key={address.id}
+              onClick={() => router.push(`/user/address/edit?address_id=${address.id}`)}
+            >
               <h2 className="text-2xl mb-4 font-semibold">{address.name}</h2>
               <p className="space-y-2 text-gray-700">
                 {address.house}

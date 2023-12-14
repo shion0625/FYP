@@ -5,7 +5,7 @@ import { Button, Card } from 'flowbite-react';
 import { useRouter } from 'next/navigation';
 import { UsePurchase } from '@/actions/order/purchase';
 import { UsePaymentMethod } from '@/actions/user/payment-method';
-import { UseUserAddresses } from '@/actions/user/user-address';
+import { UseUserAddress } from '@/actions/user/user-address';
 import CreditCardsForm from '@/components/credit-cards-form';
 import BackdropModal from '@/components/ui/backdrop-modal';
 import CardIcon from '@/components/ui/credit-cards';
@@ -22,7 +22,7 @@ const Summary = () => {
   const items = useCart((state) => state.items);
   const removeAll = useCart((state) => state.removeAll);
   const { purchaseOrder } = UsePurchase();
-  const { getUserAddress } = UseUserAddresses();
+  const { getUserAddresses } = UseUserAddress();
   const { getPaymentMethod } = UsePaymentMethod();
   const [responseData, setData] = useState<DataState>({
     paymentMethod: [],
@@ -32,12 +32,11 @@ const Summary = () => {
   useEffect(() => {
     const fetchData = async () => {
       const paymentMethod = await getPaymentMethod();
-      const userAddress = await getUserAddress();
+      const userAddress = await getUserAddresses();
       setData({ paymentMethod, userAddress });
     };
     fetchData();
   }, []);
-  console.log(responseData);
 
   const totalPrice = items.reduce((total, item) => total + Number(item.price), 0);
 

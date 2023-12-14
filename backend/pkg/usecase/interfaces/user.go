@@ -15,6 +15,7 @@ type UserUseCase interface {
 	SaveAddress(ctx echo.Context, userID string, address domain.Address, isDefault bool) error // save address
 	UpdateAddress(ctx echo.Context, addressBody request.EditAddress, userID string) error
 	FindAddresses(ctx echo.Context, userID string) ([]response.Address, error) // to get all address of a user
+	FindAddress(ctx echo.Context, userID string, addressID uint) (domain.Address, error)
 
 	FindPaymentMethods(ctx echo.Context, userID string) ([]response.PaymentMethod, error)
 	SavePaymentMethod(ctx echo.Context, userID string, paymentMethod request.PaymentMethod) error

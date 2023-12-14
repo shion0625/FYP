@@ -150,6 +150,15 @@ func (u *userUserCase) FindAddresses(ctx echo.Context, userID string) (addresses
 	return addresses, nil
 }
 
+func (u *userUserCase) FindAddress(ctx echo.Context, userID string, addressID uint) (domain.Address, error) {
+	user, err := u.userRepo.FindAddressByUserIDAndAddressID(ctx, userID, addressID)
+	if err != nil {
+		return domain.Address{}, fmt.Errorf("failed to find user details: %w", err)
+	}
+
+	return user, nil
+}
+
 func (u *userUserCase) FindPaymentMethods(ctx echo.Context, userID string) (paymentMethods []response.PaymentMethod, err error) {
 	paymentMethods, err = u.userRepo.FindAllPaymentMethodsByUserID(ctx, userID)
 	if err != nil {

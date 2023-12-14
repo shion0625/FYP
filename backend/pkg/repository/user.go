@@ -86,6 +86,17 @@ func (c *userDatabase) FindAllAddressByUserID(ctx echo.Context, userID string) (
 	return addresses, err
 }
 
+func (c *userDatabase) FindAddressByUserIDAndAddressID(ctx echo.Context, userID string, addressID uint) (address domain.Address, err error) {
+	err = c.DB.
+		Table("user_addresses").
+		Select("addresses.id, addresses.house, addresses.name, addresses.phone_number, addresses.area, addresses.land_mark, addresses.city, addresses.pincode, addresses.country_name, user_addresses.is_default").
+		Joins("JOIN addresses ON user_addresses.address_id = addresses.id").
+		Where("user_addresses.user_id = ? AND addresses.id = ?", userID, addressID).
+		Scan(&address).Error
+
+	return address, err
+}
+
 func (c *userDatabase) IsAddressAlreadyExistForUser(ctx echo.Context, address domain.Address, userID string) (exist bool, err error) {
 	var addressRes domain.Address
 	err = c.DB.Table("user_addresses").
@@ -102,12 +113,17 @@ func (c *userDatabase) IsAddressAlreadyExistForUser(ctx echo.Context, address do
 }
 
 func (c *userDatabase) IsAddressIDExist(ctx echo.Context, addressID uint) (exist bool, err error) {
-	err = c.DB.
-		Select("EXISTS(SELECT 1 FROM addresses WHERE id = ?) AS exist", addressID).
+	var addressModel domain.Address
+	err = c.DB.Table("addresses").
+		Select("addresses.id").
 		Where("id = ?", addressID).
-		First(&exist).Error
+		First(&addressModel).Error
 
-	return exist, err
+	if err == gorm.ErrRecordNotFound {
+		return false, nil
+	}
+
+	return true, err
 }
 
 func (c *userDatabase) SaveAddress(ctx echo.Context, address domain.Address) (addressID uint, err error) {
@@ -147,6 +163,7 @@ func (c *userDatabase) SaveUserAddress(ctx echo.Context, userAddress domain.User
 }
 
 func (c *userDatabase) UpdateAddress(ctx echo.Context, address domain.Address) error {
+	fmt.Print("fjoiawejofiajoiewjoifa")
 	if err := c.DB.Model(&address).Where("id = ?", address.ID).Updates(map[string]interface{}{
 		"name":         address.Name,
 		"phone_number": address.PhoneNumber,
