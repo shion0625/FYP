@@ -158,7 +158,9 @@ func (u *userUserCase) FindPaymentMethods(ctx echo.Context, userID string) (paym
 
 	for i, method := range paymentMethods {
 		creditNumberDecrypted := utils.Decrypt(method.Number, userID+u.creditCardKey)
-		paymentMethods[i].Number = creditNumberDecrypted[len(creditNumberDecrypted)-4:]
+		if len(creditNumberDecrypted) >= 4 {
+			paymentMethods[i].Number = creditNumberDecrypted[len(creditNumberDecrypted)-4:]
+		}
 	}
 
 	return paymentMethods, nil

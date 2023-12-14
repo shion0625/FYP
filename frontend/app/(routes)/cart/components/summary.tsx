@@ -35,6 +35,7 @@ const Summary = () => {
     };
     fetchData();
   }, []);
+  console.log(responseData);
 
   const totalPrice = items.reduce((total, item) => total + Number(item.price), 0);
 
@@ -117,7 +118,7 @@ const Summary = () => {
               </p>
               <p>
                 <span className="font-bold">Card Number:</span> **** **** ****{' '}
-                {paymentMethod.creditNumber}
+                {paymentMethod.Number}
               </p>
             </Card>
           ))}
