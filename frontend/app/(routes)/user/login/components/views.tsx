@@ -4,8 +4,7 @@ import { toast } from 'react-hot-toast';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Label, TextInput, Button } from 'flowbite-react';
 import { HiLockClosed, HiMail } from 'react-icons/hi';
-import { UseLogin, LoginBody } from '@/actions/user';
-import { loginSchema } from '@/schema/user';
+import { UseLogin, LoginBody, loginSchema } from '@/actions/user';
 
 const LoginView = () => {
   const {

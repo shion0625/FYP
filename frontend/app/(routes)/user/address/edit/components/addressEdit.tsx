@@ -3,28 +3,25 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Label, TextInput, Button } from 'flowbite-react';
-import { UseUserAddresses, AddressBody, AddressSchema } from '@/actions/user/user-address';
+import {
+  UseUserAddresses,
+  AddressBody,
+  UpdateAddressBody,
+  UpdateAddressSchema,
+} from '@/actions/user/user-address';
 import { CardTitle, CardDescription, CardHeader, CardContent, Card } from '@/components/ui/card';
 
 const AddressView = () => {
   const { saveUserAddress } = UseUserAddresses();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<AddressBody>({
+  } = useForm<UpdateAddressBody>({
     mode: 'onBlur',
-    defaultValues: {
-      name: '',
-      area: '',
-      city: '',
-      countryName: '',
-      house: '',
-      landMark: '',
-      phoneNumber: '',
-      pincode: '',
-    },
-    resolver: yupResolver(AddressSchema),
+    defaultValues: {},
+    resolver: yupResolver(UpdateAddressSchema),
   });
 
   const onSubmit = async (data: AddressBody) => {

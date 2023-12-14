@@ -1,15 +1,32 @@
+import * as yup from 'yup';
 import useSWR from 'swr';
 import { axiosFetcher, axiosPostFetcher } from '@/actions/fetcher';
 import { PaymentMethod } from '@/types';
 
 const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/paymentMethod`;
 
-export interface PaymentMethodBody {
-  number: string;
-  name: string;
-  expiry: string;
-  cvc: string;
-}
+export const CreditCardSchema = yup.object().shape({
+  number: yup
+    .string()
+    .required('Card number is required')
+    .matches(/^[0-9]{13,16}$/, 'Card number must be 13 to 16 digits'),
+  name: yup
+    .string()
+    .required('Name is required')
+    .matches(/^[a-zA-Z ]*$/, 'Only alphabets are allowed for name')
+    .min(2, 'Name must be at least 2 characters')
+    .max(50, "Name can't be longer than 50 characters"),
+  expiry: yup
+    .string()
+    .required('Expiry date is required')
+    .matches(/^(0[1-9]|1[0-2])\/([0-9]{4}|[0-9]{2})$/, 'Must be a valid MM/YY format'),
+  cvc: yup
+    .string()
+    .required('CVC is required')
+    .matches(/^[0-9]{3,4}$/, 'Must be a valid CVC number'),
+});
+
+export interface PaymentMethodBody extends yup.InferType<typeof CreditCardSchema> {}
 
 interface UsePaymentMethodReturn {
   getPaymentMethod: () => Promise<PaymentMethod[]>;

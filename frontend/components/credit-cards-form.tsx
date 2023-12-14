@@ -6,8 +6,11 @@ import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Label, TextInput } from 'flowbite-react';
 import { HiCreditCard, HiUser, HiCalendar, HiLockClosed } from 'react-icons/hi';
-import { UsePaymentMethod, PaymentMethodBody } from '@/actions/user/payment-method';
-import { creditCardSchema } from '@/schema/user';
+import {
+  UsePaymentMethod,
+  PaymentMethodBody,
+  CreditCardSchema,
+} from '@/actions/user/payment-method';
 
 const CreditCardsForm = () => {
   const {
@@ -24,7 +27,7 @@ const CreditCardsForm = () => {
       expiry: '',
       cvc: '',
     },
-    resolver: yupResolver(creditCardSchema),
+    resolver: yupResolver(CreditCardSchema),
   });
   const { savePaymentMethod } = UsePaymentMethod();
 

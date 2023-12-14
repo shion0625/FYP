@@ -7,3 +7,7 @@ export const axiosFetcher = async (url: string) => {
 export const axiosPostFetcher = async (url: string, data?: unknown) => {
   return axios.post(url, data).then((res) => res);
 };
+
+export const axiosPutFetcher = async (url: string, data?: unknown) => {
+  return axios.put(url, data).then((res) => res);
+};
