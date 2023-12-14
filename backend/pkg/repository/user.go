@@ -87,13 +87,18 @@ func (c *userDatabase) FindAllAddressByUserID(ctx echo.Context, userID string) (
 }
 
 func (c *userDatabase) IsAddressAlreadyExistForUser(ctx echo.Context, address domain.Address, userID string) (exist bool, err error) {
+	var addressRes domain.Address
 	err = c.DB.Table("user_addresses").
-		Select("CASE WHEN addresses.id != 0 THEN 'T' ELSE 'F' END AS exist").
-		Joins("INNER JOIN user_addresses ON addresses.id = user_addresses.address_id").
+		Select("addresses.id").
+		Joins("INNER JOIN addresses ON user_addresses.address_id = addresses.id").
 		Where("addresses.name = ? AND addresses.house = ? AND addresses.land_mark = ? AND addresses.pincode = ? AND user_addresses.user_id = ?", address.Name, address.House, address.LandMark, address.Pincode, userID).
-		First(&exist).Error
+		First(&addressRes).Error
 
-	return exist, err
+	if err == gorm.ErrRecordNotFound {
+		return false, nil
+	}
+
+	return true, err
 }
 
 func (c *userDatabase) IsAddressIDExist(ctx echo.Context, addressID uint) (exist bool, err error) {
