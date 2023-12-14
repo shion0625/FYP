@@ -17,7 +17,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-const bcryptCost = 10
+const (
+	bcryptCost            = 10
+	MinCreditNumberLength = 4
+)
 
 type userUserCase struct {
 	userRepo      interfaces.UserRepository
@@ -167,7 +170,7 @@ func (u *userUserCase) FindPaymentMethods(ctx echo.Context, userID string) (paym
 
 	for i, method := range paymentMethods {
 		creditNumberDecrypted := utils.Decrypt(method.Number, userID+u.creditCardKey)
-		if len(creditNumberDecrypted) >= 4 {
+		if len(creditNumberDecrypted) >= MinCreditNumberLength {
 			paymentMethods[i].Number = creditNumberDecrypted[len(creditNumberDecrypted)-4:]
 		}
 	}

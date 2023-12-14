@@ -38,8 +38,8 @@ type EditUser struct {
 }
 
 type PaymentMethod struct {
-	Number string `gorm:"unique;not null"     json:"number"`
-	Name   string `gorm:"not null"     json:"name"`
-	Expiry string `gorm:"not null"     json:"expiry"`
-	Cvc    string `gorm:"not null"            json:"cvc"`
+	Number string `gorm:"unique;not null" json:"number"`
+	Name   string `gorm:"not null"        json:"name"`
+	Expiry string `gorm:"not null"        json:"expiry"`
+	Cvc    string `gorm:"not null"        json:"cvc"`
 }

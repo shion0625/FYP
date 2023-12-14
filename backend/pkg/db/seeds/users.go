@@ -2,6 +2,7 @@ package seeds
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/brianvoe/gofakeit/v6"
@@ -20,6 +21,7 @@ func CreateUserDomain(db *gorm.DB, cfg *config.Config, options ...func(*domain.U
 		MinPincode      = 100000
 		MaxPincode      = 999999
 		ExpireAfterDays = 24 * 7
+		YearFormat      = 100
 	)
 
 	gofakeit.Seed(0)
@@ -51,7 +53,7 @@ func CreateUserDomain(db *gorm.DB, cfg *config.Config, options ...func(*domain.U
 		Area:        gofakeit.City(),
 		LandMark:    gofakeit.Street(),
 		City:        gofakeit.City(),
-		Pincode:     fmt.Sprint(gofakeit.Number(MinPincode, MaxPincode)),
+		Pincode:     strconv.Itoa(gofakeit.Number(MinPincode, MaxPincode)),
 		CountryName: gofakeit.Country(),
 		CreatedAt:   gofakeit.Date(),
 		UpdatedAt:   gofakeit.Date(),
@@ -75,7 +77,7 @@ func CreateUserDomain(db *gorm.DB, cfg *config.Config, options ...func(*domain.U
 	// PaymentMethod domain
 	paymentMethod := domain.PaymentMethod{
 		Number: utils.Encrypt(creditNumber, user.ID+cfg.CreditCardKey),
-		Expiry: fmt.Sprintf("%02d/%02d", gofakeit.Month(), gofakeit.Year()%100), Cvc: gofakeit.CreditCardCvv(),
+		Expiry: fmt.Sprintf("%02d/%02d", gofakeit.Month(), gofakeit.Year()%YearFormat), Cvc: gofakeit.CreditCardCvv(),
 		UserId:      user.ID,
 		CardCompany: utils.GetCardIssuer(creditNumber),
 		CreatedAt:   gofakeit.Date(),

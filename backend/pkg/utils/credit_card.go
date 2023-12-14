@@ -30,6 +30,7 @@ func Encrypt(stringToEncrypt string, keyString string) (encryptedString string) 
 	}
 
 	ciphertext := aesGCM.Seal(nonce, nonce, plaintext, nil)
+
 	return hex.EncodeToString(ciphertext)
 }
 

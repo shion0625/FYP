@@ -105,7 +105,7 @@ func (c *userDatabase) IsAddressAlreadyExistForUser(ctx echo.Context, address do
 		Where("addresses.name = ? AND addresses.house = ? AND addresses.land_mark = ? AND addresses.pincode = ? AND user_addresses.user_id = ?", address.Name, address.House, address.LandMark, address.Pincode, userID).
 		First(&addressRes).Error
 
-	if err == gorm.ErrRecordNotFound {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return false, nil
 	}
 
@@ -119,7 +119,7 @@ func (c *userDatabase) IsAddressIDExist(ctx echo.Context, addressID uint) (exist
 		Where("id = ?", addressID).
 		First(&addressModel).Error
 
-	if err == gorm.ErrRecordNotFound {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return false, nil
 	}
 
@@ -163,7 +163,6 @@ func (c *userDatabase) SaveUserAddress(ctx echo.Context, userAddress domain.User
 }
 
 func (c *userDatabase) UpdateAddress(ctx echo.Context, address domain.Address) error {
-	fmt.Print("fjoiawejofiajoiewjoifa")
 	if err := c.DB.Model(&address).Where("id = ?", address.ID).Updates(map[string]interface{}{
 		"name":         address.Name,
 		"phone_number": address.PhoneNumber,
