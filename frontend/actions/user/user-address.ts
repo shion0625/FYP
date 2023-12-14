@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { axiosFetcher, axiosPostFetcher } from '@/actions/fetcher';
 import { Address } from '@/types';
 
-const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/user-address`;
+const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/user/address`;
 
 export interface AddressBody {
   name: string;
