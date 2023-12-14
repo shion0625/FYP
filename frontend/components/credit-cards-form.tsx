@@ -1,10 +1,12 @@
 import React from 'react';
 import Cards from 'react-credit-cards-2';
-import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import { useForm, Controller } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
+import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Label, TextInput } from 'flowbite-react';
 import { HiCreditCard, HiUser, HiCalendar, HiLockClosed } from 'react-icons/hi';
+import { UsePaymentMethod, PaymentMethodBody } from '@/actions/user/payment-method';
 import { creditCardSchema } from '@/schema/user';
 
 const CreditCardsForm = () => {
@@ -14,7 +16,7 @@ const CreditCardsForm = () => {
     watch,
     formState: { errors },
     control,
-  } = useForm({
+  } = useForm<PaymentMethodBody>({
     mode: 'onChange',
     defaultValues: {
       number: '',
@@ -24,6 +26,7 @@ const CreditCardsForm = () => {
     },
     resolver: yupResolver(creditCardSchema),
   });
+  const { savePaymentMethod } = UsePaymentMethod();
 
   const formatExpiryDate = (value: string) => {
     return value
@@ -32,7 +35,15 @@ const CreditCardsForm = () => {
       .slice(0, 5);
   };
 
-  const onSubmit = (data: unknown) => console.log(data);
+  const onSubmit = async (data: PaymentMethodBody) => {
+    try {
+      const response = await savePaymentMethod(data);
+      console.log(response);
+      toast.success('success to add address');
+    } catch (error: unknown) {
+      toast.error('failed to add address');
+    }
+  };
   const watchAllFields = watch();
 
   return (

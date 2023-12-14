@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { toast } from 'react-hot-toast';
 import { Button, Card } from 'flowbite-react';
-import { UsePurchase } from '@/actions/cart/purchase';
+import { UsePurchase } from '@/actions/order/purchase';
 import { UsePaymentMethod } from '@/actions/user/payment-method';
 import { UseUserAddresses } from '@/actions/user/user-address';
 import CreditCardsForm from '@/components/credit-cards-form';

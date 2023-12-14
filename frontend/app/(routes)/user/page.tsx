@@ -4,7 +4,7 @@ import Container from '@/components/ui/container';
 
 export const revalidate = 0;
 
-const DynamicLazyUser = getDynamicComponent('views/user', <></>);
+const DynamicLazyUser = getDynamicComponent('user', <></>);
 
 const MyUser = () => (
   <div className="bg-white">

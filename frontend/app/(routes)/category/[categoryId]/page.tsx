@@ -12,7 +12,7 @@ interface CategoryIdPageProps {
   };
 }
 const DynamicLazyCategoryID = getDynamicComponent<CategoryIdPageProps['params']>(
-  'views/categoryID',
+  'category/[categoryId]',
   <Loading count={16} />
 );
 

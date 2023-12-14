@@ -157,8 +157,8 @@ func (u *userUserCase) FindPaymentMethods(ctx echo.Context, userID string) (paym
 	}
 
 	for i, method := range paymentMethods {
-		creditNumberDecrypted := utils.Decrypt(method.CreditNumber, userID+u.creditCardKey)
-		paymentMethods[i].CreditNumber = creditNumberDecrypted[len(creditNumberDecrypted)-4:]
+		creditNumberDecrypted := utils.Decrypt(method.Number, userID+u.creditCardKey)
+		paymentMethods[i].Number = creditNumberDecrypted[len(creditNumberDecrypted)-4:]
 	}
 
 	return paymentMethods, nil
@@ -167,10 +167,11 @@ func (u *userUserCase) FindPaymentMethods(ctx echo.Context, userID string) (paym
 // to add new product.
 func (u *userUserCase) SavePaymentMethod(ctx echo.Context, userID string, paymentMethod request.PaymentMethod) error {
 	_, err := u.userRepo.SavePaymentMethod(ctx, domain.PaymentMethod{
-		CreditNumber: utils.Encrypt(paymentMethod.CreditNumber, userID+u.creditCardKey),
-		Cvv:          paymentMethod.Cvv,
-		UserId:       userID,
-		CardCompany:  utils.GetCardIssuer(paymentMethod.CreditNumber),
+		Number:      utils.Encrypt(paymentMethod.Number, userID+u.creditCardKey),
+		Expiry:      paymentMethod.Expiry,
+		Cvc:         paymentMethod.Cvc,
+		UserId:      userID,
+		CardCompany: utils.GetCardIssuer(paymentMethod.Number),
 	})
 	if err != nil {
 		return fmt.Errorf("failed to save product: %w", err)

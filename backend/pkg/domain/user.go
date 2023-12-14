@@ -39,17 +39,18 @@ type Address struct {
 	LandMark    string    `gorm:"not null"          json:"landMark"`
 	City        string    `gorm:"not null"          json:"city"`
 	Pincode     string    `gorm:"not null"          json:"pincode"`
-	CountryName string      `gorm:"not null"          json:"countryName"`
+	CountryName string    `gorm:"not null"          json:"countryName"`
 	CreatedAt   time.Time `gorm:"not null"          json:"createdAt"`
 	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
 type PaymentMethod struct {
-	ID           uint      `gorm:"primaryKey;not null" json:"id"`
-	CreditNumber string    `gorm:"unique;not null"     json:"creditNumber"`
-	Cvv          string    `gorm:"not null"            json:"cvv"`
-	CardCompany  string    `gorm:"not null"     json:"cardCompany"`
-	UserId       string    `gorm:"not null"            json:"userId"`
-	CreatedAt    time.Time `gorm:"not null"            json:"createdAt"`
-	UpdatedAt    time.Time `json:"updatedAt"`
+	ID          uint      `gorm:"primaryKey;not null" json:"id"`
+	Number      string    `gorm:"unique;not null"     json:"number"`
+	Expiry      string    `gorm:"unique;not null"     json:"expiry"`
+	Cvc         string    `gorm:"not null"            json:"cvc"`
+	CardCompany string    `gorm:"not null"     json:"cardCompany"`
+	UserId      string    `gorm:"not null"            json:"userId"`
+	CreatedAt   time.Time `gorm:"not null"            json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
 }

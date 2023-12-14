@@ -119,12 +119,6 @@ func (c *orderDatabase) PayOrder(ctx echo.Context, paymentMethodID uint) error {
 		return err
 	}
 
-	// Perform payment processing using the PaymentMethod
-	// This is a placeholder, replace with actual payment processing logic
-	if paymentMethod.CreditNumber == "" {
-		return fmt.Errorf("invalid payment method")
-	}
-
 	return nil
 }
 
@@ -181,8 +175,8 @@ func (o *orderDatabase) GetShopOrders(ctx echo.Context, userID string, paginatio
 			},
 			TotalFee: shopOrder.OrderTotalPrice,
 			PaymentMethod: response.PaymentMethod{
-				ID:           shopOrder.PaymentMethod.ID,
-				CreditNumber: shopOrder.PaymentMethod.CreditNumber,
+				ID:     shopOrder.PaymentMethod.ID,
+				Number: shopOrder.PaymentMethod.Number,
 			},
 		})
 	}

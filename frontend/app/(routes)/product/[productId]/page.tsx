@@ -11,7 +11,7 @@ interface ProductPageProps {
 }
 
 const DynamicLazyProductID = getDynamicComponent<ProductPageProps['params']>(
-  'views/productID',
+  'product/[productId]',
   <Loading count={16} />
 );
 

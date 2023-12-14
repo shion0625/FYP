@@ -5,8 +5,10 @@ import { PaymentMethod } from '@/types';
 const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/paymentMethod`;
 
 export interface PaymentMethodBody {
-  creditNumber: string;
-  cvv: string;
+  number: string;
+  name: string;
+  expiry: string;
+  cvc: string;
 }
 
 interface UsePaymentMethodReturn {

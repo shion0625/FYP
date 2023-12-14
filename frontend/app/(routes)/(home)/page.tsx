@@ -5,7 +5,7 @@ import { Loading } from './components/loading';
 
 export const revalidate = 0;
 
-const DynamicLazyHome = getDynamicComponent('views/home', <Loading count={16} />);
+const DynamicLazyHome = getDynamicComponent('(home)', <Loading count={16} />);
 
 const HomePage = () => (
   <Container>
