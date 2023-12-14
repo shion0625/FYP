@@ -114,14 +114,14 @@ const Summary = () => {
         {responseData.paymentMethod &&
           responseData.paymentMethod.length > 0 &&
           responseData.paymentMethod.map((paymentMethod) => (
-            <Card key={paymentMethod.id}>
+            <Card className="mt-4" key={paymentMethod.id}>
               <p>
                 <CardIcon cardCompany={paymentMethod.cardCompany} />
                 <span className="font-bold">Card ID:</span> {paymentMethod.id}
               </p>
               <p>
                 <span className="font-bold">Card Number:</span> **** **** ****{' '}
-                {paymentMethod.Number}
+                {paymentMethod.number}
               </p>
             </Card>
           ))}

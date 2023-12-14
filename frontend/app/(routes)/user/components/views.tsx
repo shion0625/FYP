@@ -1,10 +1,14 @@
 'use client';
-import { Card } from 'flowbite-react';
+import { Button, Card } from 'flowbite-react';
+import { useRouter } from 'next/navigation';
 import { UseGetMyPage } from '@/app/(routes)/user/hooks/get-mypage';
+import CreditCardsForm from '@/components/credit-cards-form';
+import BackdropModal from '@/components/ui/backdrop-modal';
 import CardIcon from '@/components/ui/credit-cards';
 import NoResults from '@/components/ui/no-results';
 
 const MyUserView = () => {
+  const router = useRouter();
   const { userProfile, userAddressList, userPaymentMethod } = UseGetMyPage();
   return (
     <div className="space-y-10 pb-10">
@@ -32,10 +36,18 @@ const MyUserView = () => {
       ) : (
         <NoResults />
       )}
-      {userAddressList && userAddressList.data ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-center bg-white shadow-lg rounded-lg p-10">
-          {userAddressList.data.map((address) => (
-            <Card className="mt-4" key={address.id}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-center bg-white shadow-lg rounded-lg p-10">
+        <Button
+          color="white"
+          className="h-full border-dashed border-2 border-gray-500 cursor-pointer hover:bg-gray-200 transition-colors duration-200 ease-in-out"
+          onClick={() => router.push('/user/address/add')}
+        >
+          add address
+        </Button>
+        {userAddressList?.data &&
+          userAddressList.data.length > 0 &&
+          userAddressList.data.map((address) => (
+            <Card key={address.id}>
               <h2 className="text-2xl mb-4 font-semibold">{address.name}</h2>
               <p className="space-y-2 text-gray-700">
                 {address.house}
@@ -50,13 +62,18 @@ const MyUserView = () => {
               </p>
             </Card>
           ))}
-        </div>
-      ) : (
-        <NoResults />
-      )}
-      {userPaymentMethod && userPaymentMethod.data ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-center bg-white shadow-lg rounded-lg p-10">
-          {userPaymentMethod.data.map((paymentMethod) => {
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-center bg-white shadow-lg rounded-lg p-10">
+        <BackdropModal
+          buttonClassName="h-full border-dashed border-2 border-gray-500 cursor-pointer hover:bg-gray-200 transition-colors duration-200 ease-in-out"
+          buttonText="add payment method"
+          headerText="Add Payment Method"
+        >
+          <CreditCardsForm />
+        </BackdropModal>
+        {userPaymentMethod?.data &&
+          userPaymentMethod?.data.length > 0 &&
+          userPaymentMethod.data.map((paymentMethod) => {
             return (
               <Card key={paymentMethod.id}>
                 <p>
@@ -65,15 +82,12 @@ const MyUserView = () => {
                 </p>
                 <p>
                   <span className="font-bold">Card Number:</span> **** **** ****{' '}
-                  {paymentMethod.creditNumber}
+                  {paymentMethod.number}
                 </p>
               </Card>
             );
           })}
-        </div>
-      ) : (
-        <NoResults />
-      )}
+      </div>
     </div>
   );
 };

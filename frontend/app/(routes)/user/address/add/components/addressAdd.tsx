@@ -31,7 +31,7 @@ const AddressView = () => {
   const onSubmit = async (data: AddressBody) => {
     try {
       const response = await saveUserAddress(data);
-      console.log(response);
+      console.log('front', response);
       toast.success('success to add address');
     } catch (error: unknown) {
       toast.error('failed to add address');

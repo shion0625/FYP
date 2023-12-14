@@ -1,6 +1,5 @@
 import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 const COOKIE_SECURE = process.env.NEXT_PUBLIC_COOKIE_SECURE === '1';
 const accessTokenExpiresInMinutes = 20;

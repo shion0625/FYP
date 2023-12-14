@@ -91,6 +91,6 @@ export interface TokenResponse {
 
 export interface PaymentMethod {
   id: number;
-  Number: string;
+  number: string;
   cardCompany: string;
 }

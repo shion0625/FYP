@@ -1,5 +1,5 @@
+import { NextResponse, type NextRequest } from 'next/server';
 import { getAccessTokenCookie } from '@/utils/cookie';
-import type { NextRequest } from 'next/server';
 
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/account/address`;
 
@@ -31,8 +31,10 @@ export async function POST(req: NextRequest) {
     },
     body: JSON.stringify(json),
   });
-  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(`Server responded with status ${response.status}`);
+  }
 
   // レスポンスを送信
-  return Response.json(data);
+  return NextResponse.json(response);
 }
