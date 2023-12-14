@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
+import Variation from '@/components/product/variation';
 import Currency from '@/components/ui/currency';
-import Variation from '@/components/variation';
 import { ProductItem, ProductVariationValue } from '@/types';
 
 export const revalidate = 0;

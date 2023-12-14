@@ -1,10 +1,10 @@
 'use client';
 import { Card } from 'flowbite-react';
-import { UseGetMyPage } from '@/app/(routes)/user/myPage/hooks/get-mypage';
+import { UseGetMyPage } from '@/app/(routes)/user/hooks/get-mypage';
 import CardIcon from '@/components/ui/credit-cards';
 import NoResults from '@/components/ui/no-results';
 
-const MyPageView = () => {
+const MyUserView = () => {
   const { userProfile, userAddressList, userPaymentMethod } = UseGetMyPage();
   return (
     <div className="space-y-10 pb-10">
@@ -78,4 +78,4 @@ const MyPageView = () => {
   );
 };
 
-export default MyPageView;
+export default MyUserView;

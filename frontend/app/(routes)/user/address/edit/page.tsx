@@ -1,6 +1,6 @@
 'use client';
 import Container from '@/components/ui/container';
-import AddressView from '@/components/views/addressEdit';
+import AddressView from '@/app/(routes)/user/address/edit/components/addressEdit';
 export const revalidate = 0;
 
 const AddressPage = () => (

@@ -1,6 +1,6 @@
 'use client';
 import Container from '@/components/ui/container';
-import LoginInView from '@/components/views/login';
+import LoginInView from '@/app/(routes)/user/login/components/views';
 export const revalidate = 0;
 
 const LoginPage = () => (

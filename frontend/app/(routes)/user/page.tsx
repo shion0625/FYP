@@ -4,14 +4,14 @@ import Container from '@/components/ui/container';
 
 export const revalidate = 0;
 
-const DynamicLazyMyPage = getDynamicComponent('views/mypage', <></>);
+const DynamicLazyUser = getDynamicComponent('views/user', <></>);
 
-const MyPage = () => (
+const MyUser = () => (
   <div className="bg-white">
     <Container>
-      <DynamicLazyMyPage />
+      <DynamicLazyUser />
     </Container>
   </div>
 );
 
-export default MyPage;
+export default MyUser;

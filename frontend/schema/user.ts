@@ -70,7 +70,10 @@ export const creditCardSchema = yup.object().shape({
   expiry: yup
     .string()
     .required('Expiry date is required')
-    .matches(/^(0[1-9]|1[0-2])([0-9]{4}|[0-9]{2})$/, 'Must be a valid MMYY format for expiry date'),
+    .matches(
+      /^(0[1-9]|1[0-2])\/([0-9]{4}|[0-9]{2})$/,
+      'Must be a valid MM/YY format'
+    ),
   cvc: yup
     .string()
     .required('CVC is required')

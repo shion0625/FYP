@@ -1,6 +1,6 @@
 'use client';
+import SignUPView from '@/app/(routes)/user/signup/components/views';
 import Container from '@/components/ui/container';
-import SignUPView from '@/components/views/signup';
 export const revalidate = 0;
 
 const SignUpPage = () => (
