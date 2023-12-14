@@ -47,7 +47,7 @@ type Address struct {
 type PaymentMethod struct {
 	ID          uint      `gorm:"primaryKey;not null" json:"id"`
 	Number      string    `gorm:"unique;not null"     json:"number"`
-	Expiry      string    `gorm:"unique;not null"     json:"expiry"`
+	Expiry      string    `gorm:"not null"     json:"expiry"`
 	Cvc         string    `gorm:"not null"            json:"cvc"`
 	CardCompany string    `gorm:"not null"     json:"cardCompany"`
 	UserId      string    `gorm:"not null"            json:"userId"`

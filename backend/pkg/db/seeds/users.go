@@ -74,9 +74,8 @@ func CreateUserDomain(db *gorm.DB, cfg *config.Config, options ...func(*domain.U
 	creditNumber := gofakeit.CreditCardNumber(nil)
 	// PaymentMethod domain
 	paymentMethod := domain.PaymentMethod{
-		Number:      utils.Encrypt(creditNumber, user.ID+cfg.CreditCardKey),
-		Expiry:      fmt.Sprintf("%02d/%02d", gofakeit.Month(), gofakeit.Day()),
-		Cvc:         gofakeit.CreditCardCvv(),
+		Number: utils.Encrypt(creditNumber, user.ID+cfg.CreditCardKey),
+		Expiry: fmt.Sprintf("%02d/%02d", gofakeit.Month(), gofakeit.Year()%100), Cvc: gofakeit.CreditCardCvv(),
 		UserId:      user.ID,
 		CardCompany: utils.GetCardIssuer(creditNumber),
 		CreatedAt:   gofakeit.Date(),
