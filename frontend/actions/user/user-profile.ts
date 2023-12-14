@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { axiosFetcher } from '@/actions/fetcher';
 import { Response, User } from '@/types';
 
-const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/user-profile`;
+const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/user/profile`;
 
 interface UseGetProfileReturn {
   userProfile: Response<User> | undefined;

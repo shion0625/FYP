@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import { axiosFetcher } from '@/actions/fetcher';
 import { Response, Address } from '@/types';
 
-const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/user-address`;
+const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/user/address`;
 
 interface Query {
   pageNumber?: number;

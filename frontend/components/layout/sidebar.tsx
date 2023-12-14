@@ -1,5 +1,5 @@
 'use client';
-import { Sidebar as SidebarFlow } from 'flowbite-react';
+import { Sidebar as SidebarFlow, CustomFlowbiteTheme } from 'flowbite-react';
 import { Flowbite } from 'flowbite-react';
 import { usePathname } from 'next/navigation';
 import {
@@ -15,7 +15,6 @@ import {
 import { twMerge } from 'tailwind-merge';
 import useSidebar from '@/hooks/use-sidebar';
 import { Category } from '@/types';
-import type { CustomFlowbiteTheme } from 'flowbite-react';
 
 interface SidebarProps {
   data?: Category[] | null;

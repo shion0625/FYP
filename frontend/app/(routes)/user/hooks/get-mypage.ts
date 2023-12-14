@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { axiosFetcher } from '@/actions/fetcher';
 import { Response, Address, User, PaymentMethod } from '@/types';
 
-const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/mypage`;
+const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/user`;
 
 interface UseGetMyPageReturn {
   userProfile: Response<User> | undefined;
