@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Label, TextInput, Button, Checkbox } from 'flowbite-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { HiUser, HiLockClosed, HiMail, HiPhone, HiIdentification } from 'react-icons/hi';
 import { UseSignUp, SignUpBody, SignUpSchema } from '@/actions/user';
 
@@ -29,6 +30,7 @@ const SignUpView = () => {
   });
 
   const { signUp } = UseSignUp();
+  const router = useRouter();
 
   const onSubmit = async (data: SignUpBody) => {
     try {
@@ -36,6 +38,7 @@ const SignUpView = () => {
         ...data,
       });
       toast.success(response.message);
+      router.push('/user/login');
     } catch (error: unknown) {
       toast.error('failed to signUp');
     }

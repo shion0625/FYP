@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Label, TextInput, Button } from 'flowbite-react';
+import { useRouter } from 'next/navigation';
 import { HiLockClosed, HiMail } from 'react-icons/hi';
 import { UseLogin, LoginBody, loginSchema } from '@/actions/user';
 
@@ -21,7 +22,7 @@ const LoginView = () => {
   });
 
   const { login } = UseLogin();
-
+  const router = useRouter();
   const onSubmit = async (data: LoginBody) => {
     let response;
     try {
@@ -29,6 +30,7 @@ const LoginView = () => {
         ...data,
       });
       toast.success(response.message);
+      router.push('/user');
     } catch (error: unknown) {
       toast.error('failed to login');
     }
