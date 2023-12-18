@@ -7,24 +7,38 @@ const accessTokenExpiresInMinutes = 20;
 export async function middleware(req: NextRequest) {
   const isBlockedRoot =
     req.nextUrl.pathname.startsWith('/cart') || req.nextUrl.pathname.startsWith('/admin');
+  const isBlockedLoginRoot =
+    req.nextUrl.pathname.startsWith('/user/login') ||
+    req.nextUrl.pathname.startsWith('/user/signup');
   const isProtectedAPI = req.nextUrl.pathname.startsWith('/api/auth');
 
   let res = NextResponse.next();
+
   if (isBlockedRoot) {
     res = await handlingAccessToken(res);
     if (res.ok) return res;
     return NextResponse.redirect(new URL('/user/login', req.url));
   }
 
+  if (isBlockedLoginRoot) {
+    res = await handlingAccessToken(res);
+    if (res.ok) {
+      const redirectUrl = req.headers.get('referer') || '/';
+      return NextResponse.redirect(new URL(redirectUrl, req.url));
+    }
+    return res;
+  }
+
   if (isProtectedAPI) {
     res = await handlingAccessToken(res);
     return res;
   }
+
   return res;
 }
 
 export const config = {
-  matcher: ['/cart/:path*', '/admin/:path*', '/api/:path*'],
+  matcher: ['/cart/:path*', '/api/:path*', '/user/login', '/user/signup'],
 };
 
 const handlingAccessToken = async (

@@ -5,12 +5,10 @@ import { usePathname } from 'next/navigation';
 import {
   HiArrowSmRight,
   HiChartPie,
-  HiInbox,
   HiOutlineMinusSm,
   HiOutlinePlusSm,
   HiShoppingBag,
   HiTable,
-  HiUser,
 } from 'react-icons/hi';
 import { twMerge } from 'tailwind-merge';
 import useSidebar from '@/hooks/use-sidebar';
@@ -66,8 +64,11 @@ const Sidebar: React.FC<SidebarProps> = ({ data }) => {
           >
             <SidebarFlow.Items>
               <SidebarFlow.ItemGroup>
-                <SidebarFlow.Item href="/user/myPage" icon={HiChartPie}>
-                  myPage
+                <SidebarFlow.Item href="/user" icon={HiChartPie}>
+                  My page
+                </SidebarFlow.Item>
+                <SidebarFlow.Item href="/" icon={HiShoppingBag}>
+                  Products
                 </SidebarFlow.Item>
                 <SidebarFlow.Collapse
                   icon={HiShoppingBag}
@@ -93,15 +94,6 @@ const Sidebar: React.FC<SidebarProps> = ({ data }) => {
                     <div>No categories available</div>
                   )}
                 </SidebarFlow.Collapse>
-                <SidebarFlow.Item href="#" icon={HiInbox}>
-                  Inbox
-                </SidebarFlow.Item>
-                <SidebarFlow.Item href="#" icon={HiUser}>
-                  Users
-                </SidebarFlow.Item>
-                <SidebarFlow.Item href="#" icon={HiShoppingBag}>
-                  Products
-                </SidebarFlow.Item>
                 <SidebarFlow.Item href="/user/login" icon={HiArrowSmRight}>
                   login
                 </SidebarFlow.Item>
