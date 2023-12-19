@@ -23,29 +23,32 @@ func NewOrderUseCase(
 }
 
 func (o *orderUseCase) PayOrder(ctx echo.Context, userID string, payOrder request.PayOrder) error {
-	if err := o.orderRepo.Transactions(ctx,
-		func(repo repoInterfaces.OrderRepository) error {
-			for _, itemInfo := range payOrder.ProductItemInfo {
-				newStock, err := repo.UpdateProductItemStock(ctx, itemInfo.ProductItemID, itemInfo.Count)
-				if err != nil {
-					return fmt.Errorf("failed to update productItem stock to %d: %w", newStock, err)
-				}
-			}
-
-			if err := repo.PayOrder(ctx, payOrder.PaymentMethodID); err != nil {
-				return fmt.Errorf(": %w", err)
-			}
-
-			if err := repo.SaveOrder(ctx, userID, payOrder); err != nil {
-				return fmt.Errorf(": %w", err)
-			}
-
-			return nil
-		}); err != nil {
+	if err := o.orderRepo.Transactions(ctx, o.updateStockAndPayOrder(ctx, userID, payOrder)); err != nil {
 		return fmt.Errorf("failed to pay order: %w", err)
 	}
 
 	return nil
+}
+
+func (o *orderUseCase) updateStockAndPayOrder(ctx echo.Context, userID string, payOrder request.PayOrder) func(repo repoInterfaces.OrderRepository) error {
+	return func(repo repoInterfaces.OrderRepository) error {
+		for _, itemInfo := range payOrder.ProductItemInfo {
+			newStock, err := repo.UpdateProductItemStock(ctx, itemInfo.ProductItemID, itemInfo.Count)
+			if err != nil {
+				return fmt.Errorf("failed to update productItem stock to %d: %w", newStock, err)
+			}
+		}
+
+		if err := repo.PayOrder(ctx, payOrder.PaymentMethodID); err != nil {
+			return fmt.Errorf("%w", err)
+		}
+
+		if err := repo.SaveOrder(ctx, userID, payOrder); err != nil {
+			return fmt.Errorf("%w", err)
+		}
+
+		return nil
+	}
 }
 
 func (o *orderUseCase) GetAllShopOrders(ctx echo.Context, userID string, pagination request.Pagination) (orderHistory []response.Order, err error) {
