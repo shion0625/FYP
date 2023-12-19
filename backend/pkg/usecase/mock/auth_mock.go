@@ -11,9 +11,10 @@ package mock_interfaces
 import (
 	reflect "reflect"
 
-	v4 "github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	request "github.com/shion0625/FYP/backend/pkg/api/handler/request"
 	domain "github.com/shion0625/FYP/backend/pkg/domain"
+	token "github.com/shion0625/FYP/backend/pkg/service/token"
 	interfaces "github.com/shion0625/FYP/backend/pkg/usecase/interfaces"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -42,7 +43,7 @@ func (m *MockAuthUseCase) EXPECT() *MockAuthUseCaseMockRecorder {
 }
 
 // GenerateAccessToken mocks base method.
-func (m *MockAuthUseCase) GenerateAccessToken(ctx v4.Context, tokenParams interfaces.GenerateTokenParams) (string, error) {
+func (m *MockAuthUseCase) GenerateAccessToken(ctx echo.Context, tokenParams interfaces.GenerateTokenParams) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GenerateAccessToken", ctx, tokenParams)
 	ret0, _ := ret[0].(string)
@@ -57,7 +58,7 @@ func (mr *MockAuthUseCaseMockRecorder) GenerateAccessToken(ctx, tokenParams any)
 }
 
 // GenerateRefreshToken mocks base method.
-func (m *MockAuthUseCase) GenerateRefreshToken(ctx v4.Context, tokenParams interfaces.GenerateTokenParams) (string, error) {
+func (m *MockAuthUseCase) GenerateRefreshToken(ctx echo.Context, tokenParams interfaces.GenerateTokenParams) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GenerateRefreshToken", ctx, tokenParams)
 	ret0, _ := ret[0].(string)
@@ -72,7 +73,7 @@ func (mr *MockAuthUseCaseMockRecorder) GenerateRefreshToken(ctx, tokenParams any
 }
 
 // UserLogin mocks base method.
-func (m *MockAuthUseCase) UserLogin(ctx v4.Context, loginInfo request.Login) (string, error) {
+func (m *MockAuthUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserLogin", ctx, loginInfo)
 	ret0, _ := ret[0].(string)
@@ -87,7 +88,7 @@ func (mr *MockAuthUseCaseMockRecorder) UserLogin(ctx, loginInfo any) *gomock.Cal
 }
 
 // UserSignUp mocks base method.
-func (m *MockAuthUseCase) UserSignUp(ctx v4.Context, signUpDetails domain.User) (string, error) {
+func (m *MockAuthUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserSignUp", ctx, signUpDetails)
 	ret0, _ := ret[0].(string)
@@ -99,4 +100,19 @@ func (m *MockAuthUseCase) UserSignUp(ctx v4.Context, signUpDetails domain.User) 
 func (mr *MockAuthUseCaseMockRecorder) UserSignUp(ctx, signUpDetails any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserSignUp", reflect.TypeOf((*MockAuthUseCase)(nil).UserSignUp), ctx, signUpDetails)
+}
+
+// VerifyAndGetRefreshTokenSession mocks base method.
+func (m *MockAuthUseCase) VerifyAndGetRefreshTokenSession(ctx echo.Context, refreshToken string, usedFor token.UserType) (domain.RefreshSession, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "VerifyAndGetRefreshTokenSession", ctx, refreshToken, usedFor)
+	ret0, _ := ret[0].(domain.RefreshSession)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// VerifyAndGetRefreshTokenSession indicates an expected call of VerifyAndGetRefreshTokenSession.
+func (mr *MockAuthUseCaseMockRecorder) VerifyAndGetRefreshTokenSession(ctx, refreshToken, usedFor any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyAndGetRefreshTokenSession", reflect.TypeOf((*MockAuthUseCase)(nil).VerifyAndGetRefreshTokenSession), ctx, refreshToken, usedFor)
 }

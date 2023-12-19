@@ -11,7 +11,7 @@ package mock_interfaces
 import (
 	reflect "reflect"
 
-	v4 "github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	request "github.com/shion0625/FYP/backend/pkg/api/handler/request"
 	response "github.com/shion0625/FYP/backend/pkg/api/handler/response"
 	domain "github.com/shion0625/FYP/backend/pkg/domain"
@@ -42,7 +42,7 @@ func (m *MockProductUseCase) EXPECT() *MockProductUseCaseMockRecorder {
 }
 
 // FindAllCategories mocks base method.
-func (m *MockProductUseCase) FindAllCategories(ctx v4.Context, pagination request.Pagination) ([]response.Category, error) {
+func (m *MockProductUseCase) FindAllCategories(ctx echo.Context, pagination request.Pagination) ([]response.Category, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindAllCategories", ctx, pagination)
 	ret0, _ := ret[0].([]response.Category)
@@ -57,7 +57,7 @@ func (mr *MockProductUseCaseMockRecorder) FindAllCategories(ctx, pagination any)
 }
 
 // FindAllProductItems mocks base method.
-func (m *MockProductUseCase) FindAllProductItems(ctx v4.Context, productID uint) ([]response.ProductItems, error) {
+func (m *MockProductUseCase) FindAllProductItems(ctx echo.Context, productID uint) ([]response.ProductItems, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindAllProductItems", ctx, productID)
 	ret0, _ := ret[0].([]response.ProductItems)
@@ -72,7 +72,7 @@ func (mr *MockProductUseCaseMockRecorder) FindAllProductItems(ctx, productID any
 }
 
 // FindAllProducts mocks base method.
-func (m *MockProductUseCase) FindAllProducts(ctx v4.Context, pagination request.Pagination, categoryID, brandID *uint) ([]response.Product, error) {
+func (m *MockProductUseCase) FindAllProducts(ctx echo.Context, pagination request.Pagination, categoryID, brandID *uint) ([]response.Product, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindAllProducts", ctx, pagination, categoryID, brandID)
 	ret0, _ := ret[0].([]response.Product)
@@ -87,7 +87,7 @@ func (mr *MockProductUseCaseMockRecorder) FindAllProducts(ctx, pagination, categ
 }
 
 // FindAllVariationsAndItsValues mocks base method.
-func (m *MockProductUseCase) FindAllVariationsAndItsValues(ctx v4.Context, categoryID uint) ([]response.Variation, error) {
+func (m *MockProductUseCase) FindAllVariationsAndItsValues(ctx echo.Context, categoryID uint) ([]response.Variation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindAllVariationsAndItsValues", ctx, categoryID)
 	ret0, _ := ret[0].([]response.Variation)
@@ -102,7 +102,7 @@ func (mr *MockProductUseCaseMockRecorder) FindAllVariationsAndItsValues(ctx, cat
 }
 
 // GetProduct mocks base method.
-func (m *MockProductUseCase) GetProduct(ctx v4.Context, productID uint) (response.Product, error) {
+func (m *MockProductUseCase) GetProduct(ctx echo.Context, productID uint) (response.Product, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetProduct", ctx, productID)
 	ret0, _ := ret[0].(response.Product)
@@ -117,7 +117,7 @@ func (mr *MockProductUseCaseMockRecorder) GetProduct(ctx, productID any) *gomock
 }
 
 // SaveCategory mocks base method.
-func (m *MockProductUseCase) SaveCategory(ctx v4.Context, categoryName string) error {
+func (m *MockProductUseCase) SaveCategory(ctx echo.Context, categoryName string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SaveCategory", ctx, categoryName)
 	ret0, _ := ret[0].(error)
@@ -131,7 +131,7 @@ func (mr *MockProductUseCaseMockRecorder) SaveCategory(ctx, categoryName any) *g
 }
 
 // SaveProduct mocks base method.
-func (m *MockProductUseCase) SaveProduct(ctx v4.Context, product request.Product) error {
+func (m *MockProductUseCase) SaveProduct(ctx echo.Context, product request.Product) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SaveProduct", ctx, product)
 	ret0, _ := ret[0].(error)
@@ -145,7 +145,7 @@ func (mr *MockProductUseCaseMockRecorder) SaveProduct(ctx, product any) *gomock.
 }
 
 // SaveProductItem mocks base method.
-func (m *MockProductUseCase) SaveProductItem(ctx v4.Context, productID uint, productItem request.ProductItem) error {
+func (m *MockProductUseCase) SaveProductItem(ctx echo.Context, productID uint, productItem request.ProductItem) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SaveProductItem", ctx, productID, productItem)
 	ret0, _ := ret[0].(error)
@@ -159,7 +159,7 @@ func (mr *MockProductUseCaseMockRecorder) SaveProductItem(ctx, productID, produc
 }
 
 // SaveVariation mocks base method.
-func (m *MockProductUseCase) SaveVariation(ctx v4.Context, categoryID uint, variationNames []string) error {
+func (m *MockProductUseCase) SaveVariation(ctx echo.Context, categoryID uint, variationNames []string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SaveVariation", ctx, categoryID, variationNames)
 	ret0, _ := ret[0].(error)
@@ -173,7 +173,7 @@ func (mr *MockProductUseCaseMockRecorder) SaveVariation(ctx, categoryID, variati
 }
 
 // SaveVariationOption mocks base method.
-func (m *MockProductUseCase) SaveVariationOption(ctx v4.Context, variationID uint, variationOptionValues []string) error {
+func (m *MockProductUseCase) SaveVariationOption(ctx echo.Context, variationID uint, variationOptionValues []string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SaveVariationOption", ctx, variationID, variationOptionValues)
 	ret0, _ := ret[0].(error)
@@ -187,7 +187,7 @@ func (mr *MockProductUseCaseMockRecorder) SaveVariationOption(ctx, variationID, 
 }
 
 // UpdateProduct mocks base method.
-func (m *MockProductUseCase) UpdateProduct(ctx v4.Context, product domain.Product) error {
+func (m *MockProductUseCase) UpdateProduct(ctx echo.Context, product domain.Product) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateProduct", ctx, product)
 	ret0, _ := ret[0].(error)

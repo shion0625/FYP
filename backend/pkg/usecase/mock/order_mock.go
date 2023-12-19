@@ -11,8 +11,9 @@ package mock_interfaces
 import (
 	reflect "reflect"
 
-	v4 "github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	request "github.com/shion0625/FYP/backend/pkg/api/handler/request"
+	response "github.com/shion0625/FYP/backend/pkg/api/handler/response"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -39,16 +40,31 @@ func (m *MockOrderUseCase) EXPECT() *MockOrderUseCaseMockRecorder {
 	return m.recorder
 }
 
-// PayOrder mocks base method.
-func (m *MockOrderUseCase) PayOrder(ctx v4.Context, product request.PayOrder) error {
+// GetAllShopOrders mocks base method.
+func (m *MockOrderUseCase) GetAllShopOrders(ctx echo.Context, userID string, pagination request.Pagination) ([]response.Order, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PayOrder", ctx, product)
+	ret := m.ctrl.Call(m, "GetAllShopOrders", ctx, userID, pagination)
+	ret0, _ := ret[0].([]response.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllShopOrders indicates an expected call of GetAllShopOrders.
+func (mr *MockOrderUseCaseMockRecorder) GetAllShopOrders(ctx, userID, pagination any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllShopOrders", reflect.TypeOf((*MockOrderUseCase)(nil).GetAllShopOrders), ctx, userID, pagination)
+}
+
+// PayOrder mocks base method.
+func (m *MockOrderUseCase) PayOrder(ctx echo.Context, userID string, product request.PayOrder) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PayOrder", ctx, userID, product)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // PayOrder indicates an expected call of PayOrder.
-func (mr *MockOrderUseCaseMockRecorder) PayOrder(ctx, product any) *gomock.Call {
+func (mr *MockOrderUseCaseMockRecorder) PayOrder(ctx, userID, product any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PayOrder", reflect.TypeOf((*MockOrderUseCase)(nil).PayOrder), ctx, product)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PayOrder", reflect.TypeOf((*MockOrderUseCase)(nil).PayOrder), ctx, userID, product)
 }

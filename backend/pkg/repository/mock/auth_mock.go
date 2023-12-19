@@ -11,7 +11,7 @@ package mock_interfaces
 import (
 	reflect "reflect"
 
-	v4 "github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	domain "github.com/shion0625/FYP/backend/pkg/domain"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -40,7 +40,7 @@ func (m *MockAuthRepository) EXPECT() *MockAuthRepositoryMockRecorder {
 }
 
 // FindRefreshSessionByTokenID mocks base method.
-func (m *MockAuthRepository) FindRefreshSessionByTokenID(ctx v4.Context, tokenID string) (domain.RefreshSession, error) {
+func (m *MockAuthRepository) FindRefreshSessionByTokenID(ctx echo.Context, tokenID string) (domain.RefreshSession, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindRefreshSessionByTokenID", ctx, tokenID)
 	ret0, _ := ret[0].(domain.RefreshSession)
@@ -55,7 +55,7 @@ func (mr *MockAuthRepositoryMockRecorder) FindRefreshSessionByTokenID(ctx, token
 }
 
 // SaveRefreshSession mocks base method.
-func (m *MockAuthRepository) SaveRefreshSession(ctx v4.Context, refreshSession domain.RefreshSession) error {
+func (m *MockAuthRepository) SaveRefreshSession(ctx echo.Context, refreshSession domain.RefreshSession) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SaveRefreshSession", ctx, refreshSession)
 	ret0, _ := ret[0].(error)

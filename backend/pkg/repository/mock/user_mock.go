@@ -11,7 +11,7 @@ package mock_interfaces
 import (
 	reflect "reflect"
 
-	v4 "github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	response "github.com/shion0625/FYP/backend/pkg/api/handler/response"
 	domain "github.com/shion0625/FYP/backend/pkg/domain"
 	gomock "go.uber.org/mock/gomock"
@@ -40,8 +40,23 @@ func (m *MockUserRepository) EXPECT() *MockUserRepositoryMockRecorder {
 	return m.recorder
 }
 
+// FindAddressByUserIDAndAddressID mocks base method.
+func (m *MockUserRepository) FindAddressByUserIDAndAddressID(ctx echo.Context, userID string, addressID uint) (domain.Address, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindAddressByUserIDAndAddressID", ctx, userID, addressID)
+	ret0, _ := ret[0].(domain.Address)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindAddressByUserIDAndAddressID indicates an expected call of FindAddressByUserIDAndAddressID.
+func (mr *MockUserRepositoryMockRecorder) FindAddressByUserIDAndAddressID(ctx, userID, addressID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAddressByUserIDAndAddressID", reflect.TypeOf((*MockUserRepository)(nil).FindAddressByUserIDAndAddressID), ctx, userID, addressID)
+}
+
 // FindAllAddressByUserID mocks base method.
-func (m *MockUserRepository) FindAllAddressByUserID(ctx v4.Context, userID string) ([]response.Address, error) {
+func (m *MockUserRepository) FindAllAddressByUserID(ctx echo.Context, userID string) ([]response.Address, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindAllAddressByUserID", ctx, userID)
 	ret0, _ := ret[0].([]response.Address)
@@ -55,8 +70,23 @@ func (mr *MockUserRepositoryMockRecorder) FindAllAddressByUserID(ctx, userID any
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAllAddressByUserID", reflect.TypeOf((*MockUserRepository)(nil).FindAllAddressByUserID), ctx, userID)
 }
 
+// FindAllPaymentMethodsByUserID mocks base method.
+func (m *MockUserRepository) FindAllPaymentMethodsByUserID(ctx echo.Context, userID string) ([]response.PaymentMethod, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindAllPaymentMethodsByUserID", ctx, userID)
+	ret0, _ := ret[0].([]response.PaymentMethod)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindAllPaymentMethodsByUserID indicates an expected call of FindAllPaymentMethodsByUserID.
+func (mr *MockUserRepositoryMockRecorder) FindAllPaymentMethodsByUserID(ctx, userID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAllPaymentMethodsByUserID", reflect.TypeOf((*MockUserRepository)(nil).FindAllPaymentMethodsByUserID), ctx, userID)
+}
+
 // FindUserByEmail mocks base method.
-func (m *MockUserRepository) FindUserByEmail(ctx v4.Context, email string) (domain.User, error) {
+func (m *MockUserRepository) FindUserByEmail(ctx echo.Context, email string) (domain.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindUserByEmail", ctx, email)
 	ret0, _ := ret[0].(domain.User)
@@ -71,7 +101,7 @@ func (mr *MockUserRepositoryMockRecorder) FindUserByEmail(ctx, email any) *gomoc
 }
 
 // FindUserByPhoneNumber mocks base method.
-func (m *MockUserRepository) FindUserByPhoneNumber(ctx v4.Context, phoneNumber string) (domain.User, error) {
+func (m *MockUserRepository) FindUserByPhoneNumber(ctx echo.Context, phoneNumber string) (domain.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindUserByPhoneNumber", ctx, phoneNumber)
 	ret0, _ := ret[0].(domain.User)
@@ -86,7 +116,7 @@ func (mr *MockUserRepositoryMockRecorder) FindUserByPhoneNumber(ctx, phoneNumber
 }
 
 // FindUserByUserID mocks base method.
-func (m *MockUserRepository) FindUserByUserID(ctx v4.Context, userID string) (domain.User, error) {
+func (m *MockUserRepository) FindUserByUserID(ctx echo.Context, userID string) (domain.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindUserByUserID", ctx, userID)
 	ret0, _ := ret[0].(domain.User)
@@ -101,7 +131,7 @@ func (mr *MockUserRepositoryMockRecorder) FindUserByUserID(ctx, userID any) *gom
 }
 
 // FindUserByUserName mocks base method.
-func (m *MockUserRepository) FindUserByUserName(ctx v4.Context, userName string) (domain.User, error) {
+func (m *MockUserRepository) FindUserByUserName(ctx echo.Context, userName string) (domain.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindUserByUserName", ctx, userName)
 	ret0, _ := ret[0].(domain.User)
@@ -116,7 +146,7 @@ func (mr *MockUserRepositoryMockRecorder) FindUserByUserName(ctx, userName any) 
 }
 
 // FindUserByUserNameEmailOrPhone mocks base method.
-func (m *MockUserRepository) FindUserByUserNameEmailOrPhone(ctx v4.Context, user domain.User) (domain.User, error) {
+func (m *MockUserRepository) FindUserByUserNameEmailOrPhone(ctx echo.Context, user domain.User) (domain.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindUserByUserNameEmailOrPhone", ctx, user)
 	ret0, _ := ret[0].(domain.User)
@@ -131,7 +161,7 @@ func (mr *MockUserRepositoryMockRecorder) FindUserByUserNameEmailOrPhone(ctx, us
 }
 
 // IsAddressAlreadyExistForUser mocks base method.
-func (m *MockUserRepository) IsAddressAlreadyExistForUser(ctx v4.Context, address domain.Address, userID string) (bool, error) {
+func (m *MockUserRepository) IsAddressAlreadyExistForUser(ctx echo.Context, address domain.Address, userID string) (bool, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "IsAddressAlreadyExistForUser", ctx, address, userID)
 	ret0, _ := ret[0].(bool)
@@ -146,7 +176,7 @@ func (mr *MockUserRepositoryMockRecorder) IsAddressAlreadyExistForUser(ctx, addr
 }
 
 // IsAddressIDExist mocks base method.
-func (m *MockUserRepository) IsAddressIDExist(ctx v4.Context, addressID uint) (bool, error) {
+func (m *MockUserRepository) IsAddressIDExist(ctx echo.Context, addressID uint) (bool, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "IsAddressIDExist", ctx, addressID)
 	ret0, _ := ret[0].(bool)
@@ -161,7 +191,7 @@ func (mr *MockUserRepositoryMockRecorder) IsAddressIDExist(ctx, addressID any) *
 }
 
 // SaveAddress mocks base method.
-func (m *MockUserRepository) SaveAddress(ctx v4.Context, address domain.Address) (uint, error) {
+func (m *MockUserRepository) SaveAddress(ctx echo.Context, address domain.Address) (uint, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SaveAddress", ctx, address)
 	ret0, _ := ret[0].(uint)
@@ -175,8 +205,23 @@ func (mr *MockUserRepositoryMockRecorder) SaveAddress(ctx, address any) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveAddress", reflect.TypeOf((*MockUserRepository)(nil).SaveAddress), ctx, address)
 }
 
+// SavePaymentMethod mocks base method.
+func (m *MockUserRepository) SavePaymentMethod(ctx echo.Context, paymentMethod domain.PaymentMethod) (uint, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SavePaymentMethod", ctx, paymentMethod)
+	ret0, _ := ret[0].(uint)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SavePaymentMethod indicates an expected call of SavePaymentMethod.
+func (mr *MockUserRepositoryMockRecorder) SavePaymentMethod(ctx, paymentMethod any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SavePaymentMethod", reflect.TypeOf((*MockUserRepository)(nil).SavePaymentMethod), ctx, paymentMethod)
+}
+
 // SaveUser mocks base method.
-func (m *MockUserRepository) SaveUser(ctx v4.Context, user domain.User) (string, error) {
+func (m *MockUserRepository) SaveUser(ctx echo.Context, user domain.User) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SaveUser", ctx, user)
 	ret0, _ := ret[0].(string)
@@ -191,7 +236,7 @@ func (mr *MockUserRepositoryMockRecorder) SaveUser(ctx, user any) *gomock.Call {
 }
 
 // SaveUserAddress mocks base method.
-func (m *MockUserRepository) SaveUserAddress(ctx v4.Context, userAdress domain.UserAddress) error {
+func (m *MockUserRepository) SaveUserAddress(ctx echo.Context, userAdress domain.UserAddress) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SaveUserAddress", ctx, userAdress)
 	ret0, _ := ret[0].(error)
@@ -205,7 +250,7 @@ func (mr *MockUserRepositoryMockRecorder) SaveUserAddress(ctx, userAdress any) *
 }
 
 // UpdateAddress mocks base method.
-func (m *MockUserRepository) UpdateAddress(ctx v4.Context, address domain.Address) error {
+func (m *MockUserRepository) UpdateAddress(ctx echo.Context, address domain.Address) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAddress", ctx, address)
 	ret0, _ := ret[0].(error)
@@ -219,7 +264,7 @@ func (mr *MockUserRepositoryMockRecorder) UpdateAddress(ctx, address any) *gomoc
 }
 
 // UpdateUser mocks base method.
-func (m *MockUserRepository) UpdateUser(ctx v4.Context, user domain.User) error {
+func (m *MockUserRepository) UpdateUser(ctx echo.Context, user domain.User) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateUser", ctx, user)
 	ret0, _ := ret[0].(error)
@@ -233,7 +278,7 @@ func (mr *MockUserRepositoryMockRecorder) UpdateUser(ctx, user any) *gomock.Call
 }
 
 // UpdateUserAddress mocks base method.
-func (m *MockUserRepository) UpdateUserAddress(ctx v4.Context, userAddress domain.UserAddress) error {
+func (m *MockUserRepository) UpdateUserAddress(ctx echo.Context, userAddress domain.UserAddress) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateUserAddress", ctx, userAddress)
 	ret0, _ := ret[0].(error)

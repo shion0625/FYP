@@ -11,8 +11,9 @@ package mock_interfaces
 import (
 	reflect "reflect"
 
-	v4 "github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	request "github.com/shion0625/FYP/backend/pkg/api/handler/request"
+	response "github.com/shion0625/FYP/backend/pkg/api/handler/response"
 	interfaces "github.com/shion0625/FYP/backend/pkg/repository/interfaces"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -40,36 +41,51 @@ func (m *MockOrderRepository) EXPECT() *MockOrderRepositoryMockRecorder {
 	return m.recorder
 }
 
-// PayOrder mocks base method.
-func (m *MockOrderRepository) PayOrder(ctx v4.Context, payOrder request.PayOrder) error {
+// GetShopOrders mocks base method.
+func (m *MockOrderRepository) GetShopOrders(ctx echo.Context, userID string, pagination request.Pagination) ([]response.Order, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PayOrder", ctx, payOrder)
+	ret := m.ctrl.Call(m, "GetShopOrders", ctx, userID, pagination)
+	ret0, _ := ret[0].([]response.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetShopOrders indicates an expected call of GetShopOrders.
+func (mr *MockOrderRepositoryMockRecorder) GetShopOrders(ctx, userID, pagination any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetShopOrders", reflect.TypeOf((*MockOrderRepository)(nil).GetShopOrders), ctx, userID, pagination)
+}
+
+// PayOrder mocks base method.
+func (m *MockOrderRepository) PayOrder(ctx echo.Context, paymentMethodID uint) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PayOrder", ctx, paymentMethodID)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // PayOrder indicates an expected call of PayOrder.
-func (mr *MockOrderRepositoryMockRecorder) PayOrder(ctx, payOrder any) *gomock.Call {
+func (mr *MockOrderRepositoryMockRecorder) PayOrder(ctx, paymentMethodID any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PayOrder", reflect.TypeOf((*MockOrderRepository)(nil).PayOrder), ctx, payOrder)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PayOrder", reflect.TypeOf((*MockOrderRepository)(nil).PayOrder), ctx, paymentMethodID)
 }
 
 // SaveOrder mocks base method.
-func (m *MockOrderRepository) SaveOrder(ctx v4.Context, payOrder request.PayOrder) error {
+func (m *MockOrderRepository) SaveOrder(ctx echo.Context, userID string, payOrder request.PayOrder) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SaveOrder", ctx, payOrder)
+	ret := m.ctrl.Call(m, "SaveOrder", ctx, userID, payOrder)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // SaveOrder indicates an expected call of SaveOrder.
-func (mr *MockOrderRepositoryMockRecorder) SaveOrder(ctx, payOrder any) *gomock.Call {
+func (mr *MockOrderRepositoryMockRecorder) SaveOrder(ctx, userID, payOrder any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveOrder", reflect.TypeOf((*MockOrderRepository)(nil).SaveOrder), ctx, payOrder)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveOrder", reflect.TypeOf((*MockOrderRepository)(nil).SaveOrder), ctx, userID, payOrder)
 }
 
 // Transactions mocks base method.
-func (m *MockOrderRepository) Transactions(ctx v4.Context, trxFn func(interfaces.OrderRepository) error) error {
+func (m *MockOrderRepository) Transactions(ctx echo.Context, trxFn func(interfaces.OrderRepository) error) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Transactions", ctx, trxFn)
 	ret0, _ := ret[0].(error)
@@ -83,7 +99,7 @@ func (mr *MockOrderRepositoryMockRecorder) Transactions(ctx, trxFn any) *gomock.
 }
 
 // UpdateProductItemStock mocks base method.
-func (m *MockOrderRepository) UpdateProductItemStock(ctx v4.Context, productItemID, purchaseQuantity uint) (uint, error) {
+func (m *MockOrderRepository) UpdateProductItemStock(ctx echo.Context, productItemID, purchaseQuantity uint) (uint, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateProductItemStock", ctx, productItemID, purchaseQuantity)
 	ret0, _ := ret[0].(uint)

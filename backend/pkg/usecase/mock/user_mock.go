@@ -11,7 +11,7 @@ package mock_interfaces
 import (
 	reflect "reflect"
 
-	v4 "github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	request "github.com/shion0625/FYP/backend/pkg/api/handler/request"
 	response "github.com/shion0625/FYP/backend/pkg/api/handler/response"
 	domain "github.com/shion0625/FYP/backend/pkg/domain"
@@ -41,8 +41,23 @@ func (m *MockUserUseCase) EXPECT() *MockUserUseCaseMockRecorder {
 	return m.recorder
 }
 
+// FindAddress mocks base method.
+func (m *MockUserUseCase) FindAddress(ctx echo.Context, userID string, addressID uint) (domain.Address, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindAddress", ctx, userID, addressID)
+	ret0, _ := ret[0].(domain.Address)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindAddress indicates an expected call of FindAddress.
+func (mr *MockUserUseCaseMockRecorder) FindAddress(ctx, userID, addressID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAddress", reflect.TypeOf((*MockUserUseCase)(nil).FindAddress), ctx, userID, addressID)
+}
+
 // FindAddresses mocks base method.
-func (m *MockUserUseCase) FindAddresses(ctx v4.Context, userID string) ([]response.Address, error) {
+func (m *MockUserUseCase) FindAddresses(ctx echo.Context, userID string) ([]response.Address, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindAddresses", ctx, userID)
 	ret0, _ := ret[0].([]response.Address)
@@ -56,8 +71,23 @@ func (mr *MockUserUseCaseMockRecorder) FindAddresses(ctx, userID any) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAddresses", reflect.TypeOf((*MockUserUseCase)(nil).FindAddresses), ctx, userID)
 }
 
+// FindPaymentMethods mocks base method.
+func (m *MockUserUseCase) FindPaymentMethods(ctx echo.Context, userID string) ([]response.PaymentMethod, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindPaymentMethods", ctx, userID)
+	ret0, _ := ret[0].([]response.PaymentMethod)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindPaymentMethods indicates an expected call of FindPaymentMethods.
+func (mr *MockUserUseCaseMockRecorder) FindPaymentMethods(ctx, userID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindPaymentMethods", reflect.TypeOf((*MockUserUseCase)(nil).FindPaymentMethods), ctx, userID)
+}
+
 // FindProfile mocks base method.
-func (m *MockUserUseCase) FindProfile(ctx v4.Context, userId string) (domain.User, error) {
+func (m *MockUserUseCase) FindProfile(ctx echo.Context, userId string) (domain.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindProfile", ctx, userId)
 	ret0, _ := ret[0].(domain.User)
@@ -72,7 +102,7 @@ func (mr *MockUserUseCaseMockRecorder) FindProfile(ctx, userId any) *gomock.Call
 }
 
 // SaveAddress mocks base method.
-func (m *MockUserUseCase) SaveAddress(ctx v4.Context, userID string, address domain.Address, isDefault bool) error {
+func (m *MockUserUseCase) SaveAddress(ctx echo.Context, userID string, address domain.Address, isDefault bool) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SaveAddress", ctx, userID, address, isDefault)
 	ret0, _ := ret[0].(error)
@@ -85,8 +115,22 @@ func (mr *MockUserUseCaseMockRecorder) SaveAddress(ctx, userID, address, isDefau
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveAddress", reflect.TypeOf((*MockUserUseCase)(nil).SaveAddress), ctx, userID, address, isDefault)
 }
 
+// SavePaymentMethod mocks base method.
+func (m *MockUserUseCase) SavePaymentMethod(ctx echo.Context, userID string, paymentMethod request.PaymentMethod) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SavePaymentMethod", ctx, userID, paymentMethod)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SavePaymentMethod indicates an expected call of SavePaymentMethod.
+func (mr *MockUserUseCaseMockRecorder) SavePaymentMethod(ctx, userID, paymentMethod any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SavePaymentMethod", reflect.TypeOf((*MockUserUseCase)(nil).SavePaymentMethod), ctx, userID, paymentMethod)
+}
+
 // UpdateAddress mocks base method.
-func (m *MockUserUseCase) UpdateAddress(ctx v4.Context, addressBody request.EditAddress, userID string) error {
+func (m *MockUserUseCase) UpdateAddress(ctx echo.Context, addressBody request.EditAddress, userID string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAddress", ctx, addressBody, userID)
 	ret0, _ := ret[0].(error)
@@ -100,7 +144,7 @@ func (mr *MockUserUseCaseMockRecorder) UpdateAddress(ctx, addressBody, userID an
 }
 
 // UpdateProfile mocks base method.
-func (m *MockUserUseCase) UpdateProfile(ctx v4.Context, user domain.User) error {
+func (m *MockUserUseCase) UpdateProfile(ctx echo.Context, user domain.User) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateProfile", ctx, user)
 	ret0, _ := ret[0].(error)
