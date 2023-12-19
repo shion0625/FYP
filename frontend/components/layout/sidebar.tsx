@@ -100,6 +100,9 @@ const Sidebar: React.FC<SidebarProps> = ({ data }) => {
                 <SidebarFlow.Item href="/user/signup" icon={HiTable}>
                   Sign up
                 </SidebarFlow.Item>
+                <SidebarFlow.Item href="/user/logout" icon={HiTable}>
+                  logout
+                </SidebarFlow.Item>
               </SidebarFlow.ItemGroup>
             </SidebarFlow.Items>
           </SidebarFlow>

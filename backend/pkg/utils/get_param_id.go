@@ -19,7 +19,7 @@ func GetParamID(ctx echo.Context, key string) (*uint, error) {
 
 	ID, err := ParseStringToUint32(IDStr)
 	if err != nil {
-		return nil, err
+		return nil, ErrInvalidParam
 	}
 
 	return &ID, nil

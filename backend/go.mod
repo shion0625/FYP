@@ -3,6 +3,7 @@ module github.com/shion0625/FYP/backend
 go 1.19
 
 require (
+	bou.ke/monkey v1.0.2
 	cloud.google.com/go/storage v1.35.1
 	github.com/brianvoe/gofakeit/v6 v6.24.0
 	github.com/caarlos0/env/v6 v6.10.1

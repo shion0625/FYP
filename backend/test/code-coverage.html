@@ -57,11 +57,15 @@
 				
 				<option value="file0">github.com/shion0625/FYP/backend/pkg/utils/compare.go (100.0%)</option>
 				
-				<option value="file1">github.com/shion0625/FYP/backend/pkg/utils/errors.go (100.0%)</option>
+				<option value="file1">github.com/shion0625/FYP/backend/pkg/utils/credit_card.go (83.3%)</option>
 				
-				<option value="file2">github.com/shion0625/FYP/backend/pkg/utils/helper.go (11.1%)</option>
+				<option value="file2">github.com/shion0625/FYP/backend/pkg/utils/errors.go (100.0%)</option>
 				
-				<option value="file3">github.com/shion0625/FYP/backend/pkg/utils/hsash.go (0.0%)</option>
+				<option value="file3">github.com/shion0625/FYP/backend/pkg/utils/get_param_id.go (100.0%)</option>
+				
+				<option value="file4">github.com/shion0625/FYP/backend/pkg/utils/helper.go (100.0%)</option>
+				
+				<option value="file5">github.com/shion0625/FYP/backend/pkg/utils/hsash.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -109,6 +113,86 @@ func CompareUserExistingDetails(user1, user2 domain.User) error <span class="cov
 		<pre class="file" id="file1" style="display: none">package utils
 
 import (
+        "crypto/aes"
+        "crypto/cipher"
+        "crypto/rand"
+        "encoding/hex"
+        "io"
+        "strings"
+)
+
+func Encrypt(stringToEncrypt string, keyString string) (encryptedString string) <span class="cov8" title="1">{
+        key, _ := hex.DecodeString(keyString)
+        plaintext := []byte(stringToEncrypt)
+        key = key[:32]
+
+        block, err := aes.NewCipher(key)
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err.Error())</span>
+        }
+
+        <span class="cov8" title="1">aesGCM, err := cipher.NewGCM(block)
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err.Error())</span>
+        }
+
+        <span class="cov8" title="1">nonce := make([]byte, aesGCM.NonceSize())
+        if _, err = io.ReadFull(rand.Reader, nonce); err != nil </span><span class="cov0" title="0">{
+                panic(err.Error())</span>
+        }
+
+        <span class="cov8" title="1">ciphertext := aesGCM.Seal(nonce, nonce, plaintext, nil)
+
+        return hex.EncodeToString(ciphertext)</span>
+}
+
+func Decrypt(encryptedString string, keyString string) (decryptedString string) <span class="cov8" title="1">{
+        enc, _ := hex.DecodeString(encryptedString)
+        key, _ := hex.DecodeString(keyString)
+        key = key[:32]
+
+        block, err := aes.NewCipher(key)
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err.Error())</span>
+        }
+
+        <span class="cov8" title="1">aesGCM, err := cipher.NewGCM(block)
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err.Error())</span>
+        }
+
+        <span class="cov8" title="1">nonceSize := aesGCM.NonceSize()
+        nonce, ciphertext := enc[:nonceSize], enc[nonceSize:]
+
+        plaintext, err := aesGCM.Open(nil, nonce, ciphertext, nil)
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err.Error())</span>
+        }
+
+        <span class="cov8" title="1">return string(plaintext)</span>
+}
+
+func GetCardIssuer(cardNumber string) string <span class="cov8" title="1">{
+        switch </span>{
+        case strings.HasPrefix(cardNumber, "4"):<span class="cov8" title="1">
+                return "Visa"</span>
+        case strings.HasPrefix(cardNumber, "5"):<span class="cov8" title="1">
+                return "MasterCard"</span>
+        case strings.HasPrefix(cardNumber, "34") || strings.HasPrefix(cardNumber, "37"):<span class="cov8" title="1">
+                return "American Express"</span>
+        case strings.HasPrefix(cardNumber, "6"):<span class="cov8" title="1">
+                return "Discover"</span>
+        case strings.HasPrefix(cardNumber, "36"):<span class="cov8" title="1">
+                return "Diners Club"</span>
+        default:<span class="cov8" title="1">
+                return "Unknown"</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package utils
+
+import (
         "errors"
         "fmt"
 )
@@ -123,17 +207,44 @@ func AppendMessageToError(err error, message string) error <span class="cov8" ti
 }
 </pre>
 		
-		<pre class="file" id="file2" style="display: none">package utils
+		<pre class="file" id="file3" style="display: none">package utils
+
+import (
+        "errors"
+
+        "github.com/labstack/echo/v4"
+)
+
+var ErrInvalidParam = errors.New("invalid parameter")
+
+// To append the message to the error.
+func GetParamID(ctx echo.Context, key string) (*uint, error) <span class="cov8" title="1">{
+        IDStr := ctx.QueryParam(key)
+
+        if IDStr == "" </span><span class="cov8" title="1">{
+                //nolint:nilnil
+                return nil, nil
+        }</span>
+
+        <span class="cov8" title="1">ID, err := ParseStringToUint32(IDStr)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, ErrInvalidParam
+        }</span>
+
+        <span class="cov8" title="1">return &amp;ID, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package utils
 
 import (
         "crypto/rand"
         "encoding/hex"
         "fmt"
-        "math/big"
         "strconv"
-        "strings"
-        "time"
 
+        "github.com/google/uuid"
+        "github.com/labstack/echo/v4"
         "golang.org/x/crypto/bcrypt"
 )
 
@@ -145,108 +256,58 @@ var (
         bcryptCost       = 10
 )
 
-func StringToUint(str string) (uint, error) <span class="cov0" title="0">{
-        val, err := strconv.Atoi(str)
+// take userId from context.
+func GetUserIdFromContext(ctx echo.Context) (string, error) <span class="cov8" title="1">{
+        userID, ok := ctx.Get("userId").(string)
+        if !ok </span><span class="cov8" title="1">{
+                return "", fmt.Errorf("failed to get userID from context")
+        }</span>
 
-        return uint(val), err
-}</span>
-
-// generate userName.
-func GenerateRandomUserName(firstName string) string <span class="cov0" title="0">{
-        suffix, err := rand.Int(rand.Reader, big.NewInt(int64(numbersLength)))
-        if err != nil </span><span class="cov0" title="0">{
-                panic(err)</span>
-        }
-
-        <span class="cov0" title="0">userName := (firstName + suffix.String())
-
-        return strings.ToLower(userName)</span>
+        <span class="cov8" title="1">return userID, nil</span>
 }
 
+func ParseStringToUint32(param string) (uint, error) <span class="cov8" title="1">{
+        value, err := strconv.ParseUint(param, 10, 32)
+
+        return uint(value), err
+}</span>
+
 // generate unique string for sku.
-func GenerateSKU() (string, error) <span class="cov0" title="0">{
+func GenerateSKU() (string, error) <span class="cov8" title="1">{
         sku := make([]byte, skuLength)
 
         _, err := rand.Read(sku)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return "", fmt.Errorf("failed to generate SKU: %w", err)
-        }</span>
-
-        <span class="cov0" title="0">return hex.EncodeToString(sku), nil</span>
-}
-
-// random coupons.
-func GenerateCouponCode(couponCodeLength int) string <span class="cov0" title="0">{
-        // letter for coupons
-        couponCode, err := rand.Int(rand.Reader, big.NewInt(int64(couponCodeLength)))
-        if err != nil </span><span class="cov0" title="0">{
-                panic(err)</span>
-        }
-        // convert into string and return the random letter array
-        <span class="cov0" title="0">return couponCode.String()</span>
-}
-
-func StringToTime(timeString string) (timeValue time.Time, err error) <span class="cov0" title="0">{
-        // parse the string time to time
-        timeValue, err = time.Parse(time.RFC3339Nano, timeString)
-
-        if err != nil </span><span class="cov0" title="0">{
-                return timeValue, fmt.Errorf("faild to parse given time %v to time variable \nivalid input", timeString)
-        }</span>
-
-        <span class="cov0" title="0">return timeValue, fmt.Errorf("failed to parse time: %w", err)</span>
-}
-
-func GenerateRandomString(length int) (string, error) <span class="cov8" title="1">{
-        sku := make([]byte, length)
-
-        _, err := rand.Read(sku)
-        if err != nil </span><span class="cov0" title="0">{
-                return "", fmt.Errorf("failed to generate random string: %w", err)
         }</span>
 
         <span class="cov8" title="1">return hex.EncodeToString(sku), nil</span>
 }
 
-func RandomInt(min, max int) int <span class="cov0" title="0">{
-        // 乱数の範囲は[min, max)となるように調整する
-        num, err := rand.Int(rand.Reader, big.NewInt(int64(max-min)))
-        if err != nil </span><span class="cov0" title="0">{
-                panic(err)</span>
-        }
-
-        <span class="cov0" title="0">return int(num.Int64()) + min</span>
-}
-
-func GetHashedPassword(password string) (hashedPassword string, err error) <span class="cov0" title="0">{
-        hash, err := bcrypt.GenerateFromPassword([]byte(password), bcryptCost)
-        if err != nil </span><span class="cov0" title="0">{
-                return hashedPassword, fmt.Errorf("failed to generate hashed password: %w", err)
+func ComparePasswordWithHashedPassword(actualPassword, hashedPassword string) error <span class="cov8" title="1">{
+        if err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(actualPassword)); err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("failed to compare password with hashed password: %w", err)
         }</span>
 
-        <span class="cov0" title="0">hashedPassword = string(hash)
-
-        return hashedPassword, nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
-func ComparePasswordWithHashedPassword(actualpassword, hashedPassword string) error <span class="cov0" title="0">{
-        err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(actualpassword))
-
-        return fmt.Errorf("failed to compare password with hashed password: %w", err)
+func GenerateUniqueString() string <span class="cov8" title="1">{
+        return uuid.NewString()
 }</span>
 </pre>
 		
-		<pre class="file" id="file3" style="display: none">package utils
+		<pre class="file" id="file5" style="display: none">package utils
 
 import "golang.org/x/crypto/bcrypt"
 
-func GenerateHashFromPassword(password string) (string, error) <span class="cov0" title="0">{
+func GenerateHashFromPassword(password string) (string, error) <span class="cov8" title="1">{
         hash, err := bcrypt.GenerateFromPassword([]byte(password), bcryptCost)
 
         return string(hash), err
 }</span>
 
-func VerifyHashAndPassword(hashedPassword, password string) bool <span class="cov0" title="0">{
+func VerifyHashAndPassword(hashedPassword, password string) bool <span class="cov8" title="1">{
         err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 
         return err == nil
