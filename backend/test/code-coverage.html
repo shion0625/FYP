@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>utils: Go Coverage Report</title>
+		<title>repository: Go Coverage Report</title>
 		<style>
 			body {
 				background: black;
@@ -55,17 +55,25 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">github.com/shion0625/FYP/backend/pkg/utils/compare.go (100.0%)</option>
+				<option value="file0">github.com/shion0625/FYP/backend/pkg/repository/auth.go (85.7%)</option>
 				
-				<option value="file1">github.com/shion0625/FYP/backend/pkg/utils/credit_card.go (83.3%)</option>
+				<option value="file1">github.com/shion0625/FYP/backend/pkg/repository/order.go (0.0%)</option>
 				
-				<option value="file2">github.com/shion0625/FYP/backend/pkg/utils/errors.go (100.0%)</option>
+				<option value="file2">github.com/shion0625/FYP/backend/pkg/repository/product.go (0.0%)</option>
 				
-				<option value="file3">github.com/shion0625/FYP/backend/pkg/utils/get_param_id.go (100.0%)</option>
+				<option value="file3">github.com/shion0625/FYP/backend/pkg/repository/user.go (0.0%)</option>
 				
-				<option value="file4">github.com/shion0625/FYP/backend/pkg/utils/helper.go (100.0%)</option>
+				<option value="file4">github.com/shion0625/FYP/backend/pkg/utils/compare.go (100.0%)</option>
 				
-				<option value="file5">github.com/shion0625/FYP/backend/pkg/utils/hsash.go (100.0%)</option>
+				<option value="file5">github.com/shion0625/FYP/backend/pkg/utils/credit_card.go (83.3%)</option>
+				
+				<option value="file6">github.com/shion0625/FYP/backend/pkg/utils/errors.go (100.0%)</option>
+				
+				<option value="file7">github.com/shion0625/FYP/backend/pkg/utils/get_param_id.go (100.0%)</option>
+				
+				<option value="file8">github.com/shion0625/FYP/backend/pkg/utils/helper.go (100.0%)</option>
+				
+				<option value="file9">github.com/shion0625/FYP/backend/pkg/utils/hsash.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -79,7 +87,754 @@
 		</div>
 		<div id="content">
 		
-		<pre class="file" id="file0" style="display: none">package utils
+		<pre class="file" id="file0" style="display: none">package repository
+
+import (
+        "github.com/labstack/echo/v4"
+        "github.com/shion0625/FYP/backend/pkg/domain"
+        "github.com/shion0625/FYP/backend/pkg/repository/interfaces"
+        "gorm.io/gorm"
+)
+
+type authDatabase struct {
+        DB *gorm.DB
+}
+
+func NewAuthRepository(db *gorm.DB) interfaces.AuthRepository <span class="cov8" title="1">{
+        return &amp;authDatabase{
+                DB: db,
+        }
+}</span>
+
+func (c *authDatabase) SaveRefreshSession(ctx echo.Context, refreshSession domain.RefreshSession) error <span class="cov8" title="1">{
+        if err := c.DB.Table("refresh_sessions").Create(&amp;refreshSession).Error; err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (c *authDatabase) FindRefreshSessionByTokenID(ctx echo.Context, tokenID string) (refreshSession domain.RefreshSession, err error) <span class="cov8" title="1">{
+        if err := c.DB.Table("refresh_sessions").Where("token_id = ?", tokenID).First(&amp;refreshSession).Error; err != nil </span><span class="cov8" title="1">{
+                return refreshSession, err
+        }</span>
+
+        <span class="cov8" title="1">return refreshSession, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package repository
+
+import (
+        "fmt"
+        "strconv"
+        "time"
+
+        "github.com/labstack/echo/v4"
+        "github.com/shion0625/FYP/backend/pkg/api/handler/request"
+        "github.com/shion0625/FYP/backend/pkg/api/handler/response"
+        "github.com/shion0625/FYP/backend/pkg/domain"
+        "github.com/shion0625/FYP/backend/pkg/repository/interfaces"
+        "gorm.io/gorm"
+)
+
+type orderDatabase struct {
+        DB *gorm.DB
+}
+
+func NewOrderRepository(db *gorm.DB) interfaces.OrderRepository <span class="cov0" title="0">{
+        return &amp;orderDatabase{
+                DB: db,
+        }
+}</span>
+
+func (c *orderDatabase) Transactions(ctx echo.Context, trxFn func(repo interfaces.OrderRepository) error) error <span class="cov0" title="0">{
+        trx := c.DB.Begin()
+
+        repo := NewOrderRepository(trx)
+
+        if err := trxFn(repo); err != nil </span><span class="cov0" title="0">{
+                trx.Rollback()
+
+                return err
+        }</span>
+
+        <span class="cov0" title="0">if err := trx.Commit().Error; err != nil </span><span class="cov0" title="0">{
+                trx.Rollback()
+
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (c *orderDatabase) UpdateProductItemStock(ctx echo.Context, productItemID uint, purchaseQuantity uint) (newStock uint, err error) <span class="cov0" title="0">{
+        var productItem domain.ProductItem
+        err = c.DB.Table("product_items").Select("qty_in_stock").Where("id = ?", productItemID).First(&amp;productItem).Error
+
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+
+        <span class="cov0" title="0">if productItem.QtyInStock &lt; purchaseQuantity </span><span class="cov0" title="0">{
+                return 0, fmt.Errorf("%s not enough stock", productItem.Name)
+        }</span>
+
+        <span class="cov0" title="0">newStock = productItem.QtyInStock - purchaseQuantity
+        err = c.DB.Table("product_items").Where("id = ?", productItem.ID).Update("qty_in_stock", newStock).Error
+
+        return newStock, err</span>
+}
+
+func (c *orderDatabase) SaveOrder(ctx echo.Context, userID string, payOrder request.PayOrder) error <span class="cov0" title="0">{
+        // Create a new ShopOrder from the PayOrder request
+        shopOrder := domain.ShopOrder{
+                UserID:          userID,
+                OrderDate:       time.Now(),
+                OrderTotalPrice: payOrder.TotalFee,
+                AddressID:       payOrder.AddressID,
+                PaymentMethodID: payOrder.PaymentMethodID,
+        }
+
+        // Save the ShopOrder to the database
+        if err := c.DB.Create(&amp;shopOrder).Error; err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">shopOrderProductItems := make([]domain.ShopOrderProductItem, 0, len(payOrder.ProductItemInfo))
+
+        for _, productItemInfo := range payOrder.ProductItemInfo </span><span class="cov0" title="0">{
+                shopOrderProductItem := domain.ShopOrderProductItem{
+                        ShopOrderID:   shopOrder.ID,
+                        ProductItemID: productItemInfo.ProductItemID,
+                        Count:         productItemInfo.Count,
+                }
+                shopOrderProductItems = append(shopOrderProductItems, shopOrderProductItem)
+
+                shopOrderVariations := make([]domain.ShopOrderVariation, 0, len(*productItemInfo.VariationValues))
+
+                for _, variationValue := range *productItemInfo.VariationValues </span><span class="cov0" title="0">{
+                        shopOrderVariation := domain.ShopOrderVariation{
+                                ShopOrderID:       shopOrder.ID,
+                                ProductItemID:     productItemInfo.ProductItemID,
+                                VariationID:       variationValue.VariationID,
+                                VariationOptionID: variationValue.VariationOptionID,
+                        }
+                        shopOrderVariations = append(shopOrderVariations, shopOrderVariation)
+                }</span>
+
+                <span class="cov0" title="0">if err := c.DB.Create(&amp;shopOrderVariations).Error; err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+        }
+
+        <span class="cov0" title="0">if err := c.DB.Create(&amp;shopOrderProductItems).Error; err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (c *orderDatabase) PayOrder(ctx echo.Context, paymentMethodID uint) error <span class="cov0" title="0">{
+        paymentMethod := domain.PaymentMethod{
+                ID: paymentMethodID,
+        }
+
+        if err := c.DB.First(&amp;paymentMethod).Error; err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (o *orderDatabase) GetShopOrders(ctx echo.Context, userID string, pagination request.Pagination) (orders []response.Order, err error) <span class="cov0" title="0">{
+        limit := pagination.Count
+        offset := (pagination.PageNumber - 1) * limit
+
+        var shopOrders []domain.ShopOrder
+        if err := o.DB.Preload("Address").Preload("PaymentMethod").Table("shop_orders").Limit(int(limit)).Offset(int(offset)).Where("user_id= ?", userID).Find(&amp;shopOrders).Error; err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">fmt.Print(&amp;shopOrders)
+
+        for _, shopOrder := range shopOrders </span><span class="cov0" title="0">{
+                var productItemInfos []response.ProductItemInfo
+
+                var shopOrderProductItems []domain.ShopOrderProductItem
+                if err := o.DB.Where("shop_order_id = ?", shopOrder.ID).Find(&amp;shopOrderProductItems).Error; err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+
+                <span class="cov0" title="0">for _, productItem := range shopOrderProductItems </span><span class="cov0" title="0">{
+                        var variationValues []response.VariationValues
+
+                        var shopOrderVariations []domain.ShopOrderVariation
+                        if err := o.DB.Where("shop_order_id = ? AND product_item_id = ?", shopOrder.ID, productItem.ProductItemID).Find(&amp;shopOrderVariations).Error; err != nil </span><span class="cov0" title="0">{
+                                return nil, err
+                        }</span>
+
+                        <span class="cov0" title="0">for _, variation := range shopOrderVariations </span><span class="cov0" title="0">{
+                                variationValues = append(variationValues, response.VariationValues{
+                                        VariationID:       variation.VariationID,
+                                        Name:              variation.Variation.Name,
+                                        VariationOptionID: variation.VariationOptionID,
+                                        Value:             variation.VariationOption.Value,
+                                })
+                        }</span>
+
+                        <span class="cov0" title="0">productItemInfos = append(productItemInfos, response.ProductItemInfo{
+                                ProductItemID:   productItem.ProductItemID,
+                                Count:           productItem.Count,
+                                VariationValues: &amp;variationValues,
+                        })</span>
+                }
+
+                <span class="cov0" title="0">orders = append(orders, response.Order{
+                        UserID:          shopOrder.UserID,
+                        ShopOrderId:     strconv.Itoa(int(shopOrder.ID)),
+                        ProductItemInfo: productItemInfos,
+                        Address: response.Address{
+                                ID:   shopOrder.Address.ID,
+                                Name: shopOrder.Address.Name,
+                        },
+                        TotalFee: shopOrder.OrderTotalPrice,
+                        PaymentMethod: response.PaymentMethod{
+                                ID:     shopOrder.PaymentMethod.ID,
+                                Number: shopOrder.PaymentMethod.Number,
+                        },
+                })</span>
+        }
+
+        //nolint:nakedret
+        <span class="cov0" title="0">return</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package repository
+
+import (
+        "context"
+        "time"
+
+        "github.com/labstack/echo/v4"
+        "github.com/shion0625/FYP/backend/pkg/api/handler/request"
+        "github.com/shion0625/FYP/backend/pkg/api/handler/response"
+        "github.com/shion0625/FYP/backend/pkg/domain"
+        "github.com/shion0625/FYP/backend/pkg/repository/interfaces"
+        "gorm.io/gorm"
+)
+
+type productDatabase struct {
+        DB *gorm.DB
+}
+
+func NewProductRepository(db *gorm.DB) interfaces.ProductRepository <span class="cov0" title="0">{
+        return &amp;productDatabase{
+                DB: db,
+        }
+}</span>
+
+func (c *productDatabase) Transactions(ctx echo.Context, trxFn func(repo interfaces.ProductRepository) error) error <span class="cov0" title="0">{
+        trx := c.DB.Begin()
+
+        repo := NewProductRepository(trx)
+
+        if err := trxFn(repo); err != nil </span><span class="cov0" title="0">{
+                trx.Rollback()
+
+                return err
+        }</span>
+
+        <span class="cov0" title="0">if err := trx.Commit().Error; err != nil </span><span class="cov0" title="0">{
+                trx.Rollback()
+
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// To check the category name exist.
+func (c *productDatabase) IsCategoryNameExist(ctx echo.Context, name string) (exist bool, err error) <span class="cov0" title="0">{
+        err = c.DB.Table("categories").Where("name = ? AND category_id IS NULL", name).First(&amp;exist).Error
+
+        return
+}</span>
+
+// Save Category.
+func (c *productDatabase) SaveCategory(ctx echo.Context, categoryName string) (err error) <span class="cov0" title="0">{
+        err = c.DB.Table("categories").Create(&amp;domain.Category{Name: categoryName}).Error
+
+        return err
+}</span>
+
+// Find all main category(its not have a category_id).
+func (c *productDatabase) FindAllMainCategories(ctx echo.Context,
+        pagination request.Pagination,
+) (categories []response.Category, err error) <span class="cov0" title="0">{
+        limit := pagination.Count
+        offset := (pagination.PageNumber - 1) * limit
+
+        err = c.DB.Table("categories").Limit(int(limit)).Offset(int(offset)).Find(&amp;categories).Error
+
+        return
+}</span>
+
+// Find all variations which related to given category id.
+func (c *productDatabase) FindAllVariationsByCategoryID(ctx echo.Context,
+        categoryID uint,
+) (variations []response.Variation, err error) <span class="cov0" title="0">{
+        err = c.DB.Table("variations").Where("category_id = ?", categoryID).Find(&amp;variations).Error
+
+        return
+}</span>
+
+// Find all variation options which related to given variation id.
+func (c productDatabase) FindAllVariationOptionsByVariationID(ctx echo.Context,
+        variationID uint,
+) (variationOptions []response.VariationOption, err error) <span class="cov0" title="0">{
+        err = c.DB.Table("variation_options").Where("variation_id = ?", variationID).Find(&amp;variationOptions).Error
+
+        return
+}</span>
+
+// To check a variation exist for the given category.
+func (c *productDatabase) IsVariationNameExistForCategory(ctx echo.Context,
+        name string, categoryID uint,
+) (exist bool, err error) <span class="cov0" title="0">{
+        err = c.DB.Table("variations").Where("name = ? AND category_id = ?", name, categoryID).First(&amp;exist).Error
+
+        return
+}</span>
+
+// To check a variation value exist for the given variation.
+func (c *productDatabase) IsVariationValueExistForVariation(ctx echo.Context,
+        value string, variationID uint,
+) (exist bool, err error) <span class="cov0" title="0">{
+        err = c.DB.Table("variation_options").Where("value = ? AND variation_id = ?", value, variationID).First(&amp;exist).Error
+
+        return
+}</span>
+
+// Save Variation for category.
+func (c *productDatabase) SaveVariation(ctx echo.Context, categoryID uint, variationName string) error <span class="cov0" title="0">{
+        err := c.DB.Table("variations").Create(&amp;domain.Variation{CategoryID: categoryID, Name: variationName}).Error
+
+        return err
+}</span>
+
+// add variation option.
+func (c *productDatabase) SaveVariationOption(ctx echo.Context, variationID uint, variationValue string) error <span class="cov0" title="0">{
+        err := c.DB.Table("variation_options").Create(&amp;domain.VariationOption{VariationID: variationID, Value: variationValue}).Error
+
+        return err
+}</span>
+
+// find product by id.
+func (c *productDatabase) FindProductByID(ctx echo.Context, productID uint) (product response.Product, err error) <span class="cov0" title="0">{
+        err = c.DB.Table("products").Where("id = ?", productID).Find(&amp;product).Error
+
+        return
+}</span>
+
+func (c *productDatabase) IsProductNameExistForOtherProduct(ctx echo.Context,
+        name string, productID uint,
+) (exist bool, err error) <span class="cov0" title="0">{
+        err = c.DB.Table("products").Where("name = ? AND id != ?", name, productID).First(&amp;exist).Error
+
+        return
+}</span>
+
+func (c *productDatabase) IsProductNameExist(ctx echo.Context, productName string) (exist bool, err error) <span class="cov0" title="0">{
+        err = c.DB.Table("products").Where("name = ?", productName).First(&amp;exist).Error
+
+        return
+}</span>
+
+// to add a new product in database.
+func (c *productDatabase) SaveProduct(ctx echo.Context, product domain.Product) error <span class="cov0" title="0">{
+        product.CreatedAt = time.Now()
+        err := c.DB.Table("products").Create(&amp;product).Error
+
+        return err
+}</span>
+
+// update product.
+func (c *productDatabase) UpdateProduct(ctx echo.Context, product domain.Product) error <span class="cov0" title="0">{
+        product.UpdatedAt = time.Now()
+
+        err := c.DB.Table("products").Where("id = ?", product.ID).Updates(&amp;product).Error
+
+        return err
+}</span>
+
+// get all products from database.
+func (c *productDatabase) FindAllProducts(ctx echo.Context, pagination request.Pagination, categoryID *uint, brandID *uint) (products []response.Product, err error) <span class="cov0" title="0">{
+        limit := int(pagination.Count)
+        offset := (int(pagination.PageNumber) - 1) * limit
+
+        db := c.DB.Table("products p").
+                Select("p.id, p.name, p.description, p.price, p.discount_price, p.image, p.category_id, sc.name AS category_name, p.brand_id, b.name AS brand_name, p.created_at, p.updated_at").
+                Joins("INNER JOIN categories sc ON p.category_id = sc.id").
+                Joins("INNER JOIN brands b ON b.id = p.brand_id").
+                Order("created_at DESC").
+                Limit(limit).
+                Offset(offset)
+
+        if categoryID != nil </span><span class="cov0" title="0">{
+                db = db.Where("p.category_id = ?", *categoryID)
+        }</span>
+
+        <span class="cov0" title="0">if brandID != nil </span><span class="cov0" title="0">{
+                db = db.Where("p.brand_id = ?", *brandID)
+        }</span>
+
+        <span class="cov0" title="0">err = db.Scan(&amp;products).Error
+
+        return</span>
+}
+
+// to get productItem id.
+func (c *productDatabase) FindProductItemByID(ctx echo.Context, productItemID uint) (productItem domain.ProductItem, err error) <span class="cov0" title="0">{
+        err = c.DB.Table("product_items").Where("id = ?", productItemID).Find(&amp;productItem).Error
+
+        return productItem, err
+}</span>
+
+// to get how many variations are available for a product.
+func (c *productDatabase) FindVariationCountForProduct(ctx echo.Context, productID uint) (variationCount uint, err error) <span class="cov0" title="0">{
+        var count int64
+        err = c.DB.Table("variations v").
+                Joins("INNER JOIN categories c ON c.id = v.category_id").
+                Joins("INNER JOIN products p ON p.category_id = v.category_id").
+                Where("p.id = ?", productID).Count(&amp;count).Error
+        variationCount = uint(count)
+
+        return
+}</span>
+
+// To find all product item ids which related to the given product id and variation option id.
+func (c *productDatabase) FindAllProductItemIDsByProductIDAndVariationOptionID(ctx context.Context, productID,
+        variationOptionID uint,
+) (productItemIDs []uint, err error) <span class="cov0" title="0">{
+        err = c.DB.Table("product_items pi").
+                Joins("INNER JOIN product_configurations pc ON pi.id = pc.product_item_id").
+                Where("pi.product_id = ? AND variation_option_id = ?", productID, variationOptionID).Find(&amp;productItemIDs).Error
+
+        return
+}</span>
+
+func (c *productDatabase) SaveProductConfiguration(ctx echo.Context, productItemID, variationOptionID uint) error <span class="cov0" title="0">{
+        err := c.DB.Table("product_configurations").Create(&amp;domain.ProductConfiguration{ProductItemID: productItemID, VariationOptionID: variationOptionID}).Error
+
+        return err
+}</span>
+
+func (c *productDatabase) SaveProductItem(ctx echo.Context, productItem domain.ProductItem) (productItemID uint, err error) <span class="cov0" title="0">{
+        productItem.CreatedAt = time.Now()
+        err = c.DB.Table("product_items").Create(&amp;productItem).Scan(&amp;productItemID).Error
+
+        return
+}</span>
+
+// for get all products items for a product.
+func (c *productDatabase) FindAllProductItems(ctx echo.Context,
+        productID uint,
+) (productItems []response.ProductItemsDB, err error) <span class="cov0" title="0">{
+        // first find all product_items
+        err = c.DB.Table("product_items pi").
+                Select("p.name, pi.id,  pi.product_id,pi.name AS item_name, pi.price, pi.discount_price, pi.qty_in_stock, pi.sku, p.category_id, sc.name AS category_name, p.brand_id, b.name AS brand_name").
+                Joins("INNER JOIN products p ON p.id = pi.product_id").
+                Joins("INNER JOIN categories sc ON p.category_id = sc.id").
+                Joins("INNER JOIN brands b ON b.id = p.brand_id").
+                Where("pi.product_id = ?", productID).Find(&amp;productItems).Error
+
+        return
+}</span>
+
+// Find all variation and value of a product item.
+func (c *productDatabase) FindAllVariationValuesOfProductItem(ctx echo.Context,
+        productItemID uint,
+) (productVariationsValues []response.ProductVariationValue, err error) <span class="cov0" title="0">{
+        err = c.DB.Table("product_configurations pc").
+                Select("v.id AS variation_id, v.name, vo.id AS variation_option_id, vo.value").
+                Joins("INNER JOIN variation_options vo ON vo.id = pc.variation_option_id").
+                Joins("INNER JOIN variations v ON v.id = vo.variation_id").
+                Where("pc.product_item_id = ?", productItemID).Find(&amp;productVariationsValues).Error
+
+        return
+}</span>
+
+// To save image for product item.
+func (c *productDatabase) SaveProductItemImage(ctx echo.Context, productItemID uint, image string) error <span class="cov0" title="0">{
+        err := c.DB.Table("product_images").Create(&amp;domain.ProductImage{ProductItemID: productItemID, Image: image}).Error
+
+        return err
+}</span>
+
+// To find all images of a product item.
+func (c *productDatabase) FindAllProductItemImages(ctx echo.Context, productItemID uint) (images []string, err error) <span class="cov0" title="0">{
+        err = c.DB.Table("product_images").Select("image").Where("product_item_id = ?", productItemID).Find(&amp;images).Error
+
+        return
+}</span>
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package repository
+
+import (
+        "errors"
+        "fmt"
+        "time"
+
+        "github.com/labstack/echo/v4"
+        "github.com/shion0625/FYP/backend/pkg/api/handler/response"
+        "github.com/shion0625/FYP/backend/pkg/domain"
+        "github.com/shion0625/FYP/backend/pkg/repository/interfaces"
+        "gorm.io/gorm"
+)
+
+type result struct {
+        Exist string `gorm:"column:exist"`
+}
+
+type userDatabase struct {
+        DB *gorm.DB
+}
+
+func NewUserRepository(db *gorm.DB) interfaces.UserRepository <span class="cov0" title="0">{
+        return &amp;userDatabase{DB: db}
+}</span>
+
+func (c *userDatabase) FindUserByUserID(ctx echo.Context, userID string) (user domain.User, err error) <span class="cov0" title="0">{
+        err = c.DB.Where("id = ?", userID).First(&amp;user).Error
+
+        return user, err
+}</span>
+
+func (c *userDatabase) FindUserByUserName(ctx echo.Context, userName string) (user domain.User, err error) <span class="cov0" title="0">{
+        err = c.DB.Where("user_name = ?", userName).First(&amp;user).Error
+
+        return user, err
+}</span>
+
+func (c *userDatabase) FindUserByEmail(ctx echo.Context, email string) (user domain.User, err error) <span class="cov0" title="0">{
+        err = c.DB.Where("email = ?", email).First(&amp;user).Error
+
+        return user, err
+}</span>
+
+func (c *userDatabase) FindUserByPhoneNumber(ctx echo.Context, phoneNumber string) (user domain.User, err error) <span class="cov0" title="0">{
+        err = c.DB.Where("phone = ?", phoneNumber).First(&amp;user).Error
+
+        return user, err
+}</span>
+
+func (c *userDatabase) FindUserByUserNameEmailOrPhone(ctx echo.Context,
+        userDetails domain.User,
+) (user domain.User, err error) <span class="cov0" title="0">{
+        err = c.DB.Where("user_name = ? OR email = ? OR phone = ?",
+                userDetails.UserName, userDetails.Email, userDetails.Phone).Find(&amp;user).Error
+
+        return user, err
+}</span>
+
+func (c *userDatabase) SaveUser(ctx echo.Context, user domain.User) (userID string, err error) <span class="cov0" title="0">{
+        // save the user details
+        user = domain.User{
+                Age:         user.Age,
+                GoogleImage: user.GoogleImage,
+                FirstName:   user.FirstName,
+                LastName:    user.LastName,
+                UserName:    user.UserName,
+                Email:       user.Email,
+                Phone:       user.Phone,
+                Password:    user.Password,
+                CreatedAt:   time.Now(),
+        }
+        result := c.DB.Create(&amp;user)
+
+        return user.ID, result.Error
+}</span>
+
+func (c *userDatabase) FindAllAddressByUserID(ctx echo.Context, userID string) (addresses []response.Address, err error) <span class="cov0" title="0">{
+        err = c.DB.
+                Table("user_addresses").
+                Select("addresses.id, addresses.house, addresses.name, addresses.phone_number, addresses.area, addresses.land_mark, addresses.city, addresses.pincode, addresses.country_name, user_addresses.is_default").
+                Joins("JOIN addresses ON user_addresses.address_id = addresses.id").
+                Where("user_addresses.user_id = ?", userID).
+                Scan(&amp;addresses).Error
+
+        return addresses, err
+}</span>
+
+func (c *userDatabase) FindAddressByUserIDAndAddressID(ctx echo.Context, userID string, addressID uint) (address domain.Address, err error) <span class="cov0" title="0">{
+        err = c.DB.
+                Table("user_addresses").
+                Select("addresses.id, addresses.house, addresses.name, addresses.phone_number, addresses.area, addresses.land_mark, addresses.city, addresses.pincode, addresses.country_name, user_addresses.is_default").
+                Joins("JOIN addresses ON user_addresses.address_id = addresses.id").
+                Where("user_addresses.user_id = ? AND addresses.id = ?", userID, addressID).
+                Scan(&amp;address).Error
+
+        return address, err
+}</span>
+
+func (c *userDatabase) IsAddressAlreadyExistForUser(ctx echo.Context, address domain.Address, userID string) (exist bool, err error) <span class="cov0" title="0">{
+        var addressRes domain.Address
+        err = c.DB.Table("user_addresses").
+                Select("addresses.id").
+                Joins("INNER JOIN addresses ON user_addresses.address_id = addresses.id").
+                Where("addresses.name = ? AND addresses.house = ? AND addresses.land_mark = ? AND addresses.pincode = ? AND user_addresses.user_id = ?", address.Name, address.House, address.LandMark, address.Pincode, userID).
+                First(&amp;addressRes).Error
+
+        if errors.Is(err, gorm.ErrRecordNotFound) </span><span class="cov0" title="0">{
+                return false, nil
+        }</span>
+
+        <span class="cov0" title="0">return true, err</span>
+}
+
+func (c *userDatabase) IsAddressIDExist(ctx echo.Context, addressID uint) (exist bool, err error) <span class="cov0" title="0">{
+        var addressModel domain.Address
+        err = c.DB.Table("addresses").
+                Select("addresses.id").
+                Where("id = ?", addressID).
+                First(&amp;addressModel).Error
+
+        if errors.Is(err, gorm.ErrRecordNotFound) </span><span class="cov0" title="0">{
+                return false, nil
+        }</span>
+
+        <span class="cov0" title="0">return true, err</span>
+}
+
+func (c *userDatabase) SaveAddress(ctx echo.Context, address domain.Address) (addressID uint, err error) <span class="cov0" title="0">{
+        address.CreatedAt = time.Now()
+        result := c.DB.Create(&amp;address)
+
+        if result.Error != nil </span><span class="cov0" title="0">{
+                return addressID, errors.New("failed to insert address on database")
+        }</span>
+
+        <span class="cov0" title="0">return address.ID, nil</span>
+}
+
+func (c *userDatabase) SaveUserAddress(ctx echo.Context, userAddress domain.UserAddress) error <span class="cov0" title="0">{
+        // first check user's first address is this or not
+        var userID uint
+        if err := c.DB.Table("user_addresses").Select("address_id").Where("user_id = ?", userAddress.UserID).Scan(&amp;userID).Error; err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to check if user already has an address with user_id %v", userAddress.UserID)
+        }</span>
+
+        // if the given address needs to be set as default, then remove all others from default
+        <span class="cov0" title="0">if userID == 0 </span><span class="cov0" title="0">{ // it means user has no other addresses
+                userAddress.IsDefault = true
+        }</span> else<span class="cov0" title="0"> if userAddress.IsDefault </span><span class="cov0" title="0">{
+                query := `UPDATE user_addresses SET is_default = 'f' WHERE user_id = ?`
+                if c.DB.Exec(query, userAddress.UserID).Scan(&amp;userAddress).Error != nil </span><span class="cov0" title="0">{
+                        return errors.New("failed to remove default status of address")
+                }</span>
+        }
+
+        // insert the user address
+        <span class="cov0" title="0">if err := c.DB.Table("user_addresses").Create(&amp;userAddress).Error; err != nil </span><span class="cov0" title="0">{
+                return errors.New("failed to insert userAddress into database")
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (c *userDatabase) UpdateAddress(ctx echo.Context, address domain.Address) error <span class="cov0" title="0">{
+        if err := c.DB.Model(&amp;address).Where("id = ?", address.ID).Updates(map[string]interface{}{
+                "name":         address.Name,
+                "phone_number": address.PhoneNumber,
+                "house":        address.House,
+                "area":         address.Area,
+                "land_mark":    address.LandMark,
+                "city":         address.City,
+                "pincode":      address.Pincode,
+                "country_name": address.CountryName,
+                "updated_at":   time.Now(),
+        }).Error; err != nil </span><span class="cov0" title="0">{
+                return errors.New("failed to update the address for edit address")
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (c *userDatabase) UpdateUser(ctx echo.Context, user domain.User) (err error) <span class="cov0" title="0">{
+        updatedAt := time.Now()
+        // check password need to update or not
+        if user.Password != "" </span><span class="cov0" title="0">{
+                err = c.DB.Model(&amp;user).Where("id = ?", user.ID).Updates(map[string]interface{}{
+                        "user_name":  user.UserName,
+                        "first_name": user.FirstName,
+                        "last_name":  user.LastName,
+                        "age":        user.Age,
+                        "email":      user.Email,
+                        "phone":      user.Phone,
+                        "password":   user.Password,
+                        "updated_at": updatedAt,
+                }).Error
+        }</span> else<span class="cov0" title="0"> {
+                err = c.DB.Model(&amp;user).Where("id = ?", user.ID).Updates(map[string]interface{}{
+                        "user_name":  user.UserName,
+                        "first_name": user.FirstName,
+                        "last_name":  user.LastName,
+                        "age":        user.Age,
+                        "email":      user.Email,
+                        "phone":      user.Phone,
+                        "updated_at": updatedAt,
+                }).Error
+        }</span>
+
+        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to update user detail of user with user_id %s", user.ID)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (c *userDatabase) UpdateUserAddress(ctx echo.Context, userAddress domain.UserAddress) error <span class="cov0" title="0">{
+        // if it needs to be set as default, then change the old default
+        if userAddress.IsDefault </span><span class="cov0" title="0">{
+                if err := c.DB.Model(&amp;domain.UserAddress{}).Where("user_id = ?", userAddress.UserID).Update("is_default", false).Error; err != nil </span><span class="cov0" title="0">{
+                        return errors.New("failed to remove default status of address")
+                }</span>
+        }
+
+        // update the user address
+        <span class="cov0" title="0">if err := c.DB.Model(&amp;userAddress).Where("address_id = ? AND user_id = ?", userAddress.AddressID, userAddress.UserID).Update("is_default", userAddress.IsDefault).Error; err != nil </span><span class="cov0" title="0">{
+                return errors.New("failed to update user address")
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (c *userDatabase) FindAllPaymentMethodsByUserID(ctx echo.Context, userID string) (paymentMethods []response.PaymentMethod, err error) <span class="cov0" title="0">{
+        err = c.DB.
+                Table("payment_methods").
+                Select("id, number", "card_company").
+                Where("user_id = ?", userID).
+                Scan(&amp;paymentMethods).Error
+
+        return paymentMethods, err
+}</span>
+
+func (c *userDatabase) SavePaymentMethod(ctx echo.Context, paymentMethod domain.PaymentMethod) (paymentMethodID uint, err error) <span class="cov0" title="0">{
+        paymentMethod.CreatedAt = time.Now()
+        result := c.DB.Create(&amp;paymentMethod)
+
+        if result.Error != nil </span><span class="cov0" title="0">{
+                return paymentMethodID, errors.New("failed to insert address on database")
+        }</span>
+
+        <span class="cov0" title="0">return paymentMethod.ID, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package utils
 
 import (
         "errors"
@@ -110,7 +865,7 @@ func CompareUserExistingDetails(user1, user2 domain.User) error <span class="cov
 }
 </pre>
 		
-		<pre class="file" id="file1" style="display: none">package utils
+		<pre class="file" id="file5" style="display: none">package utils
 
 import (
         "crypto/aes"
@@ -190,7 +945,7 @@ func GetCardIssuer(cardNumber string) string <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file2" style="display: none">package utils
+		<pre class="file" id="file6" style="display: none">package utils
 
 import (
         "errors"
@@ -207,7 +962,7 @@ func AppendMessageToError(err error, message string) error <span class="cov8" ti
 }
 </pre>
 		
-		<pre class="file" id="file3" style="display: none">package utils
+		<pre class="file" id="file7" style="display: none">package utils
 
 import (
         "errors"
@@ -235,7 +990,7 @@ func GetParamID(ctx echo.Context, key string) (*uint, error) <span class="cov8" 
 }
 </pre>
 		
-		<pre class="file" id="file4" style="display: none">package utils
+		<pre class="file" id="file8" style="display: none">package utils
 
 import (
         "crypto/rand"
@@ -297,7 +1052,7 @@ func GenerateUniqueString() string <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file5" style="display: none">package utils
+		<pre class="file" id="file9" style="display: none">package utils
 
 import "golang.org/x/crypto/bcrypt"
 
