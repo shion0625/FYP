@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/shion0625/FYP/backend/pkg/utils"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestGenerateHashFromPassword(t *testing.T) {
@@ -13,8 +13,8 @@ func TestGenerateHashFromPassword(t *testing.T) {
 	password := "testpassword"
 
 	hashedPassword, err := utils.GenerateHashFromPassword(password)
-	assert.Nil(t, err)
-	assert.NotEmpty(t, hashedPassword)
+	require.NoError(t, err)
+	require.NotEmpty(t, hashedPassword)
 }
 
 func TestVerifyHashAndPassword(t *testing.T) {
@@ -24,5 +24,5 @@ func TestVerifyHashAndPassword(t *testing.T) {
 	hashedPassword, _ := utils.GenerateHashFromPassword(password)
 
 	isValid := utils.VerifyHashAndPassword(hashedPassword, password)
-	assert.True(t, isValid)
+	require.True(t, isValid)
 }

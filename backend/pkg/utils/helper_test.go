@@ -4,11 +4,10 @@ import (
 	"crypto/rand"
 	"fmt"
 	"strconv"
+	"testing"
 
 	"bou.ke/monkey"
 	"github.com/labstack/echo/v4"
-	"testing"
-
 	"github.com/shion0625/FYP/backend/pkg/utils"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/crypto/bcrypt"
@@ -35,6 +34,7 @@ func TestGetUserIdFromContext(t *testing.T) {
 				e := echo.New()
 				req := e.NewContext(nil, nil)
 				req.Set("userId", "testUser")
+
 				return req
 			}(),
 			want: "testUser",
