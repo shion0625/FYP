@@ -44,7 +44,9 @@ func (o *OrderHandler) PayOrder(ctx echo.Context) error {
 	}
 
 	if err := o.orderUseCase.PayOrder(ctx, userID, body); err != nil {
-		return fmt.Errorf("failed to PayOrder: %w", err)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to PayOrder", err, nil)
+
+		return nil
 	}
 
 	response.SuccessResponse(ctx, http.StatusOK, "Successfully purchase order", nil)

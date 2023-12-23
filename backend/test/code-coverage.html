@@ -57,7 +57,7 @@
 				
 				<option value="file0">github.com/shion0625/FYP/backend/pkg/api/handler/auth.go (77.9%)</option>
 				
-				<option value="file1">github.com/shion0625/FYP/backend/pkg/api/handler/order.go (0.0%)</option>
+				<option value="file1">github.com/shion0625/FYP/backend/pkg/api/handler/order.go (74.2%)</option>
 				
 				<option value="file2">github.com/shion0625/FYP/backend/pkg/api/handler/product.go (0.0%)</option>
 				
@@ -341,13 +341,13 @@ type OrderHandler struct {
         orderUseCase usecaseInterface.OrderUseCase
 }
 
-func NewOrderHandler(orderUsecase usecaseInterface.OrderUseCase) interfaces.OrderHandler <span class="cov0" title="0">{
+func NewOrderHandler(orderUsecase usecaseInterface.OrderUseCase) interfaces.OrderHandler <span class="cov8" title="1">{
         return &amp;OrderHandler{
                 orderUseCase: orderUsecase,
         }
 }</span>
 
-func (o *OrderHandler) PayOrder(ctx echo.Context) error <span class="cov0" title="0">{
+func (o *OrderHandler) PayOrder(ctx echo.Context) error <span class="cov8" title="1">{
         userID, err := utils.GetUserIdFromContext(ctx)
         if err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user id", err, nil)
@@ -355,29 +355,31 @@ func (o *OrderHandler) PayOrder(ctx echo.Context) error <span class="cov0" title
                 return nil
         }</span>
 
-        <span class="cov0" title="0">var body request.PayOrder
+        <span class="cov8" title="1">var body request.PayOrder
         if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
 
                 return fmt.Errorf("Bind error: %w", err)
         }</span>
 
-        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">if err := o.orderUseCase.PayOrder(ctx, userID, body); err != nil </span><span class="cov0" title="0">{
-                return fmt.Errorf("failed to PayOrder: %w", err)
+        <span class="cov8" title="1">if err := o.orderUseCase.PayOrder(ctx, userID, body); err != nil </span><span class="cov8" title="1">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to PayOrder", err, nil)
+
+                return nil
         }</span>
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully purchase order", nil)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusOK, "Successfully purchase order", nil)
 
         return nil</span>
 }
 
-func (o *OrderHandler) GetOrderHistory(ctx echo.Context) error <span class="cov0" title="0">{
+func (o *OrderHandler) GetOrderHistory(ctx echo.Context) error <span class="cov8" title="1">{
         pagination := request.GetPagination(ctx)
 
         userID, err := utils.GetUserIdFromContext(ctx)
@@ -387,20 +389,20 @@ func (o *OrderHandler) GetOrderHistory(ctx echo.Context) error <span class="cov0
                 return nil
         }</span>
 
-        <span class="cov0" title="0">orderHistories, err := o.orderUseCase.GetAllShopOrders(ctx, userID, pagination)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">orderHistories, err := o.orderUseCase.GetAllShopOrders(ctx, userID, pagination)
+        if err != nil </span><span class="cov8" title="1">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to update user address", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">if len(orderHistories) == 0 </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if len(orderHistories) == 0 </span><span class="cov8" title="1">{
                 response.SuccessResponse(ctx, http.StatusOK, "No shopOrders found", nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "successfully addresses updated", orderHistories)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusOK, "successfully addresses updated", orderHistories)
 
         return nil</span>
 }
