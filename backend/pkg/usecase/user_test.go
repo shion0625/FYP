@@ -7,11 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shion0625/FYP/backend/pkg/config"
-
 	"github.com/labstack/echo/v4"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/request"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/response"
+	"github.com/shion0625/FYP/backend/pkg/config"
 	"github.com/shion0625/FYP/backend/pkg/domain"
 	userMock "github.com/shion0625/FYP/backend/pkg/repository/mock"
 	"github.com/shion0625/FYP/backend/pkg/usecase"
