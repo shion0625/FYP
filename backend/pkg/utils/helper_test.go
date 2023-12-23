@@ -119,8 +119,6 @@ func TestGenerateSKU(t *testing.T) {
 		tt := tt
 
 		t.Run(testName, func(t *testing.T) {
-			t.Parallel()
-
 			// Mock rand.Read to return error only for the abnormal case
 			if tt.err != nil {
 				patch := monkey.Patch(rand.Read, func(b []byte) (n int, err error) {

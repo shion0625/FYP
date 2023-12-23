@@ -32,7 +32,7 @@ const numGoroutines = 2
 func (p *productUseCase) FindAllCategories(ctx echo.Context, pagination request.Pagination) ([]response.Category, error) {
 	categories, err := p.productRepo.FindAllMainCategories(ctx, pagination)
 	if err != nil {
-		return nil, fmt.Errorf("failed find all main categories %w", err)
+		return nil, fmt.Errorf("failed find all main categories: %w", err)
 	}
 
 	return categories, nil
@@ -141,8 +141,6 @@ func (p *productUseCase) FindAllProducts(ctx echo.Context, pagination request.Pa
 	for i := range products {
 		url, err := p.cloudService.GetFileUrl(ctx, products[i].Image)
 		if err != nil {
-			fmt.Println(err)
-
 			continue
 		}
 
@@ -310,21 +308,13 @@ func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, produ
 	return nil
 }
 
-// step 1 : get product_id and all variation id as function parameter
-// step 2 : initialize an map for storing product item id and its count(map[uint]int)
-// step 3 : loop through the variation option ids
-// step 4 : then find all product items ids with given product id and the loop variation option id
-// step 5 : if the product item array length is zero means the configuration not exist return false
-// step 6 : then loop through the product items ids array(got from database)
-// step 7 : add each id on the map and increment its count
-// step 8 : check if any of the product items id's count is greater than the variation options ids length then return true
-// step 9 : if the loop exist means product configuration is not exist.
 func (p *productUseCase) isProductVariationCombinationExist(productID uint, variationOptionIDs []uint) (exist bool, err error) {
 	setOfIds := map[uint]int{}
 
 	for _, variationOptionID := range variationOptionIDs {
 		productItemIds, err := p.productRepo.FindAllProductItemIDsByProductIDAndVariationOptionID(context.TODO(),
 			productID, variationOptionID)
+
 		if err != nil {
 			return false, fmt.Errorf("failed to find product item ids from database using product id and variation option id: %w", err)
 		}

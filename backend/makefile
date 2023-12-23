@@ -68,6 +68,7 @@ mockgen: # Generate mock files for the test
 	mockgen -source=pkg/repository/interfaces/product.go -destination=pkg/repository/mock/product_mock.go
 	mockgen -source=pkg/repository/interfaces/user.go -destination=pkg/repository/mock/user_mock.go
 	mockgen -source=pkg/service/token/token.go -destination=pkg/service/mock/token/token_mock.go
+	mockgen -source=pkg/service/cloud/cloud.go -destination=pkg/service/mock/cloud/cloud_mock.go
 	mockgen -source=pkg/usecase/interfaces/auth.go -destination=pkg/usecase/mock/auth_mock.go
 	mockgen -source=pkg/usecase/interfaces/order.go -destination=pkg/usecase/mock/order_mock.go
 	mockgen -source=pkg/usecase/interfaces/product.go -destination=pkg/usecase/mock/product_mock.go

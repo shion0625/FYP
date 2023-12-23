@@ -67,7 +67,7 @@
 				
 				<option value="file5">github.com/shion0625/FYP/backend/pkg/usecase/order.go (100.0%)</option>
 				
-				<option value="file6">github.com/shion0625/FYP/backend/pkg/usecase/product.go (0.0%)</option>
+				<option value="file6">github.com/shion0625/FYP/backend/pkg/usecase/product.go (91.2%)</option>
 				
 				<option value="file7">github.com/shion0625/FYP/backend/pkg/usecase/user.go (0.0%)</option>
 				
@@ -1138,7 +1138,7 @@ type productUseCase struct {
 }
 
 // to get a new instance of productUseCase.
-func NewProductUseCase(productRepo interfaces.ProductRepository, cloudService cloud.CloudService) usecaseInterfaces.ProductUseCase <span class="cov0" title="0">{
+func NewProductUseCase(productRepo interfaces.ProductRepository, cloudService cloud.CloudService) usecaseInterfaces.ProductUseCase <span class="cov8" title="1">{
         return &amp;productUseCase{
                 productRepo:  productRepo,
                 cloudService: cloudService,
@@ -1147,162 +1147,160 @@ func NewProductUseCase(productRepo interfaces.ProductRepository, cloudService cl
 
 const numGoroutines = 2
 
-func (p *productUseCase) FindAllCategories(ctx echo.Context, pagination request.Pagination) ([]response.Category, error) <span class="cov0" title="0">{
+func (p *productUseCase) FindAllCategories(ctx echo.Context, pagination request.Pagination) ([]response.Category, error) <span class="cov8" title="1">{
         categories, err := p.productRepo.FindAllMainCategories(ctx, pagination)
-        if err != nil </span><span class="cov0" title="0">{
-                return nil, fmt.Errorf("failed find all main categories %w", err)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("failed find all main categories: %w", err)
         }</span>
 
-        <span class="cov0" title="0">return categories, nil</span>
+        <span class="cov8" title="1">return categories, nil</span>
 }
 
 // Save category.
-func (p *productUseCase) SaveCategory(ctx echo.Context, categoryName string) error <span class="cov0" title="0">{
+func (p *productUseCase) SaveCategory(ctx echo.Context, categoryName string) error <span class="cov8" title="1">{
         categoryExist, err := p.productRepo.IsCategoryNameExist(ctx, categoryName)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return fmt.Errorf("failed to check category already exist: %w", err)
         }</span>
 
-        <span class="cov0" title="0">if categoryExist </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if categoryExist </span><span class="cov8" title="1">{
                 return ErrCategoryAlreadyExist
         }</span>
 
-        <span class="cov0" title="0">err = p.productRepo.SaveCategory(ctx, categoryName)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">err = p.productRepo.SaveCategory(ctx, categoryName)
+        if err != nil </span><span class="cov8" title="1">{
                 return fmt.Errorf("failed to save category: %w", err)
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
 // to add new variation for a category.
-func (p *productUseCase) SaveVariation(ctx echo.Context, categoryID uint, variationNames []string) error <span class="cov0" title="0">{
-        err := p.productRepo.Transactions(ctx, func(repo interfaces.ProductRepository) error </span><span class="cov0" title="0">{
-                for _, variationName := range variationNames </span><span class="cov0" title="0">{
+func (p *productUseCase) SaveVariation(ctx echo.Context, categoryID uint, variationNames []string) error <span class="cov8" title="1">{
+        err := p.productRepo.Transactions(ctx, func(repo interfaces.ProductRepository) error </span><span class="cov8" title="1">{
+                for _, variationName := range variationNames </span><span class="cov8" title="1">{
                         variationExist, err := repo.IsVariationNameExistForCategory(ctx, variationName, categoryID)
-                        if err != nil </span><span class="cov0" title="0">{
+                        if err != nil </span><span class="cov8" title="1">{
                                 return fmt.Errorf("failed to check variation already exist: %w", err)
                         }</span>
 
-                        <span class="cov0" title="0">if variationExist </span><span class="cov0" title="0">{
+                        <span class="cov8" title="1">if variationExist </span><span class="cov8" title="1">{
                                 return fmt.Errorf("variation name %s: %w", variationName, ErrVariationAlreadyExist)
                         }</span>
 
-                        <span class="cov0" title="0">err = p.productRepo.SaveVariation(ctx, categoryID, variationName)
-                        if err != nil </span><span class="cov0" title="0">{
+                        <span class="cov8" title="1">err = p.productRepo.SaveVariation(ctx, categoryID, variationName)
+                        if err != nil </span><span class="cov8" title="1">{
                                 return fmt.Errorf("failed to save variation: %w", err)
                         }</span>
                 }
 
-                <span class="cov0" title="0">return nil</span>
+                <span class="cov8" title="1">return nil</span>
         })
-        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
                 return fmt.Errorf("failed to save variation: %w", err)
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
 // to add new variation value for variation.
-func (p *productUseCase) SaveVariationOption(ctx echo.Context, variationID uint, variationOptionValues []string) error <span class="cov0" title="0">{
-        err := p.productRepo.Transactions(ctx, func(repo interfaces.ProductRepository) error </span><span class="cov0" title="0">{
-                for _, variationValue := range variationOptionValues </span><span class="cov0" title="0">{
+func (p *productUseCase) SaveVariationOption(ctx echo.Context, variationID uint, variationOptionValues []string) error <span class="cov8" title="1">{
+        err := p.productRepo.Transactions(ctx, func(repo interfaces.ProductRepository) error </span><span class="cov8" title="1">{
+                for _, variationValue := range variationOptionValues </span><span class="cov8" title="1">{
                         valueExist, err := repo.IsVariationValueExistForVariation(ctx, variationValue, variationID)
-                        if err != nil </span><span class="cov0" title="0">{
+                        if err != nil </span><span class="cov8" title="1">{
                                 return fmt.Errorf("failed to check variation already exist: %w", err)
                         }</span>
-                        <span class="cov0" title="0">if valueExist </span><span class="cov0" title="0">{
+                        <span class="cov8" title="1">if valueExist </span><span class="cov8" title="1">{
                                 return fmt.Errorf("variation option value %s: %w", variationValue, ErrVariationOptionAlreadyExist)
                         }</span>
 
-                        <span class="cov0" title="0">err = repo.SaveVariationOption(ctx, variationID, variationValue)
-                        if err != nil </span><span class="cov0" title="0">{
+                        <span class="cov8" title="1">err = repo.SaveVariationOption(ctx, variationID, variationValue)
+                        if err != nil </span><span class="cov8" title="1">{
                                 return fmt.Errorf("failed to save variation option: %w", err)
                         }</span>
                 }
 
-                <span class="cov0" title="0">return nil</span>
+                <span class="cov8" title="1">return nil</span>
         })
-        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
                 return fmt.Errorf("failed to save variation option: %w", err)
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
-func (p *productUseCase) FindAllVariationsAndItsValues(ctx echo.Context, categoryID uint) ([]response.Variation, error) <span class="cov0" title="0">{
+func (p *productUseCase) FindAllVariationsAndItsValues(ctx echo.Context, categoryID uint) ([]response.Variation, error) <span class="cov8" title="1">{
         variations, err := p.productRepo.FindAllVariationsByCategoryID(ctx, categoryID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, fmt.Errorf("failed to find all variations of category: %w", err)
         }</span>
 
         // get all variation values of each variations
-        <span class="cov0" title="0">for i, variation := range variations </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">for i, variation := range variations </span><span class="cov8" title="1">{
                 variationOption, err := p.productRepo.FindAllVariationOptionsByVariationID(ctx, variation.ID)
-                if err != nil </span><span class="cov0" title="0">{
+                if err != nil </span><span class="cov8" title="1">{
                         return nil, fmt.Errorf("failed to get variation option: %w", err)
                 }</span>
 
-                <span class="cov0" title="0">variations[i].VariationOptions = variationOption</span>
+                <span class="cov8" title="1">variations[i].VariationOptions = variationOption</span>
         }
 
-        <span class="cov0" title="0">return variations, nil</span>
+        <span class="cov8" title="1">return variations, nil</span>
 }
 
 // to get all product.
-func (p *productUseCase) FindAllProducts(ctx echo.Context, pagination request.Pagination, categoryID *uint, brandID *uint) ([]response.Product, error) <span class="cov0" title="0">{
+func (p *productUseCase) FindAllProducts(ctx echo.Context, pagination request.Pagination, categoryID *uint, brandID *uint) ([]response.Product, error) <span class="cov8" title="1">{
         products, err := p.productRepo.FindAllProducts(ctx, pagination, categoryID, brandID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, fmt.Errorf("failed to get product details from database: %w", err)
         }</span>
 
-        <span class="cov0" title="0">for i := range products </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">for i := range products </span><span class="cov8" title="1">{
                 url, err := p.cloudService.GetFileUrl(ctx, products[i].Image)
-                if err != nil </span><span class="cov0" title="0">{
-                        fmt.Println(err)
-
+                if err != nil </span><span class="cov8" title="1">{
                         continue</span>
                 }
 
-                <span class="cov0" title="0">products[i].Image = url</span>
+                <span class="cov8" title="1">products[i].Image = url</span>
         }
 
-        <span class="cov0" title="0">return products, nil</span>
+        <span class="cov8" title="1">return products, nil</span>
 }
 
-func (p *productUseCase) GetProduct(ctx echo.Context, productID uint) (response.Product, error) <span class="cov0" title="0">{
+func (p *productUseCase) GetProduct(ctx echo.Context, productID uint) (response.Product, error) <span class="cov8" title="1">{
         product, err := p.productRepo.FindProductByID(ctx, productID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return response.Product{}, fmt.Errorf("failed to get product from database: %w", err)
         }</span>
 
-        <span class="cov0" title="0">url, err := p.cloudService.GetFileUrl(ctx, product.Image)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">url, err := p.cloudService.GetFileUrl(ctx, product.Image)
+        if err != nil </span><span class="cov8" title="1">{
                 return response.Product{}, fmt.Errorf("failed to get image url from could service: %w", err)
         }</span>
 
-        <span class="cov0" title="0">product.Image = url
+        <span class="cov8" title="1">product.Image = url
 
         return product, nil</span>
 }
 
 // to add new product.
-func (p *productUseCase) SaveProduct(ctx echo.Context, product request.Product) error <span class="cov0" title="0">{
+func (p *productUseCase) SaveProduct(ctx echo.Context, product request.Product) error <span class="cov8" title="1">{
         productNameExist, err := p.productRepo.IsProductNameExist(ctx, product.Name)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return fmt.Errorf("failed to check product name already exist: %w", err)
         }</span>
 
-        <span class="cov0" title="0">if productNameExist </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if productNameExist </span><span class="cov8" title="1">{
                 return fmt.Errorf("product name %s: %w", product.Name, ErrProductAlreadyExist)
         }</span>
 
-        <span class="cov0" title="0">uploadID, err := p.cloudService.SaveFile(ctx, product.ImageFileHeader)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">uploadID, err := p.cloudService.SaveFile(ctx, product.ImageFileHeader)
+        if err != nil </span><span class="cov8" title="1">{
                 return fmt.Errorf("failed to save image on cloud storage: %w", err)
         }</span>
 
-        <span class="cov0" title="0">err = p.productRepo.SaveProduct(ctx, domain.Product{
+        <span class="cov8" title="1">err = p.productRepo.SaveProduct(ctx, domain.Product{
                 Name:        product.Name,
                 Description: product.Description,
                 CategoryID:  product.CategoryID,
@@ -1310,41 +1308,41 @@ func (p *productUseCase) SaveProduct(ctx echo.Context, product request.Product) 
                 Price:       product.Price,
                 Image:       uploadID,
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return fmt.Errorf("failed to save product: %w", err)
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
 // for add new productItem for a specific product.
-func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, productItem request.ProductItem) error <span class="cov0" title="0">{
+func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, productItem request.ProductItem) error <span class="cov8" title="1">{
         variationCount, err := p.productRepo.FindVariationCountForProduct(ctx, productID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return fmt.Errorf("failed to get variation count of product from database: %w", err)
         }</span>
 
-        <span class="cov0" title="0">if len(productItem.VariationOptionIDs) != int(variationCount) </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if len(productItem.VariationOptionIDs) != int(variationCount) </span><span class="cov8" title="1">{
                 return ErrNotEnoughVariations
         }</span>
 
         // check the given all combination already exist (Color:Red with Size:M)
-        <span class="cov0" title="0">productItemExist, err := p.isProductVariationCombinationExist(productID, productItem.VariationOptionIDs)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">productItemExist, err := p.isProductVariationCombinationExist(productID, productItem.VariationOptionIDs)
+        if err != nil </span><span class="cov8" title="1">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">if productItemExist </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if productItemExist </span><span class="cov8" title="1">{
                 return ErrProductItemAlreadyExist
         }</span>
 
-        <span class="cov0" title="0">err = p.productRepo.Transactions(ctx, func(trxRepo interfaces.ProductRepository) error </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">err = p.productRepo.Transactions(ctx, func(trxRepo interfaces.ProductRepository) error </span><span class="cov8" title="1">{
                 sku, err := utils.GenerateSKU()
                 if err != nil </span><span class="cov0" title="0">{
                         return fmt.Errorf("failed to generate SKU: %w", err)
                 }</span>
 
-                <span class="cov0" title="0">newProductItem := domain.ProductItem{
+                <span class="cov8" title="1">newProductItem := domain.ProductItem{
                         ProductID:  productID,
                         QtyInStock: productItem.QtyInStock,
                         Price:      productItem.Price,
@@ -1356,18 +1354,18 @@ func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, produ
                         return fmt.Errorf("failed to save product item: %w", err)
                 }</span>
 
-                <span class="cov0" title="0">errChan := make(chan error, numGoroutines)
+                <span class="cov8" title="1">errChan := make(chan error, numGoroutines)
 
                 newCtx, cancel := context.WithCancel(ctx.Request().Context()) // for any of one of goroutine get error then cancel the working of other also
                 defer cancel()
 
-                go func() </span><span class="cov0" title="0">{
+                go func() </span><span class="cov8" title="1">{
                         // save all product configurations based on given variation option id
-                        for _, variationOptionID := range productItem.VariationOptionIDs </span><span class="cov0" title="0">{
+                        for _, variationOptionID := range productItem.VariationOptionIDs </span><span class="cov8" title="1">{
                                 select </span>{
                                 case &lt;-newCtx.Done():<span class="cov0" title="0">
                                         return</span>
-                                default:<span class="cov0" title="0">
+                                default:<span class="cov8" title="1">
                                         err = trxRepo.SaveProductConfiguration(ctx, productItemID, variationOptionID)
                                         if err != nil </span><span class="cov0" title="0">{
                                                 errChan &lt;- fmt.Errorf("failed to save product_item configuration: %w", err)
@@ -1376,16 +1374,16 @@ func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, produ
                                         }</span>
                                 }
                         }
-                        <span class="cov0" title="0">errChan &lt;- nil</span>
+                        <span class="cov8" title="1">errChan &lt;- nil</span>
                 }()
 
-                <span class="cov0" title="0">go func() </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">go func() </span><span class="cov8" title="1">{
                         // save all images for the given product item
-                        for _, imageFile := range productItem.ImageFileHeaders </span><span class="cov0" title="0">{
+                        for _, imageFile := range productItem.ImageFileHeaders </span><span class="cov8" title="1">{
                                 select </span>{
                                 case &lt;-newCtx.Done():<span class="cov0" title="0">
                                         return</span>
-                                default:<span class="cov0" title="0">
+                                default:<span class="cov8" title="1">
                                         // upload image on cloud
                                         uploadID, err := p.cloudService.SaveFile(ctx, imageFile)
                                         if err != nil </span><span class="cov0" title="0">{
@@ -1394,7 +1392,7 @@ func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, produ
                                                 return
                                         }</span>
                                         // save upload id on database
-                                        <span class="cov0" title="0">err = trxRepo.SaveProductItemImage(ctx, productItemID, uploadID)
+                                        <span class="cov8" title="1">err = trxRepo.SaveProductItemImage(ctx, productItemID, uploadID)
                                         if err != nil </span><span class="cov0" title="0">{
                                                 errChan &lt;- fmt.Errorf("failed to save image for product item on database: %w", err)
 
@@ -1402,15 +1400,15 @@ func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, produ
                                         }</span>
                                 }
                         }
-                        <span class="cov0" title="0">errChan &lt;- nil</span>
+                        <span class="cov8" title="1">errChan &lt;- nil</span>
                 }()
 
                 // wait for the both go routine to complete
-                <span class="cov0" title="0">for i := 1; i &lt;= 2; i++ </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">for i := 1; i &lt;= 2; i++ </span><span class="cov8" title="1">{
                         select </span>{
                         case &lt;-ctx.Request().Context().Done():<span class="cov0" title="0">
                                 return nil</span>
-                        case err := &lt;-errChan:<span class="cov0" title="0">
+                        case err := &lt;-errChan:<span class="cov8" title="1">
                                 if err != nil </span><span class="cov0" title="0">{ // if any of the goroutine send error then return the error
                                         return err
                                 }</span>
@@ -1418,43 +1416,35 @@ func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, produ
                         }
                 }
 
-                <span class="cov0" title="0">return nil</span>
+                <span class="cov8" title="1">return nil</span>
         })
 
-        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err != nil </span><span class="cov0" title="0">{
                 return fmt.Errorf("failed to save product item: %w", err)
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
-// step 1 : get product_id and all variation id as function parameter
-// step 2 : initialize an map for storing product item id and its count(map[uint]int)
-// step 3 : loop through the variation option ids
-// step 4 : then find all product items ids with given product id and the loop variation option id
-// step 5 : if the product item array length is zero means the configuration not exist return false
-// step 6 : then loop through the product items ids array(got from database)
-// step 7 : add each id on the map and increment its count
-// step 8 : check if any of the product items id's count is greater than the variation options ids length then return true
-// step 9 : if the loop exist means product configuration is not exist.
-func (p *productUseCase) isProductVariationCombinationExist(productID uint, variationOptionIDs []uint) (exist bool, err error) <span class="cov0" title="0">{
+func (p *productUseCase) isProductVariationCombinationExist(productID uint, variationOptionIDs []uint) (exist bool, err error) <span class="cov8" title="1">{
         setOfIds := map[uint]int{}
 
-        for _, variationOptionID := range variationOptionIDs </span><span class="cov0" title="0">{
+        for _, variationOptionID := range variationOptionIDs </span><span class="cov8" title="1">{
                 productItemIds, err := p.productRepo.FindAllProductItemIDsByProductIDAndVariationOptionID(context.TODO(),
                         productID, variationOptionID)
-                if err != nil </span><span class="cov0" title="0">{
+
+                if err != nil </span><span class="cov8" title="1">{
                         return false, fmt.Errorf("failed to find product item ids from database using product id and variation option id: %w", err)
                 }</span>
 
-                <span class="cov0" title="0">if len(productItemIds) == 0 </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">if len(productItemIds) == 0 </span><span class="cov8" title="1">{
                         return false, nil
                 }</span>
 
-                <span class="cov0" title="0">for _, productItemID := range productItemIds </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">for _, productItemID := range productItemIds </span><span class="cov8" title="1">{
                         setOfIds[productItemID]++
                         // if any of the ids count is equal to array length it means product item id of this is the existing product item of this configuration
-                        if setOfIds[productItemID] &gt;= len(variationOptionIDs) </span><span class="cov0" title="0">{
+                        if setOfIds[productItemID] &gt;= len(variationOptionIDs) </span><span class="cov8" title="1">{
                                 return true, nil
                         }</span>
                 }
@@ -1464,11 +1454,11 @@ func (p *productUseCase) isProductVariationCombinationExist(productID uint, vari
 }
 
 // for get all productItem for a specific product.
-func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) ([]response.ProductItems, error) <span class="cov0" title="0">{
+func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) ([]response.ProductItems, error) <span class="cov8" title="1">{
         productItems, err := p.productRepo.FindAllProductItems(ctx, productID)
         completeProductItems := make([]response.ProductItems, len(productItems))
 
-        for i, item := range productItems </span><span class="cov0" title="0">{
+        for i, item := range productItems </span><span class="cov8" title="1">{
                 completeProductItems[i] = response.ProductItems{
                         ID:               item.ID,
                         Name:             item.Name,
@@ -1486,101 +1476,101 @@ func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) (
                 }
         }</span>
 
-        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
                 return completeProductItems, fmt.Errorf("failed to find all product items: %w", err)
         }</span>
 
-        <span class="cov0" title="0">errChan := make(chan error, numGoroutines)
+        <span class="cov8" title="1">errChan := make(chan error, numGoroutines)
         newCtx, cancel := context.WithCancel(ctx.Request().Context())
 
         defer cancel()
 
-        go func() </span><span class="cov0" title="0">{
+        go func() </span><span class="cov8" title="1">{
                 // get all variation values of each product items
-                for i := range completeProductItems </span><span class="cov0" title="0">{
+                for i := range completeProductItems </span><span class="cov8" title="1">{
                         select </span>{ // checking each time echo is cancelled or not
                         case &lt;-ctx.Request().Context().Done():<span class="cov0" title="0">
                                 return</span>
-                        default:<span class="cov0" title="0">
+                        default:<span class="cov8" title="1">
                                 variationValues, err := p.productRepo.FindAllVariationValuesOfProductItem(ctx, completeProductItems[i].ID)
-                                if err != nil </span><span class="cov0" title="0">{
+                                if err != nil </span><span class="cov8" title="1">{
                                         errChan &lt;- fmt.Errorf("failed to find variation values product item: %w", err)
 
                                         return
                                 }</span>
 
-                                <span class="cov0" title="0">completeProductItems[i].VariationValues = variationValues</span>
+                                <span class="cov8" title="1">completeProductItems[i].VariationValues = variationValues</span>
                         }
                 }
-                <span class="cov0" title="0">errChan &lt;- nil</span>
+                <span class="cov8" title="1">errChan &lt;- nil</span>
         }()
 
-        <span class="cov0" title="0">go func() </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">go func() </span><span class="cov8" title="1">{
                 // get all images of each product items
-                for i := range completeProductItems </span><span class="cov0" title="0">{
+                for i := range completeProductItems </span><span class="cov8" title="1">{
                         select </span>{ // checking each time echo is cancelled or not
                         case &lt;-newCtx.Done():<span class="cov0" title="0">
                                 return</span>
-                        default:<span class="cov0" title="0">
+                        default:<span class="cov8" title="1">
                                 images, err := p.productRepo.FindAllProductItemImages(ctx, completeProductItems[i].ID)
 
                                 imageUrls := make([]string, len(images))
 
-                                for j := range images </span><span class="cov0" title="0">{
+                                for j := range images </span><span class="cov8" title="1">{
                                         url, err := p.cloudService.GetFileUrl(ctx, images[j])
-                                        if err != nil </span><span class="cov0" title="0">{
+                                        if err != nil </span><span class="cov8" title="1">{
                                                 errChan &lt;- fmt.Errorf("failed to get image url from could service: %w", err)
                                         }</span>
 
-                                        <span class="cov0" title="0">imageUrls[j] = url</span>
+                                        <span class="cov8" title="1">imageUrls[j] = url</span>
                                 }
 
-                                <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                                <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
                                         errChan &lt;- fmt.Errorf("failed to find images of product item: %w", err)
 
                                         return
                                 }</span>
 
-                                <span class="cov0" title="0">completeProductItems[i].Images = imageUrls</span>
+                                <span class="cov8" title="1">completeProductItems[i].Images = imageUrls</span>
                         }
                 }
-                <span class="cov0" title="0">errChan &lt;- nil</span>
+                <span class="cov8" title="1">errChan &lt;- nil</span>
         }()
 
         // wait for the two routine to complete
-        <span class="cov0" title="0">for i := 1; i &lt;= 2; i++ </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">for i := 1; i &lt;= 2; i++ </span><span class="cov8" title="1">{
                 select </span>{
                 case &lt;-ctx.Request().Context().Done():<span class="cov0" title="0">
                         return nil, nil</span>
-                case err := &lt;-errChan:<span class="cov0" title="0">
+                case err := &lt;-errChan:<span class="cov8" title="1">
                         // no error then continue for the next check
-                        if err != nil </span><span class="cov0" title="0">{
+                        if err != nil </span><span class="cov8" title="1">{
                                 return nil, err
                         }</span>
                 }
         }
 
-        <span class="cov0" title="0">return completeProductItems, nil</span>
+        <span class="cov8" title="1">return completeProductItems, nil</span>
 }
 
-func (p *productUseCase) UpdateProduct(ctx echo.Context, updateDetails domain.Product) error <span class="cov0" title="0">{
+func (p *productUseCase) UpdateProduct(ctx echo.Context, updateDetails domain.Product) error <span class="cov8" title="1">{
         nameExistForOther, err := p.productRepo.IsProductNameExistForOtherProduct(ctx, updateDetails.Name, updateDetails.ID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return fmt.Errorf("failed to check product name already exist for other product: %w", err)
         }</span>
 
-        <span class="cov0" title="0">if nameExistForOther </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if nameExistForOther </span><span class="cov8" title="1">{
                 return fmt.Errorf("product name %s: %w", updateDetails.Name, ErrProductAlreadyExist)
         }</span>
 
         // p.productRepo.FindProductByID(ctx, updateDetails.ID)
 
-        <span class="cov0" title="0">err = p.productRepo.UpdateProduct(ctx, updateDetails)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">err = p.productRepo.UpdateProduct(ctx, updateDetails)
+        if err != nil </span><span class="cov8" title="1">{
                 return fmt.Errorf("failed to update product: %w", err)
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 </pre>
 		
