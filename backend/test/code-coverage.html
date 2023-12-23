@@ -59,7 +59,7 @@
 				
 				<option value="file1">github.com/shion0625/FYP/backend/pkg/api/handler/order.go (74.2%)</option>
 				
-				<option value="file2">github.com/shion0625/FYP/backend/pkg/api/handler/product.go (0.0%)</option>
+				<option value="file2">github.com/shion0625/FYP/backend/pkg/api/handler/product.go (70.0%)</option>
 				
 				<option value="file3">github.com/shion0625/FYP/backend/pkg/api/handler/user.go (0.0%)</option>
 				
@@ -412,7 +412,6 @@ func (o *OrderHandler) GetOrderHistory(ctx echo.Context) error <span class="cov8
 
 import (
         "errors"
-        "fmt"
         "net/http"
 
         "github.com/jinzhu/copier"
@@ -430,341 +429,341 @@ type ProductHandler struct {
         productUseCase usecaseInterface.ProductUseCase
 }
 
-func NewProductHandler(productUsecase usecaseInterface.ProductUseCase) interfaces.ProductHandler <span class="cov0" title="0">{
+func NewProductHandler(productUsecase usecaseInterface.ProductUseCase) interfaces.ProductHandler <span class="cov8" title="1">{
         return &amp;ProductHandler{
                 productUseCase: productUsecase,
         }
 }</span>
 
-func (p *ProductHandler) GetAllCategories(ctx echo.Context) error <span class="cov0" title="0">{
+func (p *ProductHandler) GetAllCategories(ctx echo.Context) error <span class="cov8" title="1">{
         pagination := request.GetPagination(ctx)
 
         categories, err := p.productUseCase.FindAllCategories(ctx, pagination)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve categories", err, nil)
 
-                return fmt.Errorf("FindAllCategories error: %w", err)
+                return nil
         }</span>
 
-        <span class="cov0" title="0">if len(categories) == 0 </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if len(categories) == 0 </span><span class="cov0" title="0">{
                 response.SuccessResponse(ctx, http.StatusOK, "No categories found", nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all categories", categories)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all categories", categories)
 
         return nil</span>
 }
 
-func (p *ProductHandler) SaveCategory(ctx echo.Context) error <span class="cov0" title="0">{
+func (p *ProductHandler) SaveCategory(ctx echo.Context) error <span class="cov8" title="1">{
         var body request.Category
 
         if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
 
-                return fmt.Errorf("Bind error: %w", err)
+                return nil
         }</span>
 
-        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">err := p.productUseCase.SaveCategory(ctx, body.Name)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">err := p.productUseCase.SaveCategory(ctx, body.Name)
+        if err != nil </span><span class="cov8" title="1">{
                 statusCode := http.StatusInternalServerError
                 if errors.Is(err, usecase.ErrCategoryAlreadyExist) </span><span class="cov0" title="0">{
                         statusCode = http.StatusConflict
                 }</span>
 
-                <span class="cov0" title="0">response.ErrorResponse(ctx, statusCode, "Failed to add category", err, nil)
+                <span class="cov8" title="1">response.ErrorResponse(ctx, statusCode, "Failed to add category", err, nil)
 
-                return fmt.Errorf("SaveCategory error: %w", err)</span>
+                return nil</span>
         }
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusCreated, "Successfully added category", nil)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusCreated, "Successfully added category", nil)
 
         return nil</span>
 }
 
-func (p *ProductHandler) SaveVariation(ctx echo.Context) error <span class="cov0" title="0">{
+func (p *ProductHandler) SaveVariation(ctx echo.Context) error <span class="cov8" title="1">{
         categoryIDStr := ctx.Param("category_id")
 
         categoryID, err := utils.ParseStringToUint32(categoryIDStr)
         if err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
 
-                return fmt.Errorf("ParseStringToUint32 error: %w", err)
+                return nil
         }</span>
 
-        <span class="cov0" title="0">var body request.Variation
+        <span class="cov8" title="1">var body request.Variation
 
         if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
 
-                return fmt.Errorf("Bind error: %w", err)
+                return nil
         }</span>
 
-        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">err = p.productUseCase.SaveVariation(ctx, categoryID, body.Names)
+        <span class="cov8" title="1">err = p.productUseCase.SaveVariation(ctx, categoryID, body.Names)
 
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 statusCode := http.StatusInternalServerError
                 if errors.Is(err, usecase.ErrVariationAlreadyExist) </span><span class="cov0" title="0">{
                         statusCode = http.StatusConflict
                 }</span>
 
-                <span class="cov0" title="0">response.ErrorResponse(ctx, statusCode, "Failed to add variation", err, nil)
+                <span class="cov8" title="1">response.ErrorResponse(ctx, statusCode, "Failed to add variation", err, nil)
 
-                return fmt.Errorf("SaveVariation error: %w", err)</span>
+                return nil</span>
         }
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusCreated, "Successfully added variations", nil)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusCreated, "Successfully added variations", nil)
 
         return nil</span>
 }
 
-func (p *ProductHandler) SaveVariationOption(ctx echo.Context) error <span class="cov0" title="0">{
+func (p *ProductHandler) SaveVariationOption(ctx echo.Context) error <span class="cov8" title="1">{
         variationIDStr := ctx.Param("variation_id")
 
         variationID, err := utils.ParseStringToUint32(variationIDStr)
         if err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
 
-                return fmt.Errorf("ParseStringToUint32 error: %w", err)
+                return nil
         }</span>
 
-        <span class="cov0" title="0">var body request.VariationOption
+        <span class="cov8" title="1">var body request.VariationOption
 
         if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
 
-                return fmt.Errorf("Bind error: %w", err)
+                return nil
         }</span>
 
-        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">err = p.productUseCase.SaveVariationOption(ctx, variationID, body.Values)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">err = p.productUseCase.SaveVariationOption(ctx, variationID, body.Values)
+        if err != nil </span><span class="cov8" title="1">{
                 statusCode := http.StatusInternalServerError
                 if errors.Is(err, usecase.ErrVariationOptionAlreadyExist) </span><span class="cov0" title="0">{
                         statusCode = http.StatusConflict
                 }</span>
 
-                <span class="cov0" title="0">response.ErrorResponse(ctx, statusCode, "Failed to add variation options", err, nil)
+                <span class="cov8" title="1">response.ErrorResponse(ctx, statusCode, "Failed to add variation options", err, nil)
 
-                return fmt.Errorf("SaveVariationOption error: %w", err)</span>
+                return nil</span>
         }
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusCreated, "Successfully added variation options", nil)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusCreated, "Successfully added variation options", nil)
 
         return nil</span>
 }
 
-func (c *ProductHandler) GetAllVariations(ctx echo.Context) error <span class="cov0" title="0">{
+func (c *ProductHandler) GetAllVariations(ctx echo.Context) error <span class="cov8" title="1">{
         categoryIDStr := ctx.Param("category_id")
 
         categoryID, err := utils.ParseStringToUint32(categoryIDStr)
         if err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
 
-                return fmt.Errorf("ParseStringToUint32 error: %w", err)
+                return nil
         }</span>
 
-        <span class="cov0" title="0">variations, err := c.productUseCase.FindAllVariationsAndItsValues(ctx, categoryID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">variations, err := c.productUseCase.FindAllVariationsAndItsValues(ctx, categoryID)
+        if err != nil </span><span class="cov8" title="1">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to Get variations and its values", err, nil)
 
-                return fmt.Errorf("FindAllVariationsAndItsValues error: %w", err)
+                return nil
         }</span>
 
-        <span class="cov0" title="0">if len(variations) == 0 </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if len(variations) == 0 </span><span class="cov0" title="0">{
                 response.SuccessResponse(ctx, http.StatusOK, "No variations found", nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all variations and its values", variations)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all variations and its values", variations)
 
         return nil</span>
 }
 
-func (p *ProductHandler) SaveProduct(ctx echo.Context) error <span class="cov0" title="0">{
+func (p *ProductHandler) SaveProduct(ctx echo.Context) error <span class="cov8" title="1">{
         var body request.Product
 
         if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
 
-                return fmt.Errorf("Bind error: %w", err)
+                return nil
         }</span>
 
-        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">err := p.productUseCase.SaveProduct(ctx, body)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">err := p.productUseCase.SaveProduct(ctx, body)
+        if err != nil </span><span class="cov8" title="1">{
                 statusCode := http.StatusInternalServerError
                 if errors.Is(err, usecase.ErrProductAlreadyExist) </span><span class="cov0" title="0">{
                         statusCode = http.StatusConflict
                 }</span>
 
-                <span class="cov0" title="0">response.ErrorResponse(ctx, statusCode, "Failed to add product", err, nil)
+                <span class="cov8" title="1">response.ErrorResponse(ctx, statusCode, "Failed to add product", err, nil)
 
-                return fmt.Errorf("SaveProduct error: %w", err)</span>
+                return nil</span>
         }
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusCreated, "Successfully product added", nil)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusCreated, "Successfully product added", nil)
 
         return nil</span>
 }
 
-func (p *ProductHandler) GetAllProductsAdmin() func(ctx echo.Context) error <span class="cov0" title="0">{
+func (p *ProductHandler) GetAllProductsAdmin() func(ctx echo.Context) error <span class="cov8" title="1">{
         return p.getAllProducts()
 }</span>
 
-func (p *ProductHandler) GetAllProductsUser() func(ctx echo.Context) error <span class="cov0" title="0">{
+func (p *ProductHandler) GetAllProductsUser() func(ctx echo.Context) error <span class="cov8" title="1">{
         return p.getAllProducts()
 }</span>
 
 // Get products is common for user and admin so this function is to get the common Get all products func for them.
-func (p *ProductHandler) getAllProducts() func(ctx echo.Context) error <span class="cov0" title="0">{
-        return func(ctx echo.Context) error </span><span class="cov0" title="0">{
+func (p *ProductHandler) getAllProducts() func(ctx echo.Context) error <span class="cov8" title="1">{
+        return func(ctx echo.Context) error </span><span class="cov8" title="1">{
                 categoryID, err := utils.GetParamID(ctx, "category_id")
                 if err != nil </span><span class="cov0" title="0">{
                         response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
 
-                        return fmt.Errorf("getAllProducts error: %w", err)
+                        return nil
                 }</span>
 
-                <span class="cov0" title="0">brandID, err := utils.GetParamID(ctx, "brand_id")
+                <span class="cov8" title="1">brandID, err := utils.GetParamID(ctx, "brand_id")
                 if err != nil </span><span class="cov0" title="0">{
                         response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
 
-                        return fmt.Errorf("getAllProducts error: %w", err)
+                        return nil
                 }</span>
 
-                <span class="cov0" title="0">pagination := request.GetPagination(ctx)
+                <span class="cov8" title="1">pagination := request.GetPagination(ctx)
 
                 products, err := p.productUseCase.FindAllProducts(ctx, pagination, categoryID, brandID)
-                if err != nil </span><span class="cov0" title="0">{
+                if err != nil </span><span class="cov8" title="1">{
                         response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to Get all products", err, nil)
 
-                        return fmt.Errorf("FindAllProducts error: %w", err)
+                        return nil
                 }</span>
 
-                <span class="cov0" title="0">if len(products) == 0 </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">if len(products) == 0 </span><span class="cov0" title="0">{
                         response.SuccessResponse(ctx, http.StatusOK, "No products found", nil)
 
                         return nil
                 }</span>
 
-                <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully found all products", products)
+                <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusOK, "Successfully found all products", products)
 
                 return nil</span>
         }
 }
 
-func (p *ProductHandler) GetProduct(ctx echo.Context) error <span class="cov0" title="0">{
+func (p *ProductHandler) GetProduct(ctx echo.Context) error <span class="cov8" title="1">{
         productIDStr := ctx.Param("product_id")
 
         productID, err := utils.ParseStringToUint32(productIDStr)
         if err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
 
-                return fmt.Errorf("ParseStringToUint32 error: %w", err)
+                return nil
         }</span>
 
-        <span class="cov0" title="0">products, err := p.productUseCase.GetProduct(ctx, productID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">products, err := p.productUseCase.GetProduct(ctx, productID)
+        if err != nil </span><span class="cov8" title="1">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to Get all products", err, nil)
 
-                return fmt.Errorf("FindAllProducts error: %w", err)
+                return nil
         }</span>
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully found all products", products)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusOK, "Successfully found all products", products)
 
         return nil</span>
 }
 
-func (c *ProductHandler) UpdateProduct(ctx echo.Context) error <span class="cov0" title="0">{
+func (c *ProductHandler) UpdateProduct(ctx echo.Context) error <span class="cov8" title="1">{
         var body request.UpdateProduct
 
         if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
 
-                return fmt.Errorf("Bind error: %w", err)
+                return nil
         }</span>
 
-        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">var product domain.Product
+        <span class="cov8" title="1">var product domain.Product
         if err := copier.Copy(&amp;product, &amp;body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to copy product data", err, nil)
 
-                return fmt.Errorf("Copy error: %w", err)
+                return nil
         }</span>
 
-        <span class="cov0" title="0">if err := c.productUseCase.UpdateProduct(ctx, product); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := c.productUseCase.UpdateProduct(ctx, product); err != nil </span><span class="cov8" title="1">{
                 statusCode := http.StatusInternalServerError
                 if errors.Is(err, usecase.ErrProductAlreadyExist) </span><span class="cov0" title="0">{
                         statusCode = http.StatusConflict
                 }</span>
 
-                <span class="cov0" title="0">response.ErrorResponse(ctx, statusCode, "Failed to update product", err, nil)
+                <span class="cov8" title="1">response.ErrorResponse(ctx, statusCode, "Failed to update product", err, nil)
 
-                return fmt.Errorf("UpdateProduct error: %w", err)</span>
+                return nil</span>
         }
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully product updated", nil)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusOK, "Successfully product updated", nil)
 
         return nil</span>
 }
 
-func (p *ProductHandler) SaveProductItem(ctx echo.Context) error <span class="cov0" title="0">{
+func (p *ProductHandler) SaveProductItem(ctx echo.Context) error <span class="cov8" title="1">{
         productIDStr := ctx.Param("product_id")
 
         productID, err := utils.ParseStringToUint32(productIDStr)
         if err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
 
-                return fmt.Errorf("ParseStringToUint32 error: %w", err)
+                return nil
         }</span>
 
-        <span class="cov0" title="0">var body request.ProductItem
+        <span class="cov8" title="1">var body request.ProductItem
 
         if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
 
-                return fmt.Errorf("Bind error: %w", err)
+                return nil
         }</span>
 
-        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">err = p.productUseCase.SaveProductItem(ctx, productID, body)
+        <span class="cov8" title="1">err = p.productUseCase.SaveProductItem(ctx, productID, body)
 
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 var statusCode int
 
                 switch </span>{
@@ -772,55 +771,55 @@ func (p *ProductHandler) SaveProductItem(ctx echo.Context) error <span class="co
                         statusCode = http.StatusConflict</span>
                 case errors.Is(err, usecase.ErrNotEnoughVariations):<span class="cov0" title="0">
                         statusCode = http.StatusBadRequest</span>
-                default:<span class="cov0" title="0">
+                default:<span class="cov8" title="1">
                         statusCode = http.StatusInternalServerError</span>
                 }
 
-                <span class="cov0" title="0">response.ErrorResponse(ctx, statusCode, "Failed to add product item", err, nil)
+                <span class="cov8" title="1">response.ErrorResponse(ctx, statusCode, "Failed to add product item", err, nil)
 
-                return fmt.Errorf("SaveProductItem error: %w", err)</span>
+                return nil</span>
         }
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusCreated, "Successfully product item added", nil)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusCreated, "Successfully product item added", nil)
 
         return nil</span>
 }
 
-func (p *ProductHandler) GetAllProductItemsAdmin() func(ctx echo.Context) error <span class="cov0" title="0">{
+func (p *ProductHandler) GetAllProductItemsAdmin() func(ctx echo.Context) error <span class="cov8" title="1">{
         return p.getAllProductItems()
 }</span>
 
-func (p *ProductHandler) GetAllProductItemsUser() func(ctx echo.Context) error <span class="cov0" title="0">{
+func (p *ProductHandler) GetAllProductItemsUser() func(ctx echo.Context) error <span class="cov8" title="1">{
         return p.getAllProductItems()
 }</span>
 
 // same functionality of get all product items for admin and user.
-func (p *ProductHandler) getAllProductItems() func(ctx echo.Context) error <span class="cov0" title="0">{
-        return func(ctx echo.Context) error </span><span class="cov0" title="0">{
+func (p *ProductHandler) getAllProductItems() func(ctx echo.Context) error <span class="cov8" title="1">{
+        return func(ctx echo.Context) error </span><span class="cov8" title="1">{
                 productIDStr := ctx.Param("product_id")
 
                 productID, err := utils.ParseStringToUint32(productIDStr)
                 if err != nil </span><span class="cov0" title="0">{
                         response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
 
-                        return fmt.Errorf("getAllProductItems error: %w", err)
+                        return nil
                 }</span>
 
-                <span class="cov0" title="0">productItems, err := p.productUseCase.FindAllProductItems(ctx, productID)
-                if err != nil </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">productItems, err := p.productUseCase.FindAllProductItems(ctx, productID)
+                if err != nil </span><span class="cov8" title="1">{
                         response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get all product items", err, nil)
 
-                        return fmt.Errorf("getAllProductItems error: %w", err)
+                        return nil
                 }</span>
 
                 // check the product have productItem exist or not
-                <span class="cov0" title="0">if len(productItems) == 0 </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">if len(productItems) == 0 </span><span class="cov0" title="0">{
                         response.SuccessResponse(ctx, http.StatusOK, "No product items found", nil)
 
                         return nil
                 }</span>
 
-                <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully get all product items ", productItems)
+                <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusOK, "Successfully get all product items ", productItems)
 
                 return nil</span>
         }
