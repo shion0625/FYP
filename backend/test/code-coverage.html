@@ -61,7 +61,7 @@
 				
 				<option value="file2">github.com/shion0625/FYP/backend/pkg/api/handler/product.go (70.0%)</option>
 				
-				<option value="file3">github.com/shion0625/FYP/backend/pkg/api/handler/user.go (0.0%)</option>
+				<option value="file3">github.com/shion0625/FYP/backend/pkg/api/handler/user.go (66.4%)</option>
 				
 				<option value="file4">github.com/shion0625/FYP/backend/pkg/repository/auth.go (85.7%)</option>
 				
@@ -846,13 +846,13 @@ type UserHandler struct {
         userUseCase usecaseInterface.UserUseCase
 }
 
-func NewUserHandler(userUsecase usecaseInterface.UserUseCase) interfaces.UserHandler <span class="cov0" title="0">{
+func NewUserHandler(userUsecase usecaseInterface.UserUseCase) interfaces.UserHandler <span class="cov8" title="1">{
         return &amp;UserHandler{
                 userUseCase: userUsecase,
         }
 }</span>
 
-func (u *UserHandler) GetProfile(ctx echo.Context) error <span class="cov0" title="0">{
+func (u *UserHandler) GetProfile(ctx echo.Context) error <span class="cov8" title="1">{
         userID, err := utils.GetUserIdFromContext(ctx)
         if err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
@@ -860,14 +860,14 @@ func (u *UserHandler) GetProfile(ctx echo.Context) error <span class="cov0" titl
                 return nil
         }</span>
 
-        <span class="cov0" title="0">user, err := u.userUseCase.FindProfile(ctx, userID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">user, err := u.userUseCase.FindProfile(ctx, userID)
+        if err != nil </span><span class="cov8" title="1">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">responseUser := response.User{
+        <span class="cov8" title="1">responseUser := response.User{
                 ID:          user.ID,
                 GoogleImage: user.GoogleImage,
                 FirstName:   user.FirstName,
@@ -886,7 +886,7 @@ func (u *UserHandler) GetProfile(ctx echo.Context) error <span class="cov0" titl
         return nil</span>
 }
 
-func (u *UserHandler) UpdateProfile(ctx echo.Context) error <span class="cov0" title="0">{
+func (u *UserHandler) UpdateProfile(ctx echo.Context) error <span class="cov8" title="1">{
         userID, err := utils.GetUserIdFromContext(ctx)
         if err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
@@ -894,7 +894,7 @@ func (u *UserHandler) UpdateProfile(ctx echo.Context) error <span class="cov0" t
                 return nil
         }</span>
 
-        <span class="cov0" title="0">var body request.EditUser
+        <span class="cov8" title="1">var body request.EditUser
 
         if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
@@ -902,33 +902,33 @@ func (u *UserHandler) UpdateProfile(ctx echo.Context) error <span class="cov0" t
                 return nil
         }</span>
 
-        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">var user domain.User
+        <span class="cov8" title="1">var user domain.User
         if err := copier.Copy(&amp;user, &amp;body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to copy user data", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">user.ID = userID
+        <span class="cov8" title="1">user.ID = userID
 
-        if err := u.userUseCase.UpdateProfile(ctx, user); err != nil </span><span class="cov0" title="0">{
+        if err := u.userUseCase.UpdateProfile(ctx, user); err != nil </span><span class="cov8" title="1">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to update profile", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully profile updated", nil)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusOK, "Successfully profile updated", nil)
 
         return nil</span>
 }
 
-func (u *UserHandler) SaveAddress(ctx echo.Context) error <span class="cov0" title="0">{
+func (u *UserHandler) SaveAddress(ctx echo.Context) error <span class="cov8" title="1">{
         var body request.Address
         if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
@@ -936,20 +936,20 @@ func (u *UserHandler) SaveAddress(ctx echo.Context) error <span class="cov0" tit
                 return nil
         }</span>
 
-        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">userID, err := utils.GetUserIdFromContext(ctx)
+        <span class="cov8" title="1">userID, err := utils.GetUserIdFromContext(ctx)
         if err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">var address domain.Address
+        <span class="cov8" title="1">var address domain.Address
 
         if err := copier.Copy(&amp;address, &amp;body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to copy address data", err, nil)
@@ -958,22 +958,22 @@ func (u *UserHandler) SaveAddress(ctx echo.Context) error <span class="cov0" tit
         }</span>
 
         // check is default is null
-        <span class="cov0" title="0">if body.IsDefault == nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if body.IsDefault == nil </span><span class="cov0" title="0">{
                 body.IsDefault = new(bool)
         }</span>
 
-        <span class="cov0" title="0">if err := u.userUseCase.SaveAddress(ctx, userID, address, *body.IsDefault); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := u.userUseCase.SaveAddress(ctx, userID, address, *body.IsDefault); err != nil </span><span class="cov8" title="1">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to save address", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusCreated, "Successfully address saved", nil)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusCreated, "Successfully address saved", nil)
 
         return nil</span>
 }
 
-func (u *UserHandler) GetAllAddresses(ctx echo.Context) error <span class="cov0" title="0">{
+func (u *UserHandler) GetAllAddresses(ctx echo.Context) error <span class="cov8" title="1">{
         userID, err := utils.GetUserIdFromContext(ctx)
         if err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
@@ -981,25 +981,25 @@ func (u *UserHandler) GetAllAddresses(ctx echo.Context) error <span class="cov0"
                 return nil
         }</span>
 
-        <span class="cov0" title="0">addresses, err := u.userUseCase.FindAddresses(ctx, userID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">addresses, err := u.userUseCase.FindAddresses(ctx, userID)
+        if err != nil </span><span class="cov8" title="1">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get user addresses", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">if addresses == nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if addresses == nil </span><span class="cov0" title="0">{
                 response.SuccessResponse(ctx, http.StatusOK, "No addresses found", nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all user addresses", addresses)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all user addresses", addresses)
 
         return nil</span>
 }
 
-func (u *UserHandler) GetAddressById(ctx echo.Context) error <span class="cov0" title="0">{
+func (u *UserHandler) GetAddressById(ctx echo.Context) error <span class="cov8" title="1">{
         userID, err := utils.GetUserIdFromContext(ctx)
         if err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
@@ -1007,7 +1007,7 @@ func (u *UserHandler) GetAddressById(ctx echo.Context) error <span class="cov0" 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">addressIDStr := ctx.Param("address_id")
+        <span class="cov8" title="1">addressIDStr := ctx.Param("address_id")
         fmt.Print(addressIDStr)
 
         addressID, err := utils.ParseStringToUint32(addressIDStr)
@@ -1017,19 +1017,19 @@ func (u *UserHandler) GetAddressById(ctx echo.Context) error <span class="cov0" 
                 return fmt.Errorf("ParseStringToUint32 error: %w", err)
         }</span>
 
-        <span class="cov0" title="0">addresses, err := u.userUseCase.FindAddress(ctx, userID, addressID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">addresses, err := u.userUseCase.FindAddress(ctx, userID, addressID)
+        if err != nil </span><span class="cov8" title="1">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get user addresses", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all user addresses", addresses)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all user addresses", addresses)
 
         return nil</span>
 }
 
-func (u *UserHandler) UpdateAddress(ctx echo.Context) error <span class="cov0" title="0">{
+func (u *UserHandler) UpdateAddress(ctx echo.Context) error <span class="cov8" title="1">{
         userID, err := utils.GetUserIdFromContext(ctx)
         if err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
@@ -1037,7 +1037,7 @@ func (u *UserHandler) UpdateAddress(ctx echo.Context) error <span class="cov0" t
                 return nil
         }</span>
 
-        <span class="cov0" title="0">var body request.EditAddress
+        <span class="cov8" title="1">var body request.EditAddress
 
         if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
@@ -1045,29 +1045,29 @@ func (u *UserHandler) UpdateAddress(ctx echo.Context) error <span class="cov0" t
                 return nil
         }</span>
 
-        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
 
                 return nil
         }</span>
 
         // address is_default reference pointer need to change in future
-        <span class="cov0" title="0">if body.IsDefault == nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if body.IsDefault == nil </span><span class="cov0" title="0">{
                 body.IsDefault = new(bool)
         }</span>
 
-        <span class="cov0" title="0">if err := u.userUseCase.UpdateAddress(ctx, body, userID); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := u.userUseCase.UpdateAddress(ctx, body, userID); err != nil </span><span class="cov8" title="1">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to update user address", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "successfully addresses updated", body)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusOK, "successfully addresses updated", body)
 
         return nil</span>
 }
 
-func (u *UserHandler) GetAllPaymentMethods(ctx echo.Context) error <span class="cov0" title="0">{
+func (u *UserHandler) GetAllPaymentMethods(ctx echo.Context) error <span class="cov8" title="1">{
         userID, err := utils.GetUserIdFromContext(ctx)
         if err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "GetAllPaymentMethods", err, nil)
@@ -1075,25 +1075,25 @@ func (u *UserHandler) GetAllPaymentMethods(ctx echo.Context) error <span class="
                 return nil
         }</span>
 
-        <span class="cov0" title="0">paymentMethod, err := u.userUseCase.FindPaymentMethods(ctx, userID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">paymentMethod, err := u.userUseCase.FindPaymentMethods(ctx, userID)
+        if err != nil </span><span class="cov8" title="1">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "GetAllPaymentMethods", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">if len(paymentMethod) == 0 </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if len(paymentMethod) == 0 </span><span class="cov0" title="0">{
                 response.SuccessResponse(ctx, http.StatusOK, "No addresses found", nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all user addresses", paymentMethod)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all user addresses", paymentMethod)
 
         return nil</span>
 }
 
-func (u *UserHandler) SavePaymentMethod(ctx echo.Context) error <span class="cov0" title="0">{
+func (u *UserHandler) SavePaymentMethod(ctx echo.Context) error <span class="cov8" title="1">{
         userID, err := utils.GetUserIdFromContext(ctx)
         if err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
@@ -1101,7 +1101,7 @@ func (u *UserHandler) SavePaymentMethod(ctx echo.Context) error <span class="cov
                 return nil
         }</span>
 
-        <span class="cov0" title="0">var body request.PaymentMethod
+        <span class="cov8" title="1">var body request.PaymentMethod
 
         if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
@@ -1109,19 +1109,19 @@ func (u *UserHandler) SavePaymentMethod(ctx echo.Context) error <span class="cov
                 return nil
         }</span>
 
-        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
                 response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">if err := u.userUseCase.SavePaymentMethod(ctx, userID, body); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := u.userUseCase.SavePaymentMethod(ctx, userID, body); err != nil </span><span class="cov8" title="1">{
                 response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to update user address", err, nil)
 
                 return nil
         }</span>
 
-        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "successfully addresses updated", body)
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusOK, "successfully addresses updated", body)
 
         return nil</span>
 }
