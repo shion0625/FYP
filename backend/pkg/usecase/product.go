@@ -314,7 +314,6 @@ func (p *productUseCase) isProductVariationCombinationExist(productID uint, vari
 	for _, variationOptionID := range variationOptionIDs {
 		productItemIds, err := p.productRepo.FindAllProductItemIDsByProductIDAndVariationOptionID(context.TODO(),
 			productID, variationOptionID)
-
 		if err != nil {
 			return false, fmt.Errorf("failed to find product item ids from database using product id and variation option id: %w", err)
 		}

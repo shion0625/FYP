@@ -3,14 +3,18 @@ package usecase_test
 import (
 	"errors"
 	"fmt"
-	"github.com/shion0625/FYP/backend/pkg/config"
 	"net/http/httptest"
 	"testing"
 	"time"
 
+	"github.com/shion0625/FYP/backend/pkg/config"
+
+	"github.com/shion0625/FYP/backend/pkg/config"
+
 	"github.com/labstack/echo/v4"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/request"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/response"
+	"github.com/shion0625/FYP/backend/pkg/config"
 	"github.com/shion0625/FYP/backend/pkg/domain"
 	userMock "github.com/shion0625/FYP/backend/pkg/repository/mock"
 	"github.com/shion0625/FYP/backend/pkg/usecase"
@@ -139,7 +143,6 @@ func TestUserUseCase_UpdateProfile(t *testing.T) {
 			func(mr *userMock.MockUserRepository) {
 				mr.EXPECT().FindUserByUserNameEmailOrPhone(gomock.Any(), userDomain).Return(userDomain, nil)
 				mr.EXPECT().UpdateUser(gomock.Any(), gomock.Any()).Return(errors.New("error"))
-
 			},
 			output{fmt.Errorf("failed to update user: error")},
 		},
