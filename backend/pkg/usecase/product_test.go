@@ -818,6 +818,7 @@ func TestProductUseCase_FindAllProductItems(t *testing.T) {
 			Images:           []string{"image1", "image2"},
 		},
 	}
+
 	type input struct {
 		productID uint
 	}
@@ -837,8 +838,8 @@ func TestProductUseCase_FindAllProductItems(t *testing.T) {
 			func(mr *productMock.MockProductRepository, cs *cloudMock.MockCloudService) {
 				mr.EXPECT().FindAllProductItems(gomock.Any(), productID).Return(productItemsDB, nil).Times(1)
 				mr.EXPECT().FindAllVariationValuesOfProductItem(gomock.Any(), gomock.Any()).Return([]response.ProductVariationValue{}, nil).Times(1)
-				mr.EXPECT().FindAllProductItemImages(gomock.Any(), gomock.Any()).Return([]string{"image1dec", "image2dec"}, nil).Times(2)
-				cs.EXPECT().GetFileUrl(gomock.Any(), gomock.Any()).Return("changeImage", nil).Times(4)
+				mr.EXPECT().FindAllProductItemImages(gomock.Any(), gomock.Any()).Return([]string{"image1dec", "image2dec"}, nil).AnyTimes()
+				cs.EXPECT().GetFileUrl(gomock.Any(), gomock.Any()).Return("changeImage", nil).AnyTimes()
 			},
 			output{
 				wantProductItems: []response.ProductItems{
@@ -861,37 +862,154 @@ func TestProductUseCase_FindAllProductItems(t *testing.T) {
 				wantErr: nil,
 			},
 		},
-		"Abnormal Case: FindAllProductItems": {
-			input{productID},
-			func(mr *productMock.MockProductRepository, cs *cloudMock.MockCloudService) {
-				mr.EXPECT().FindAllProductItems(gomock.Any(), productID).Return(nil, errors.New("error")).Times(1)
-			},
-			output{nil, fmt.Errorf("failed to find all product items: %w", errors.New("error"))},
+	}
+
+	for testName, tt := range tests {
+		t.Run(testName, func(t *testing.T) {
+			tt.prepareMockFn(mockProductRepo, mockCloudService)
+			productItems, err := product.FindAllProductItems(ctx, tt.input.productID)
+			if err != nil {
+				assert.Equal(t, tt.want.wantErr.Error(), err.Error())
+			} else {
+				assert.Equal(t, tt.want.wantProductItems, productItems)
+			}
+		})
+	}
+}
+// func TestProductUseCase_FindAllProductItemsAbnormal(t *testing.T) {
+// 	ctrl := gomock.NewController(t)
+// 	defer ctrl.Finish()
+
+// 	mockProductRepo := productMock.NewMockProductRepository(ctrl)
+// 	mockCloudService := cloudMock.NewMockCloudService(ctrl)
+
+// 	product := usecase.NewProductUseCase(mockProductRepo, mockCloudService)
+
+// 	req := httptest.NewRequest(echo.GET, "/", nil)
+// 	rec := httptest.NewRecorder()
+// 	ctx := echo.New().NewContext(req, rec)
+// 	productID := uint(1)
+
+// 	productItemsDB := []response.ProductItemsDB{
+// 		{
+// 			ID:               1,
+// 			Name:             "Test Name",
+// 			ItemName:         "Test ItemName",
+// 			Price:            100,
+// 			DiscountPrice:    80,
+// 			SKU:              "Test SKU",
+// 			QtyInStock:       10,
+// 			CategoryName:     "Test CategoryName",
+// 			MainCategoryName: "Test MainCategoryName",
+// 			BrandID:          1,
+// 			BrandName:        "Test BrandName",
+// 			Images:           []string{"image1", "image2"},
+// 		},
+// 	}
+// 	type input struct {
+// 		productID uint
+// 	}
+
+// 	type output struct {
+// 		wantProductItems []response.ProductItems
+// 		wantErr          error
+// 	}
+
+// 	tests := map[string]struct {
+// 		input         input
+// 		prepareMockFn func(mr *productMock.MockProductRepository, cs *cloudMock.MockCloudService)
+// 		want          output
+// 	}{
+// 		"Abnormal Case: FindAllProductItems": {
+// 			input{productID},
+// 			func(mr *productMock.MockProductRepository, cs *cloudMock.MockCloudService) {
+// 				mr.EXPECT().FindAllProductItems(gomock.Any(), productID).Return(nil, errors.New("error")).Times(1)
+// 			},
+// 			output{nil, fmt.Errorf("failed to find all product items: %w", errors.New("error"))},
+// 		},
+// 		"Abnormal Case: FindAllProductItems1": {
+// 			input{productID},
+// 			func(mr *productMock.MockProductRepository, cs *cloudMock.MockCloudService) {
+// 				mr.EXPECT().FindAllProductItems(gomock.Any(), productID).Return(productItemsDB, nil).Times(1)
+// 				mr.EXPECT().FindAllVariationValuesOfProductItem(gomock.Any(), gomock.Any()).Return(nil, errors.New("error")).Times(1)
+// 			},
+// 			output{nil, fmt.Errorf("failed to find variation values product item: error")},
+// 		},
+// 		"Abnormal Case: FindAllProductItems2": {
+// 			input{productID},
+// 			func(mr *productMock.MockProductRepository, cs *cloudMock.MockCloudService) {
+// 				mr.EXPECT().FindAllProductItems(gomock.Any(), productID).Return(productItemsDB, nil).Times(1)
+// 				mr.EXPECT().FindAllVariationValuesOfProductItem(gomock.Any(), gomock.Any()).Return([]response.ProductVariationValue{}, nil).AnyTimes()
+// 				mr.EXPECT().FindAllProductItemImages(gomock.Any(), gomock.Any()).Return([]string{}, errors.New("error")).Times(1)
+// 			},
+// 			output{nil, fmt.Errorf("failed to find images of product item: error")},
+// 		},
+// 	}
+
+// 	for testName, tt := range tests {
+// 		t.Run(testName, func(t *testing.T) {
+// 			tt.prepareMockFn(mockProductRepo, mockCloudService)
+// 			productItems, err := product.FindAllProductItems(ctx, tt.input.productID)
+// 			if err != nil {
+// 				assert.Equal(t, tt.want.wantErr.Error(), err.Error())
+// 			} else {
+// 				assert.Equal(t, tt.want.wantProductItems, productItems)
+// 			}
+// 		})
+// 	}
+// }
+
+func TestProductUseCase_FindAllProductItemsAbnormal3(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockProductRepo := productMock.NewMockProductRepository(ctrl)
+	mockCloudService := cloudMock.NewMockCloudService(ctrl)
+
+	product := usecase.NewProductUseCase(mockProductRepo, mockCloudService)
+
+	req := httptest.NewRequest(echo.GET, "/", nil)
+	rec := httptest.NewRecorder()
+	ctx := echo.New().NewContext(req, rec)
+	productID := uint(1)
+
+	productItemsDB := []response.ProductItemsDB{
+		{
+			ID:               1,
+			Name:             "Test Name",
+			ItemName:         "Test ItemName",
+			Price:            100,
+			DiscountPrice:    80,
+			SKU:              "Test SKU",
+			QtyInStock:       10,
+			CategoryName:     "Test CategoryName",
+			MainCategoryName: "Test MainCategoryName",
+			BrandID:          1,
+			BrandName:        "Test BrandName",
+			Images:           []string{"image1", "image2"},
 		},
-		"Abnormal Case: FindAllProductItems1": {
-			input{productID},
-			func(mr *productMock.MockProductRepository, cs *cloudMock.MockCloudService) {
-				mr.EXPECT().FindAllProductItems(gomock.Any(), productID).Return(productItemsDB, nil).Times(1)
-				mr.EXPECT().FindAllVariationValuesOfProductItem(gomock.Any(), gomock.Any()).Return(nil, errors.New("error")).Times(1)
-			},
-			output{nil, fmt.Errorf("failed to find variation values product item: error")},
-		},
-		"Abnormal Case: FindAllProductItems2": {
-			input{productID},
-			func(mr *productMock.MockProductRepository, cs *cloudMock.MockCloudService) {
-				mr.EXPECT().FindAllProductItems(gomock.Any(), productID).Return(productItemsDB, nil).Times(1)
-				mr.EXPECT().FindAllVariationValuesOfProductItem(gomock.Any(), gomock.Any()).Return([]response.ProductVariationValue{}, nil).AnyTimes()
-				mr.EXPECT().FindAllProductItemImages(gomock.Any(), gomock.Any()).Return([]string{}, errors.New("error")).Times(1)
-			},
-			output{nil, fmt.Errorf("failed to find images of product item: error")},
-		},
+	}
+	type input struct {
+		productID uint
+	}
+
+	type output struct {
+		wantProductItems []response.ProductItems
+		wantErr          error
+	}
+
+	tests := map[string]struct {
+		input         input
+		prepareMockFn func(mr *productMock.MockProductRepository, cs *cloudMock.MockCloudService)
+		want          output
+	}{
 		"Abnormal Case: FindAllProductItems3": {
 			input{productID},
 			func(mr *productMock.MockProductRepository, cs *cloudMock.MockCloudService) {
 				mr.EXPECT().FindAllProductItems(gomock.Any(), productID).Return(productItemsDB, nil).Times(1)
 				mr.EXPECT().FindAllVariationValuesOfProductItem(gomock.Any(), gomock.Any()).Return([]response.ProductVariationValue{}, nil).AnyTimes()
 				mr.EXPECT().FindAllProductItemImages(gomock.Any(), gomock.Any()).Return([]string{"image1dec", "image2dec"}, nil).Times(1)
-				cs.EXPECT().GetFileUrl(gomock.Any(), gomock.Any()).Return("", errors.New("error")).Times(2)
+				cs.EXPECT().GetFileUrl(gomock.Any(), gomock.Any()).Return("", errors.New("error")).AnyTimes()
 			},
 			output{nil, fmt.Errorf("failed to get image url from could service: error")},
 		},

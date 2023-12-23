@@ -51,7 +51,7 @@ func (u *userUserCase) UpdateProfile(ctx echo.Context, user domain.User) error {
 	}
 
 	if checkUser.ID != "" { // if there is an user exist with given details then make it as error
-		if err := utils.CompareUserExistingDetails(user, checkUser); err != nil {
+		if err := utils.CompareUserExistingDetails(user, checkUser); err == nil {
 			return fmt.Errorf("failed to compare user details: %w", err)
 		}
 	}
