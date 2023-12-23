@@ -72,8 +72,6 @@ func (a *AuthHandler) UserLogin(ctx echo.Context) error {
 		return nil
 	}
 
-	print("login")
-
 	// common functionality for admin and user
 	a.setupTokenAndResponse(ctx, token.User, userID)
 

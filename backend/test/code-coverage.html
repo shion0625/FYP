@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>repository: Go Coverage Report</title>
+		<title>handler: Go Coverage Report</title>
 		<style>
 			body {
 				background: black;
@@ -55,33 +55,41 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">github.com/shion0625/FYP/backend/pkg/repository/auth.go (85.7%)</option>
+				<option value="file0">github.com/shion0625/FYP/backend/pkg/api/handler/auth.go (77.9%)</option>
 				
-				<option value="file1">github.com/shion0625/FYP/backend/pkg/repository/order.go (0.0%)</option>
+				<option value="file1">github.com/shion0625/FYP/backend/pkg/api/handler/order.go (0.0%)</option>
 				
-				<option value="file2">github.com/shion0625/FYP/backend/pkg/repository/product.go (0.0%)</option>
+				<option value="file2">github.com/shion0625/FYP/backend/pkg/api/handler/product.go (0.0%)</option>
 				
-				<option value="file3">github.com/shion0625/FYP/backend/pkg/repository/user.go (0.0%)</option>
+				<option value="file3">github.com/shion0625/FYP/backend/pkg/api/handler/user.go (0.0%)</option>
 				
-				<option value="file4">github.com/shion0625/FYP/backend/pkg/usecase/auth.go (98.5%)</option>
+				<option value="file4">github.com/shion0625/FYP/backend/pkg/repository/auth.go (85.7%)</option>
 				
-				<option value="file5">github.com/shion0625/FYP/backend/pkg/usecase/order.go (100.0%)</option>
+				<option value="file5">github.com/shion0625/FYP/backend/pkg/repository/order.go (0.0%)</option>
 				
-				<option value="file6">github.com/shion0625/FYP/backend/pkg/usecase/product.go (88.7%)</option>
+				<option value="file6">github.com/shion0625/FYP/backend/pkg/repository/product.go (0.0%)</option>
 				
-				<option value="file7">github.com/shion0625/FYP/backend/pkg/usecase/user.go (94.2%)</option>
+				<option value="file7">github.com/shion0625/FYP/backend/pkg/repository/user.go (0.0%)</option>
 				
-				<option value="file8">github.com/shion0625/FYP/backend/pkg/utils/compare.go (100.0%)</option>
+				<option value="file8">github.com/shion0625/FYP/backend/pkg/usecase/auth.go (98.5%)</option>
 				
-				<option value="file9">github.com/shion0625/FYP/backend/pkg/utils/credit_card.go (83.3%)</option>
+				<option value="file9">github.com/shion0625/FYP/backend/pkg/usecase/order.go (100.0%)</option>
 				
-				<option value="file10">github.com/shion0625/FYP/backend/pkg/utils/errors.go (100.0%)</option>
+				<option value="file10">github.com/shion0625/FYP/backend/pkg/usecase/product.go (88.7%)</option>
 				
-				<option value="file11">github.com/shion0625/FYP/backend/pkg/utils/get_param_id.go (100.0%)</option>
+				<option value="file11">github.com/shion0625/FYP/backend/pkg/usecase/user.go (94.2%)</option>
 				
-				<option value="file12">github.com/shion0625/FYP/backend/pkg/utils/helper.go (100.0%)</option>
+				<option value="file12">github.com/shion0625/FYP/backend/pkg/utils/compare.go (100.0%)</option>
 				
-				<option value="file13">github.com/shion0625/FYP/backend/pkg/utils/hsash.go (100.0%)</option>
+				<option value="file13">github.com/shion0625/FYP/backend/pkg/utils/credit_card.go (83.3%)</option>
+				
+				<option value="file14">github.com/shion0625/FYP/backend/pkg/utils/errors.go (100.0%)</option>
+				
+				<option value="file15">github.com/shion0625/FYP/backend/pkg/utils/get_param_id.go (100.0%)</option>
+				
+				<option value="file16">github.com/shion0625/FYP/backend/pkg/utils/helper.go (100.0%)</option>
+				
+				<option value="file17">github.com/shion0625/FYP/backend/pkg/utils/hsash.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -95,7 +103,1030 @@
 		</div>
 		<div id="content">
 		
-		<pre class="file" id="file0" style="display: none">package repository
+		<pre class="file" id="file0" style="display: none">package handler
+
+import (
+        "errors"
+        "net/http"
+
+        "github.com/jinzhu/copier"
+        "github.com/labstack/echo/v4"
+        "github.com/shion0625/FYP/backend/pkg/api/handler/interfaces"
+        "github.com/shion0625/FYP/backend/pkg/api/handler/request"
+        "github.com/shion0625/FYP/backend/pkg/api/handler/response"
+        "github.com/shion0625/FYP/backend/pkg/config"
+        "github.com/shion0625/FYP/backend/pkg/domain"
+        "github.com/shion0625/FYP/backend/pkg/service/token"
+        "github.com/shion0625/FYP/backend/pkg/usecase"
+        usecaseInterface "github.com/shion0625/FYP/backend/pkg/usecase/interfaces"
+)
+
+const (
+        authorizationHeaderKey = "Authorization"
+        authorizationType      = "Bearer"
+)
+
+type AuthHandler struct {
+        authUseCase usecaseInterface.AuthUseCase
+        config      *config.Config
+}
+
+func NewAuthHandler(authUsecase usecaseInterface.AuthUseCase, config *config.Config) interfaces.AuthHandler <span class="cov8" title="1">{
+        return &amp;AuthHandler{
+                authUseCase: authUsecase,
+                config:      config,
+        }
+}</span>
+
+func (a *AuthHandler) UserLogin(ctx echo.Context) error <span class="cov8" title="1">{
+        var body request.Login
+
+        if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, body)
+
+                return nil
+        }</span>
+
+        <span class="cov8" title="1">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov8" title="1">userID, err := a.authUseCase.UserLogin(ctx, body)
+        if err != nil </span><span class="cov8" title="1">{
+                var statusCode int
+
+                switch </span>{
+                case errors.Is(err, usecase.ErrEmptyLoginCredentials):<span class="cov0" title="0">
+                        statusCode = http.StatusBadRequest</span>
+                case errors.Is(err, usecase.ErrUserNotExist):<span class="cov0" title="0">
+                        statusCode = http.StatusNotFound</span>
+                case errors.Is(err, usecase.ErrUserBlocked):<span class="cov0" title="0">
+                        statusCode = http.StatusForbidden</span>
+                // case errors.Is(err, usecase.ErrUserNotVerified):
+                //         statusCode = http.StatusUnauthorized
+                case errors.Is(err, usecase.ErrWrongPassword):<span class="cov0" title="0">
+                        statusCode = http.StatusUnauthorized</span>
+                default:<span class="cov8" title="1">
+                        statusCode = http.StatusInternalServerError</span>
+                }
+
+                <span class="cov8" title="1">response.ErrorResponse(ctx, statusCode, "Failed to login", err, nil)
+
+                return nil</span>
+        }
+
+        // common functionality for admin and user
+        <span class="cov8" title="1">a.setupTokenAndResponse(ctx, token.User, userID)
+
+        return nil</span>
+}
+
+func (c *AuthHandler) UserSignUp(ctx echo.Context) error <span class="cov8" title="1">{
+        var body request.SignUp
+
+        if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, body)
+
+                return nil
+        }</span>
+
+        <span class="cov8" title="1">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov8" title="1">var user domain.User
+        if err := copier.Copy(&amp;user, body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "failed to copy details", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov8" title="1">_, err := c.authUseCase.UserSignUp(ctx, user)
+        if err != nil </span><span class="cov8" title="1">{
+                statusCode := http.StatusInternalServerError
+                if errors.Is(err, usecase.ErrUserAlreadyExit) </span><span class="cov0" title="0">{
+                        statusCode = http.StatusConflict
+                }</span>
+
+                <span class="cov8" title="1">response.ErrorResponse(ctx, statusCode, "Failed to signup", err, nil)
+
+                return nil</span>
+        }
+
+        <span class="cov8" title="1">response.SuccessResponse(ctx, http.StatusCreated,
+                "Successfully account created", nil)
+
+        return nil</span>
+}
+
+func (a *AuthHandler) UserRenewAccessToken() func(ctx echo.Context) error <span class="cov8" title="1">{
+        return a.renewAccessToken(token.User)
+}</span>
+
+func (a *AuthHandler) setupTokenAndResponse(ctx echo.Context, tokenUser token.UserType, userID string) <span class="cov8" title="1">{
+        tokenParams := usecaseInterface.GenerateTokenParams{
+                UserID:   userID,
+                UserType: tokenUser,
+        }
+
+        accessToken, err := a.authUseCase.GenerateAccessToken(ctx, tokenParams)
+        if err != nil </span><span class="cov8" title="1">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to generate access token", err, nil)
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">refreshToken, err := a.authUseCase.GenerateRefreshToken(ctx, usecaseInterface.GenerateTokenParams{
+                UserID:   userID,
+                UserType: tokenUser,
+        })
+        if err != nil </span><span class="cov8" title="1">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to generate refresh token", err, nil)
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">authorizationValue := authorizationType + " " + accessToken
+        ctx.Response().Header().Set(authorizationHeaderKey, authorizationValue)
+        ctx.Response().Header().Set("access_token", accessToken)
+        ctx.Response().Header().Set("refresh_token", refreshToken)
+        tokenRes := response.TokenResponse{
+                AccessToken:  accessToken,
+                RefreshToken: refreshToken,
+                UserID:       userID,
+        }
+        response.SuccessResponse(ctx, http.StatusOK, "Successfully logged in", tokenRes)</span>
+}
+
+func (a *AuthHandler) renewAccessToken(tokenUser token.UserType) echo.HandlerFunc <span class="cov8" title="1">{
+        return func(ctx echo.Context) error </span><span class="cov8" title="1">{
+                var body request.RefreshToken
+
+                if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
+                        response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, body)
+
+                        return nil
+                }</span>
+
+                <span class="cov8" title="1">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+                        response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+                        return nil
+                }</span>
+
+                <span class="cov8" title="1">refreshSession, err := a.authUseCase.VerifyAndGetRefreshTokenSession(ctx, body.RefreshToken, tokenUser)
+                if err != nil </span><span class="cov8" title="1">{
+                        var statusCode int
+
+                        switch </span>{
+                        case errors.Is(err, usecase.ErrInvalidRefreshToken):<span class="cov8" title="1">
+                                statusCode = http.StatusUnauthorized</span>
+                        case errors.Is(err, usecase.ErrRefreshSessionNotExist):<span class="cov8" title="1">
+                                statusCode = http.StatusNotFound</span>
+                        case errors.Is(err, usecase.ErrRefreshSessionExpired):<span class="cov8" title="1">
+                                statusCode = http.StatusGone</span>
+                        case errors.Is(err, usecase.ErrRefreshSessionBlocked):<span class="cov8" title="1">
+                                statusCode = http.StatusForbidden</span>
+                        default:<span class="cov8" title="1">
+                                statusCode = http.StatusInternalServerError</span>
+                        }
+
+                        <span class="cov8" title="1">response.ErrorResponse(ctx, statusCode, "Failed verify refresh token", err, nil)
+
+                        return nil</span>
+                }
+
+                <span class="cov8" title="1">accessTokenParams := usecaseInterface.GenerateTokenParams{
+                        UserID:   refreshSession.UserID,
+                        UserType: tokenUser,
+                }
+
+                accessToken, err := a.authUseCase.GenerateAccessToken(ctx, accessTokenParams)
+                if err != nil </span><span class="cov8" title="1">{
+                        response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed generate access token", err, nil)
+
+                        return nil
+                }</span>
+
+                <span class="cov8" title="1">authorizationValue := authorizationType + " " + accessToken
+                ctx.Response().Header().Set(authorizationHeaderKey, authorizationValue)
+                ctx.Response().Header().Set("access_token", accessToken)
+
+                response.SuccessResponse(ctx, http.StatusOK, "Successfully generated access token using refresh token", accessToken)
+
+                return nil</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package handler
+
+import (
+        "fmt"
+        "net/http"
+
+        "github.com/labstack/echo/v4"
+        "github.com/shion0625/FYP/backend/pkg/api/handler/interfaces"
+        "github.com/shion0625/FYP/backend/pkg/api/handler/request"
+        "github.com/shion0625/FYP/backend/pkg/api/handler/response"
+        usecaseInterface "github.com/shion0625/FYP/backend/pkg/usecase/interfaces"
+        "github.com/shion0625/FYP/backend/pkg/utils"
+)
+
+type OrderHandler struct {
+        orderUseCase usecaseInterface.OrderUseCase
+}
+
+func NewOrderHandler(orderUsecase usecaseInterface.OrderUseCase) interfaces.OrderHandler <span class="cov0" title="0">{
+        return &amp;OrderHandler{
+                orderUseCase: orderUsecase,
+        }
+}</span>
+
+func (o *OrderHandler) PayOrder(ctx echo.Context) error <span class="cov0" title="0">{
+        userID, err := utils.GetUserIdFromContext(ctx)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user id", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">var body request.PayOrder
+        if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
+
+                return fmt.Errorf("Bind error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">if err := o.orderUseCase.PayOrder(ctx, userID, body); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to PayOrder: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully purchase order", nil)
+
+        return nil</span>
+}
+
+func (o *OrderHandler) GetOrderHistory(ctx echo.Context) error <span class="cov0" title="0">{
+        pagination := request.GetPagination(ctx)
+
+        userID, err := utils.GetUserIdFromContext(ctx)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user id", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">orderHistories, err := o.orderUseCase.GetAllShopOrders(ctx, userID, pagination)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to update user address", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">if len(orderHistories) == 0 </span><span class="cov0" title="0">{
+                response.SuccessResponse(ctx, http.StatusOK, "No shopOrders found", nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "successfully addresses updated", orderHistories)
+
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package handler
+
+import (
+        "errors"
+        "fmt"
+        "net/http"
+
+        "github.com/jinzhu/copier"
+        "github.com/labstack/echo/v4"
+        "github.com/shion0625/FYP/backend/pkg/api/handler/interfaces"
+        "github.com/shion0625/FYP/backend/pkg/api/handler/request"
+        "github.com/shion0625/FYP/backend/pkg/api/handler/response"
+        "github.com/shion0625/FYP/backend/pkg/domain"
+        "github.com/shion0625/FYP/backend/pkg/usecase"
+        usecaseInterface "github.com/shion0625/FYP/backend/pkg/usecase/interfaces"
+        "github.com/shion0625/FYP/backend/pkg/utils"
+)
+
+type ProductHandler struct {
+        productUseCase usecaseInterface.ProductUseCase
+}
+
+func NewProductHandler(productUsecase usecaseInterface.ProductUseCase) interfaces.ProductHandler <span class="cov0" title="0">{
+        return &amp;ProductHandler{
+                productUseCase: productUsecase,
+        }
+}</span>
+
+func (p *ProductHandler) GetAllCategories(ctx echo.Context) error <span class="cov0" title="0">{
+        pagination := request.GetPagination(ctx)
+
+        categories, err := p.productUseCase.FindAllCategories(ctx, pagination)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve categories", err, nil)
+
+                return fmt.Errorf("FindAllCategories error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">if len(categories) == 0 </span><span class="cov0" title="0">{
+                response.SuccessResponse(ctx, http.StatusOK, "No categories found", nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all categories", categories)
+
+        return nil</span>
+}
+
+func (p *ProductHandler) SaveCategory(ctx echo.Context) error <span class="cov0" title="0">{
+        var body request.Category
+
+        if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
+
+                return fmt.Errorf("Bind error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">err := p.productUseCase.SaveCategory(ctx, body.Name)
+        if err != nil </span><span class="cov0" title="0">{
+                statusCode := http.StatusInternalServerError
+                if errors.Is(err, usecase.ErrCategoryAlreadyExist) </span><span class="cov0" title="0">{
+                        statusCode = http.StatusConflict
+                }</span>
+
+                <span class="cov0" title="0">response.ErrorResponse(ctx, statusCode, "Failed to add category", err, nil)
+
+                return fmt.Errorf("SaveCategory error: %w", err)</span>
+        }
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusCreated, "Successfully added category", nil)
+
+        return nil</span>
+}
+
+func (p *ProductHandler) SaveVariation(ctx echo.Context) error <span class="cov0" title="0">{
+        categoryIDStr := ctx.Param("category_id")
+
+        categoryID, err := utils.ParseStringToUint32(categoryIDStr)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
+
+                return fmt.Errorf("ParseStringToUint32 error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">var body request.Variation
+
+        if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
+
+                return fmt.Errorf("Bind error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">err = p.productUseCase.SaveVariation(ctx, categoryID, body.Names)
+
+        if err != nil </span><span class="cov0" title="0">{
+                statusCode := http.StatusInternalServerError
+                if errors.Is(err, usecase.ErrVariationAlreadyExist) </span><span class="cov0" title="0">{
+                        statusCode = http.StatusConflict
+                }</span>
+
+                <span class="cov0" title="0">response.ErrorResponse(ctx, statusCode, "Failed to add variation", err, nil)
+
+                return fmt.Errorf("SaveVariation error: %w", err)</span>
+        }
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusCreated, "Successfully added variations", nil)
+
+        return nil</span>
+}
+
+func (p *ProductHandler) SaveVariationOption(ctx echo.Context) error <span class="cov0" title="0">{
+        variationIDStr := ctx.Param("variation_id")
+
+        variationID, err := utils.ParseStringToUint32(variationIDStr)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
+
+                return fmt.Errorf("ParseStringToUint32 error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">var body request.VariationOption
+
+        if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
+
+                return fmt.Errorf("Bind error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">err = p.productUseCase.SaveVariationOption(ctx, variationID, body.Values)
+        if err != nil </span><span class="cov0" title="0">{
+                statusCode := http.StatusInternalServerError
+                if errors.Is(err, usecase.ErrVariationOptionAlreadyExist) </span><span class="cov0" title="0">{
+                        statusCode = http.StatusConflict
+                }</span>
+
+                <span class="cov0" title="0">response.ErrorResponse(ctx, statusCode, "Failed to add variation options", err, nil)
+
+                return fmt.Errorf("SaveVariationOption error: %w", err)</span>
+        }
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusCreated, "Successfully added variation options", nil)
+
+        return nil</span>
+}
+
+func (c *ProductHandler) GetAllVariations(ctx echo.Context) error <span class="cov0" title="0">{
+        categoryIDStr := ctx.Param("category_id")
+
+        categoryID, err := utils.ParseStringToUint32(categoryIDStr)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
+
+                return fmt.Errorf("ParseStringToUint32 error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">variations, err := c.productUseCase.FindAllVariationsAndItsValues(ctx, categoryID)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to Get variations and its values", err, nil)
+
+                return fmt.Errorf("FindAllVariationsAndItsValues error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">if len(variations) == 0 </span><span class="cov0" title="0">{
+                response.SuccessResponse(ctx, http.StatusOK, "No variations found", nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all variations and its values", variations)
+
+        return nil</span>
+}
+
+func (p *ProductHandler) SaveProduct(ctx echo.Context) error <span class="cov0" title="0">{
+        var body request.Product
+
+        if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
+
+                return fmt.Errorf("Bind error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">err := p.productUseCase.SaveProduct(ctx, body)
+        if err != nil </span><span class="cov0" title="0">{
+                statusCode := http.StatusInternalServerError
+                if errors.Is(err, usecase.ErrProductAlreadyExist) </span><span class="cov0" title="0">{
+                        statusCode = http.StatusConflict
+                }</span>
+
+                <span class="cov0" title="0">response.ErrorResponse(ctx, statusCode, "Failed to add product", err, nil)
+
+                return fmt.Errorf("SaveProduct error: %w", err)</span>
+        }
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusCreated, "Successfully product added", nil)
+
+        return nil</span>
+}
+
+func (p *ProductHandler) GetAllProductsAdmin() func(ctx echo.Context) error <span class="cov0" title="0">{
+        return p.getAllProducts()
+}</span>
+
+func (p *ProductHandler) GetAllProductsUser() func(ctx echo.Context) error <span class="cov0" title="0">{
+        return p.getAllProducts()
+}</span>
+
+// Get products is common for user and admin so this function is to get the common Get all products func for them.
+func (p *ProductHandler) getAllProducts() func(ctx echo.Context) error <span class="cov0" title="0">{
+        return func(ctx echo.Context) error </span><span class="cov0" title="0">{
+                categoryID, err := utils.GetParamID(ctx, "category_id")
+                if err != nil </span><span class="cov0" title="0">{
+                        response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
+
+                        return fmt.Errorf("getAllProducts error: %w", err)
+                }</span>
+
+                <span class="cov0" title="0">brandID, err := utils.GetParamID(ctx, "brand_id")
+                if err != nil </span><span class="cov0" title="0">{
+                        response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
+
+                        return fmt.Errorf("getAllProducts error: %w", err)
+                }</span>
+
+                <span class="cov0" title="0">pagination := request.GetPagination(ctx)
+
+                products, err := p.productUseCase.FindAllProducts(ctx, pagination, categoryID, brandID)
+                if err != nil </span><span class="cov0" title="0">{
+                        response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to Get all products", err, nil)
+
+                        return fmt.Errorf("FindAllProducts error: %w", err)
+                }</span>
+
+                <span class="cov0" title="0">if len(products) == 0 </span><span class="cov0" title="0">{
+                        response.SuccessResponse(ctx, http.StatusOK, "No products found", nil)
+
+                        return nil
+                }</span>
+
+                <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully found all products", products)
+
+                return nil</span>
+        }
+}
+
+func (p *ProductHandler) GetProduct(ctx echo.Context) error <span class="cov0" title="0">{
+        productIDStr := ctx.Param("product_id")
+
+        productID, err := utils.ParseStringToUint32(productIDStr)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
+
+                return fmt.Errorf("ParseStringToUint32 error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">products, err := p.productUseCase.GetProduct(ctx, productID)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to Get all products", err, nil)
+
+                return fmt.Errorf("FindAllProducts error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully found all products", products)
+
+        return nil</span>
+}
+
+func (c *ProductHandler) UpdateProduct(ctx echo.Context) error <span class="cov0" title="0">{
+        var body request.UpdateProduct
+
+        if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
+
+                return fmt.Errorf("Bind error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">var product domain.Product
+        if err := copier.Copy(&amp;product, &amp;body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to copy product data", err, nil)
+
+                return fmt.Errorf("Copy error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">if err := c.productUseCase.UpdateProduct(ctx, product); err != nil </span><span class="cov0" title="0">{
+                statusCode := http.StatusInternalServerError
+                if errors.Is(err, usecase.ErrProductAlreadyExist) </span><span class="cov0" title="0">{
+                        statusCode = http.StatusConflict
+                }</span>
+
+                <span class="cov0" title="0">response.ErrorResponse(ctx, statusCode, "Failed to update product", err, nil)
+
+                return fmt.Errorf("UpdateProduct error: %w", err)</span>
+        }
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully product updated", nil)
+
+        return nil</span>
+}
+
+func (p *ProductHandler) SaveProductItem(ctx echo.Context) error <span class="cov0" title="0">{
+        productIDStr := ctx.Param("product_id")
+
+        productID, err := utils.ParseStringToUint32(productIDStr)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
+
+                return fmt.Errorf("ParseStringToUint32 error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">var body request.ProductItem
+
+        if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
+
+                return fmt.Errorf("Bind error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">err = p.productUseCase.SaveProductItem(ctx, productID, body)
+
+        if err != nil </span><span class="cov0" title="0">{
+                var statusCode int
+
+                switch </span>{
+                case errors.Is(err, usecase.ErrProductItemAlreadyExist):<span class="cov0" title="0">
+                        statusCode = http.StatusConflict</span>
+                case errors.Is(err, usecase.ErrNotEnoughVariations):<span class="cov0" title="0">
+                        statusCode = http.StatusBadRequest</span>
+                default:<span class="cov0" title="0">
+                        statusCode = http.StatusInternalServerError</span>
+                }
+
+                <span class="cov0" title="0">response.ErrorResponse(ctx, statusCode, "Failed to add product item", err, nil)
+
+                return fmt.Errorf("SaveProductItem error: %w", err)</span>
+        }
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusCreated, "Successfully product item added", nil)
+
+        return nil</span>
+}
+
+func (p *ProductHandler) GetAllProductItemsAdmin() func(ctx echo.Context) error <span class="cov0" title="0">{
+        return p.getAllProductItems()
+}</span>
+
+func (p *ProductHandler) GetAllProductItemsUser() func(ctx echo.Context) error <span class="cov0" title="0">{
+        return p.getAllProductItems()
+}</span>
+
+// same functionality of get all product items for admin and user.
+func (p *ProductHandler) getAllProductItems() func(ctx echo.Context) error <span class="cov0" title="0">{
+        return func(ctx echo.Context) error </span><span class="cov0" title="0">{
+                productIDStr := ctx.Param("product_id")
+
+                productID, err := utils.ParseStringToUint32(productIDStr)
+                if err != nil </span><span class="cov0" title="0">{
+                        response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
+
+                        return fmt.Errorf("getAllProductItems error: %w", err)
+                }</span>
+
+                <span class="cov0" title="0">productItems, err := p.productUseCase.FindAllProductItems(ctx, productID)
+                if err != nil </span><span class="cov0" title="0">{
+                        response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get all product items", err, nil)
+
+                        return fmt.Errorf("getAllProductItems error: %w", err)
+                }</span>
+
+                // check the product have productItem exist or not
+                <span class="cov0" title="0">if len(productItems) == 0 </span><span class="cov0" title="0">{
+                        response.SuccessResponse(ctx, http.StatusOK, "No product items found", nil)
+
+                        return nil
+                }</span>
+
+                <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully get all product items ", productItems)
+
+                return nil</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package handler
+
+import (
+        "fmt"
+        "net/http"
+
+        "github.com/jinzhu/copier"
+        "github.com/labstack/echo/v4"
+        "github.com/shion0625/FYP/backend/pkg/api/handler/interfaces"
+        "github.com/shion0625/FYP/backend/pkg/api/handler/request"
+        "github.com/shion0625/FYP/backend/pkg/api/handler/response"
+        "github.com/shion0625/FYP/backend/pkg/domain"
+        usecaseInterface "github.com/shion0625/FYP/backend/pkg/usecase/interfaces"
+        "github.com/shion0625/FYP/backend/pkg/utils"
+)
+
+type UserHandler struct {
+        userUseCase usecaseInterface.UserUseCase
+}
+
+func NewUserHandler(userUsecase usecaseInterface.UserUseCase) interfaces.UserHandler <span class="cov0" title="0">{
+        return &amp;UserHandler{
+                userUseCase: userUsecase,
+        }
+}</span>
+
+func (u *UserHandler) GetProfile(ctx echo.Context) error <span class="cov0" title="0">{
+        userID, err := utils.GetUserIdFromContext(ctx)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">user, err := u.userUseCase.FindProfile(ctx, userID)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">responseUser := response.User{
+                ID:          user.ID,
+                GoogleImage: user.GoogleImage,
+                FirstName:   user.FirstName,
+                LastName:    user.LastName,
+                Age:         user.Age,
+                Email:       user.Email,
+                UserName:    user.UserName,
+                Phone:       user.Phone,
+                BlockStatus: user.BlockStatus,
+                CreatedAt:   user.CreatedAt,
+                UpdatedAt:   user.UpdatedAt,
+        }
+
+        response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved user details", responseUser)
+
+        return nil</span>
+}
+
+func (u *UserHandler) UpdateProfile(ctx echo.Context) error <span class="cov0" title="0">{
+        userID, err := utils.GetUserIdFromContext(ctx)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">var body request.EditUser
+
+        if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">var user domain.User
+        if err := copier.Copy(&amp;user, &amp;body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to copy user data", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">user.ID = userID
+
+        if err := u.userUseCase.UpdateProfile(ctx, user); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to update profile", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully profile updated", nil)
+
+        return nil</span>
+}
+
+func (u *UserHandler) SaveAddress(ctx echo.Context) error <span class="cov0" title="0">{
+        var body request.Address
+        if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">userID, err := utils.GetUserIdFromContext(ctx)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">var address domain.Address
+
+        if err := copier.Copy(&amp;address, &amp;body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to copy address data", err, nil)
+
+                return nil
+        }</span>
+
+        // check is default is null
+        <span class="cov0" title="0">if body.IsDefault == nil </span><span class="cov0" title="0">{
+                body.IsDefault = new(bool)
+        }</span>
+
+        <span class="cov0" title="0">if err := u.userUseCase.SaveAddress(ctx, userID, address, *body.IsDefault); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to save address", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusCreated, "Successfully address saved", nil)
+
+        return nil</span>
+}
+
+func (u *UserHandler) GetAllAddresses(ctx echo.Context) error <span class="cov0" title="0">{
+        userID, err := utils.GetUserIdFromContext(ctx)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">addresses, err := u.userUseCase.FindAddresses(ctx, userID)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get user addresses", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">if addresses == nil </span><span class="cov0" title="0">{
+                response.SuccessResponse(ctx, http.StatusOK, "No addresses found", nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all user addresses", addresses)
+
+        return nil</span>
+}
+
+func (u *UserHandler) GetAddressById(ctx echo.Context) error <span class="cov0" title="0">{
+        userID, err := utils.GetUserIdFromContext(ctx)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">addressIDStr := ctx.Param("address_id")
+        fmt.Print(addressIDStr)
+
+        addressID, err := utils.ParseStringToUint32(addressIDStr)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindParamFailMessage, err, nil)
+
+                return fmt.Errorf("ParseStringToUint32 error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">addresses, err := u.userUseCase.FindAddress(ctx, userID, addressID)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get user addresses", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all user addresses", addresses)
+
+        return nil</span>
+}
+
+func (u *UserHandler) UpdateAddress(ctx echo.Context) error <span class="cov0" title="0">{
+        userID, err := utils.GetUserIdFromContext(ctx)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">var body request.EditAddress
+
+        if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+                return nil
+        }</span>
+
+        // address is_default reference pointer need to change in future
+        <span class="cov0" title="0">if body.IsDefault == nil </span><span class="cov0" title="0">{
+                body.IsDefault = new(bool)
+        }</span>
+
+        <span class="cov0" title="0">if err := u.userUseCase.UpdateAddress(ctx, body, userID); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to update user address", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "successfully addresses updated", body)
+
+        return nil</span>
+}
+
+func (u *UserHandler) GetAllPaymentMethods(ctx echo.Context) error <span class="cov0" title="0">{
+        userID, err := utils.GetUserIdFromContext(ctx)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "GetAllPaymentMethods", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">paymentMethod, err := u.userUseCase.FindPaymentMethods(ctx, userID)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "GetAllPaymentMethods", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">if len(paymentMethod) == 0 </span><span class="cov0" title="0">{
+                response.SuccessResponse(ctx, http.StatusOK, "No addresses found", nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all user addresses", paymentMethod)
+
+        return nil</span>
+}
+
+func (u *UserHandler) SavePaymentMethod(ctx echo.Context) error <span class="cov0" title="0">{
+        userID, err := utils.GetUserIdFromContext(ctx)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">var body request.PaymentMethod
+
+        if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">if err := u.userUseCase.SavePaymentMethod(ctx, userID, body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to update user address", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "successfully addresses updated", body)
+
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package repository
 
 import (
         "github.com/labstack/echo/v4"
@@ -131,7 +1162,7 @@ func (c *authDatabase) FindRefreshSessionByTokenID(ctx echo.Context, tokenID str
 }
 </pre>
 		
-		<pre class="file" id="file1" style="display: none">package repository
+		<pre class="file" id="file5" style="display: none">package repository
 
 import (
         "fmt"
@@ -319,7 +1350,7 @@ func (o *orderDatabase) GetShopOrders(ctx echo.Context, userID string, paginatio
 }
 </pre>
 		
-		<pre class="file" id="file2" style="display: none">package repository
+		<pre class="file" id="file6" style="display: none">package repository
 
 import (
         "context"
@@ -589,7 +1620,7 @@ func (c *productDatabase) FindAllProductItemImages(ctx echo.Context, productItem
 }</span>
 </pre>
 		
-		<pre class="file" id="file3" style="display: none">package repository
+		<pre class="file" id="file7" style="display: none">package repository
 
 import (
         "errors"
@@ -842,7 +1873,7 @@ func (c *userDatabase) SavePaymentMethod(ctx echo.Context, paymentMethod domain.
 }
 </pre>
 		
-		<pre class="file" id="file4" style="display: none">package usecase
+		<pre class="file" id="file8" style="display: none">package usecase
 
 import (
         "fmt"
@@ -1048,7 +2079,7 @@ func (c *authUseCase) VerifyAndGetRefreshTokenSession(ctx echo.Context, refreshT
 }
 </pre>
 		
-		<pre class="file" id="file5" style="display: none">package usecase
+		<pre class="file" id="file9" style="display: none">package usecase
 
 import (
         "fmt"
@@ -1111,7 +2142,7 @@ func (o *orderUseCase) GetAllShopOrders(ctx echo.Context, userID string, paginat
 }
 </pre>
 		
-		<pre class="file" id="file6" style="display: none">package usecase
+		<pre class="file" id="file10" style="display: none">package usecase
 
 import (
         "context"
@@ -1568,7 +2599,7 @@ func (p *productUseCase) UpdateProduct(ctx echo.Context, updateDetails domain.Pr
 }
 </pre>
 		
-		<pre class="file" id="file7" style="display: none">package usecase
+		<pre class="file" id="file11" style="display: none">package usecase
 
 import (
         "errors"
@@ -1765,7 +2796,7 @@ func (u *userUserCase) SavePaymentMethod(ctx echo.Context, userID string, paymen
 }
 </pre>
 		
-		<pre class="file" id="file8" style="display: none">package utils
+		<pre class="file" id="file12" style="display: none">package utils
 
 import (
         "errors"
@@ -1796,7 +2827,7 @@ func CompareUserExistingDetails(user1, user2 domain.User) error <span class="cov
 }
 </pre>
 		
-		<pre class="file" id="file9" style="display: none">package utils
+		<pre class="file" id="file13" style="display: none">package utils
 
 import (
         "crypto/aes"
@@ -1876,7 +2907,7 @@ func GetCardIssuer(cardNumber string) string <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file10" style="display: none">package utils
+		<pre class="file" id="file14" style="display: none">package utils
 
 import (
         "errors"
@@ -1893,7 +2924,7 @@ func AppendMessageToError(err error, message string) error <span class="cov8" ti
 }
 </pre>
 		
-		<pre class="file" id="file11" style="display: none">package utils
+		<pre class="file" id="file15" style="display: none">package utils
 
 import (
         "errors"
@@ -1921,7 +2952,7 @@ func GetParamID(ctx echo.Context, key string) (*uint, error) <span class="cov8" 
 }
 </pre>
 		
-		<pre class="file" id="file12" style="display: none">package utils
+		<pre class="file" id="file16" style="display: none">package utils
 
 import (
         "crypto/rand"
@@ -1983,7 +3014,7 @@ func GenerateUniqueString() string <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file13" style="display: none">package utils
+		<pre class="file" id="file17" style="display: none">package utils
 
 import "golang.org/x/crypto/bcrypt"
 
