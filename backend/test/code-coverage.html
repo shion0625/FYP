@@ -63,7 +63,7 @@
 				
 				<option value="file3">github.com/shion0625/FYP/backend/pkg/repository/user.go (0.0%)</option>
 				
-				<option value="file4">github.com/shion0625/FYP/backend/pkg/usecase/auth.go (0.0%)</option>
+				<option value="file4">github.com/shion0625/FYP/backend/pkg/usecase/auth.go (98.5%)</option>
 				
 				<option value="file5">github.com/shion0625/FYP/backend/pkg/usecase/order.go (100.0%)</option>
 				
@@ -878,7 +878,7 @@ func NewAuthUseCase(
         userRepo repoInterfaces.UserRepository,
         tokenService token.TokenService,
         authRepo repoInterfaces.AuthRepository,
-) interfaces.AuthUseCase <span class="cov0" title="0">{
+) interfaces.AuthUseCase <span class="cov8" title="1">{
         return &amp;authUseCase{
                 userRepo:     userRepo,
                 tokenService: tokenService,
@@ -886,69 +886,64 @@ func NewAuthUseCase(
         }
 }</span>
 
-func (a *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (string, error) <span class="cov0" title="0">{
+func (a *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (string, error) <span class="cov8" title="1">{
         var (
                 user domain.User
                 err  error
         )
 
         switch </span>{
-        case loginInfo.Email != "":<span class="cov0" title="0">
+        case loginInfo.Email != "":<span class="cov8" title="1">
                 user, err = a.userRepo.FindUserByEmail(ctx, loginInfo.Email)</span>
-        case loginInfo.UserName != "":<span class="cov0" title="0">
+        case loginInfo.UserName != "":<span class="cov8" title="1">
                 user, err = a.userRepo.FindUserByUserName(ctx, loginInfo.UserName)</span>
-        case loginInfo.Phone != "":<span class="cov0" title="0">
+        case loginInfo.Phone != "":<span class="cov8" title="1">
                 user, err = a.userRepo.FindUserByPhoneNumber(ctx, loginInfo.Phone)</span>
-        default:<span class="cov0" title="0">
+        default:<span class="cov8" title="1">
                 return "", ErrEmptyLoginCredentials</span>
         }
 
-        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
                 return "", fmt.Errorf("failed to find user from database: %w", err)
         }</span>
 
-        <span class="cov0" title="0">if user.ID == "" </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if user.ID == "" </span><span class="cov8" title="1">{
                 return "", ErrUserNotExist
         }</span>
 
-        <span class="cov0" title="0">if user.BlockStatus </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if user.BlockStatus </span><span class="cov8" title="1">{
                 return "", ErrUserBlocked
         }</span>
 
-        // // otp verified
-        // if !user.Verified {
-        //         return "", ErrUserNotVerified
-        // }
-
-        <span class="cov0" title="0">if err := utils.ComparePasswordWithHashedPassword(loginInfo.Password, user.Password); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := utils.ComparePasswordWithHashedPassword(loginInfo.Password, user.Password); err != nil </span><span class="cov8" title="1">{
                 return "", ErrWrongPassword
         }</span>
 
-        <span class="cov0" title="0">return user.ID, nil</span>
+        <span class="cov8" title="1">return user.ID, nil</span>
 }
 
-func (a *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (string, error) <span class="cov0" title="0">{
+func (a *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (string, error) <span class="cov8" title="1">{
         existUser, err := a.userRepo.FindUserByUserNameEmailOrPhone(ctx, signUpDetails)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return "", fmt.Errorf("failed to check user %w", err)
         }</span>
 
-        <span class="cov0" title="0">if existUser != (domain.User{}) </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if existUser != (domain.User{}) </span><span class="cov8" title="1">{
                 // 一致しているプロパティをエラー内容として返す
                 errorMsg := "failed to check user details already exist:"
-                if signUpDetails.UserName == existUser.UserName </span><span class="cov0" title="0">{
+                if signUpDetails.UserName == existUser.UserName </span><span class="cov8" title="1">{
                         errorMsg += "\rUserName already exists"
                 }</span>
 
-                <span class="cov0" title="0">if signUpDetails.Email == existUser.Email </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">if signUpDetails.Email == existUser.Email </span><span class="cov8" title="1">{
                         errorMsg += "\rEmail already exists"
                 }</span>
 
-                <span class="cov0" title="0">if signUpDetails.Phone == existUser.Phone </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">if signUpDetails.Phone == existUser.Phone </span><span class="cov8" title="1">{
                         errorMsg += "\rPhone already exists"
                 }</span>
 
-                <span class="cov0" title="0">return "", fmt.Errorf("%s.", errorMsg)</span>
+                <span class="cov8" title="1">return "", fmt.Errorf("%s.", errorMsg)</span>
         }
 
         // // if user credentials already exist and  verified then return it as errors
@@ -958,26 +953,26 @@ func (a *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (s
         //         return "", fmt.Errorf("failed to user is not otp verified: %w", err)
         // }
 
-        <span class="cov0" title="0">userID := existUser.ID
+        <span class="cov8" title="1">userID := existUser.ID
 
-        if userID == "" </span><span class="cov0" title="0">{ // if user not exist then save user on database
+        if userID == "" </span><span class="cov8" title="1">{ // if user not exist then save user on database
                 hashPass, err := utils.GenerateHashFromPassword(signUpDetails.Password)
                 if err != nil </span><span class="cov0" title="0">{
                         return "", fmt.Errorf("failed to hash the password: %w", err)
                 }</span>
 
-                <span class="cov0" title="0">signUpDetails.Password = hashPass
+                <span class="cov8" title="1">signUpDetails.Password = hashPass
                 _, err = a.userRepo.SaveUser(ctx, signUpDetails)
 
-                if err != nil </span><span class="cov0" title="0">{
+                if err != nil </span><span class="cov8" title="1">{
                         return "", fmt.Errorf("failed to save user details: %w", err)
                 }</span>
         }
 
-        <span class="cov0" title="0">return "success", nil</span>
+        <span class="cov8" title="1">return "success", nil</span>
 }
 
-func (a *authUseCase) GenerateAccessToken(ctx echo.Context, tokenParams interfaces.GenerateTokenParams) (string, error) <span class="cov0" title="0">{
+func (a *authUseCase) GenerateAccessToken(ctx echo.Context, tokenParams interfaces.GenerateTokenParams) (string, error) <span class="cov8" title="1">{
         tokenReq := token.GenerateTokenRequest{
                 UserID:   tokenParams.UserID,
                 UsedFor:  tokenParams.UserType,
@@ -985,14 +980,14 @@ func (a *authUseCase) GenerateAccessToken(ctx echo.Context, tokenParams interfac
         }
 
         tokenRes, err := a.tokenService.GenerateToken(tokenReq)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return "", fmt.Errorf("failed to generate access token: %w", err)
         }</span>
 
-        <span class="cov0" title="0">return tokenRes.TokenString, nil</span>
+        <span class="cov8" title="1">return tokenRes.TokenString, nil</span>
 }
 
-func (a *authUseCase) GenerateRefreshToken(ctx echo.Context, tokenParams interfaces.GenerateTokenParams) (string, error) <span class="cov0" title="0">{
+func (a *authUseCase) GenerateRefreshToken(ctx echo.Context, tokenParams interfaces.GenerateTokenParams) (string, error) <span class="cov8" title="1">{
         expireAt := time.Now().Add(RefreshTokenDuration)
         tokenReq := token.GenerateTokenRequest{
                 UserID:   tokenParams.UserID,
@@ -1001,55 +996,55 @@ func (a *authUseCase) GenerateRefreshToken(ctx echo.Context, tokenParams interfa
         }
 
         tokenRes, err := a.tokenService.GenerateToken(tokenReq)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return "", fmt.Errorf("failed to generate refresh token: %w", err)
         }</span>
 
-        <span class="cov0" title="0">err = a.authRepo.SaveRefreshSession(ctx, domain.RefreshSession{
+        <span class="cov8" title="1">err = a.authRepo.SaveRefreshSession(ctx, domain.RefreshSession{
                 UserID:       tokenParams.UserID,
                 TokenID:      tokenRes.TokenID,
                 RefreshToken: tokenRes.TokenString,
                 ExpireAt:     expireAt,
         })
 
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return "", fmt.Errorf("failed to save refresh session: %w", err)
         }</span>
 
-        <span class="cov0" title="0">log.Printf("successfully refresh token created and refresh session stored in database")
+        <span class="cov8" title="1">log.Printf("successfully refresh token created and refresh session stored in database")
 
         return tokenRes.TokenString, nil</span>
 }
 
-func (c *authUseCase) VerifyAndGetRefreshTokenSession(ctx echo.Context, refreshToken string, usedFor token.UserType) (domain.RefreshSession, error) <span class="cov0" title="0">{
+func (c *authUseCase) VerifyAndGetRefreshTokenSession(ctx echo.Context, refreshToken string, usedFor token.UserType) (domain.RefreshSession, error) <span class="cov8" title="1">{
         verifyReq := token.VerifyTokenRequest{
                 TokenString: refreshToken,
                 UsedFor:     usedFor,
         }
 
         verifyRes, err := c.tokenService.VerifyToken(verifyReq)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return domain.RefreshSession{}, fmt.Errorf("failed to save refresh session: %w", err)
         }</span>
 
-        <span class="cov0" title="0">refreshSession, err := c.authRepo.FindRefreshSessionByTokenID(ctx, verifyRes.TokenID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">refreshSession, err := c.authRepo.FindRefreshSessionByTokenID(ctx, verifyRes.TokenID)
+        if err != nil </span><span class="cov8" title="1">{
                 return refreshSession, fmt.Errorf("failed to find refresh session by token ID: %w", err)
         }</span>
 
-        <span class="cov0" title="0">if refreshSession.TokenID == "" </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if refreshSession.TokenID == "" </span><span class="cov8" title="1">{
                 return refreshSession, ErrRefreshSessionNotExist
         }</span>
 
-        <span class="cov0" title="0">if time.Since(refreshSession.ExpireAt) &gt; 0 </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if time.Since(refreshSession.ExpireAt) &gt; 0 </span><span class="cov8" title="1">{
                 return domain.RefreshSession{}, ErrRefreshSessionExpired
         }</span>
 
-        <span class="cov0" title="0">if refreshSession.IsBlocked </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if refreshSession.IsBlocked </span><span class="cov8" title="1">{
                 return domain.RefreshSession{}, ErrRefreshSessionBlocked
         }</span>
 
-        <span class="cov0" title="0">return refreshSession, nil</span>
+        <span class="cov8" title="1">return refreshSession, nil</span>
 }
 </pre>
 		
@@ -1432,7 +1427,6 @@ func (p *productUseCase) isProductVariationCombinationExist(productID uint, vari
         for _, variationOptionID := range variationOptionIDs </span><span class="cov8" title="1">{
                 productItemIds, err := p.productRepo.FindAllProductItemIDsByProductIDAndVariationOptionID(context.TODO(),
                         productID, variationOptionID)
-
                 if err != nil </span><span class="cov8" title="1">{
                         return false, fmt.Errorf("failed to find product item ids from database using product id and variation option id: %w", err)
                 }</span>

@@ -71,11 +71,6 @@ func (a *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (stri
 		return "", ErrUserBlocked
 	}
 
-	// // otp verified
-	// if !user.Verified {
-	// 	return "", ErrUserNotVerified
-	// }
-
 	if err := utils.ComparePasswordWithHashedPassword(loginInfo.Password, user.Password); err != nil {
 		return "", ErrWrongPassword
 	}
