@@ -3,6 +3,7 @@ package repository_test
 import (
 	// "errors"
 	"context"
+	"errors"
 	"fmt"
 	"reflect"
 	"testing"
@@ -13,10 +14,67 @@ import (
 	"github.com/shion0625/FYP/backend/pkg/api/handler/response"
 	"github.com/shion0625/FYP/backend/pkg/domain"
 	"github.com/shion0625/FYP/backend/pkg/repository"
-	// "github.com/stretchr/testify/assert"
+	"github.com/shion0625/FYP/backend/pkg/repository/interfaces"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
+
+func TestProductRepository_Transactions(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+
+	gormDB, err := gorm.Open(postgres.New(postgres.Config{Conn: db}), &gorm.Config{})
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a gorm database", err)
+	}
+
+	productRepo := repository.NewProductRepository(gormDB)
+
+	tests := map[string]struct {
+		trxFn         func(repo interfaces.ProductRepository) error
+		prepareMockFn func()
+		wantErr       error
+	}{
+		"Normal Case: Transactions": {
+			trxFn: func(repo interfaces.ProductRepository) error {
+				return nil
+			},
+			prepareMockFn: func() {
+				mock.ExpectBegin()
+				mock.ExpectCommit()
+			},
+			wantErr: nil,
+		},
+		"Error Case: Transactions": {
+			trxFn: func(repo interfaces.ProductRepository) error {
+				return errors.New("transaction error")
+			},
+			prepareMockFn: func() {
+				mock.ExpectBegin()
+				mock.ExpectRollback()
+			},
+			wantErr: errors.New("transaction error"),
+		},
+	}
+
+	for testName, tt := range tests {
+		t.Run(testName, func(t *testing.T) {
+			tt.prepareMockFn()
+
+			err := productRepo.Transactions(echo.New().AcquireContext(), tt.trxFn)
+
+			if err != nil && err.Error() != tt.wantErr.Error() {
+				t.Errorf("expected %v, but got %v", tt.wantErr, err)
+			}
+
+			if err := mock.ExpectationsWereMet(); err != nil {
+				t.Errorf("there were unfulfilled expectations: %s", err)
+			}
+		})
+	}
+}
 
 func TestProductRepository_IsCategoryNameExist(t *testing.T) {
 	db, mock, err := sqlmock.New()

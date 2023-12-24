@@ -65,9 +65,9 @@
 				
 				<option value="file4">github.com/shion0625/FYP/backend/pkg/repository/auth.go (85.7%)</option>
 				
-				<option value="file5">github.com/shion0625/FYP/backend/pkg/repository/order.go (0.0%)</option>
+				<option value="file5">github.com/shion0625/FYP/backend/pkg/repository/order.go (81.7%)</option>
 				
-				<option value="file6">github.com/shion0625/FYP/backend/pkg/repository/product.go (86.6%)</option>
+				<option value="file6">github.com/shion0625/FYP/backend/pkg/repository/product.go (95.1%)</option>
 				
 				<option value="file7">github.com/shion0625/FYP/backend/pkg/repository/user.go (0.0%)</option>
 				
@@ -1182,33 +1182,33 @@ type orderDatabase struct {
         DB *gorm.DB
 }
 
-func NewOrderRepository(db *gorm.DB) interfaces.OrderRepository <span class="cov0" title="0">{
+func NewOrderRepository(db *gorm.DB) interfaces.OrderRepository <span class="cov8" title="1">{
         return &amp;orderDatabase{
                 DB: db,
         }
 }</span>
 
-func (c *orderDatabase) Transactions(ctx echo.Context, trxFn func(repo interfaces.OrderRepository) error) error <span class="cov0" title="0">{
+func (c *orderDatabase) Transactions(ctx echo.Context, trxFn func(repo interfaces.OrderRepository) error) error <span class="cov8" title="1">{
         trx := c.DB.Begin()
 
         repo := NewOrderRepository(trx)
 
-        if err := trxFn(repo); err != nil </span><span class="cov0" title="0">{
+        if err := trxFn(repo); err != nil </span><span class="cov8" title="1">{
                 trx.Rollback()
 
                 return err
         }</span>
 
-        <span class="cov0" title="0">if err := trx.Commit().Error; err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := trx.Commit().Error; err != nil </span><span class="cov0" title="0">{
                 trx.Rollback()
 
                 return err
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
-func (c *orderDatabase) UpdateProductItemStock(ctx echo.Context, productItemID uint, purchaseQuantity uint) (newStock uint, err error) <span class="cov0" title="0">{
+func (c *orderDatabase) UpdateProductItemStock(ctx echo.Context, productItemID uint, purchaseQuantity uint) (newStock uint, err error) <span class="cov8" title="1">{
         var productItem domain.ProductItem
         err = c.DB.Table("product_items").Select("qty_in_stock").Where("id = ?", productItemID).First(&amp;productItem).Error
 
@@ -1216,17 +1216,17 @@ func (c *orderDatabase) UpdateProductItemStock(ctx echo.Context, productItemID u
                 return 0, err
         }</span>
 
-        <span class="cov0" title="0">if productItem.QtyInStock &lt; purchaseQuantity </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if productItem.QtyInStock &lt; purchaseQuantity </span><span class="cov0" title="0">{
                 return 0, fmt.Errorf("%s not enough stock", productItem.Name)
         }</span>
 
-        <span class="cov0" title="0">newStock = productItem.QtyInStock - purchaseQuantity
+        <span class="cov8" title="1">newStock = productItem.QtyInStock - purchaseQuantity
         err = c.DB.Table("product_items").Where("id = ?", productItem.ID).Update("qty_in_stock", newStock).Error
 
         return newStock, err</span>
 }
 
-func (c *orderDatabase) SaveOrder(ctx echo.Context, userID string, payOrder request.PayOrder) error <span class="cov0" title="0">{
+func (c *orderDatabase) SaveOrder(ctx echo.Context, userID string, payOrder request.PayOrder) error <span class="cov8" title="1">{
         // Create a new ShopOrder from the PayOrder request
         shopOrder := domain.ShopOrder{
                 UserID:          userID,
@@ -1241,9 +1241,9 @@ func (c *orderDatabase) SaveOrder(ctx echo.Context, userID string, payOrder requ
                 return err
         }</span>
 
-        <span class="cov0" title="0">shopOrderProductItems := make([]domain.ShopOrderProductItem, 0, len(payOrder.ProductItemInfo))
+        <span class="cov8" title="1">shopOrderProductItems := make([]domain.ShopOrderProductItem, 0, len(payOrder.ProductItemInfo))
 
-        for _, productItemInfo := range payOrder.ProductItemInfo </span><span class="cov0" title="0">{
+        for _, productItemInfo := range payOrder.ProductItemInfo </span><span class="cov8" title="1">{
                 shopOrderProductItem := domain.ShopOrderProductItem{
                         ShopOrderID:   shopOrder.ID,
                         ProductItemID: productItemInfo.ProductItemID,
@@ -1253,7 +1253,7 @@ func (c *orderDatabase) SaveOrder(ctx echo.Context, userID string, payOrder requ
 
                 shopOrderVariations := make([]domain.ShopOrderVariation, 0, len(*productItemInfo.VariationValues))
 
-                for _, variationValue := range *productItemInfo.VariationValues </span><span class="cov0" title="0">{
+                for _, variationValue := range *productItemInfo.VariationValues </span><span class="cov8" title="1">{
                         shopOrderVariation := domain.ShopOrderVariation{
                                 ShopOrderID:       shopOrder.ID,
                                 ProductItemID:     productItemInfo.ProductItemID,
@@ -1263,19 +1263,19 @@ func (c *orderDatabase) SaveOrder(ctx echo.Context, userID string, payOrder requ
                         shopOrderVariations = append(shopOrderVariations, shopOrderVariation)
                 }</span>
 
-                <span class="cov0" title="0">if err := c.DB.Create(&amp;shopOrderVariations).Error; err != nil </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">if err := c.DB.Create(&amp;shopOrderVariations).Error; err != nil </span><span class="cov0" title="0">{
                         return err
                 }</span>
         }
 
-        <span class="cov0" title="0">if err := c.DB.Create(&amp;shopOrderProductItems).Error; err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := c.DB.Create(&amp;shopOrderProductItems).Error; err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
-func (c *orderDatabase) PayOrder(ctx echo.Context, paymentMethodID uint) error <span class="cov0" title="0">{
+func (c *orderDatabase) PayOrder(ctx echo.Context, paymentMethodID uint) error <span class="cov8" title="1">{
         paymentMethod := domain.PaymentMethod{
                 ID: paymentMethodID,
         }
@@ -1284,10 +1284,10 @@ func (c *orderDatabase) PayOrder(ctx echo.Context, paymentMethodID uint) error <
                 return err
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
-func (o *orderDatabase) GetShopOrders(ctx echo.Context, userID string, pagination request.Pagination) (orders []response.Order, err error) <span class="cov0" title="0">{
+func (o *orderDatabase) GetShopOrders(ctx echo.Context, userID string, pagination request.Pagination) (orders []response.Order, err error) <span class="cov8" title="1">{
         limit := pagination.Count
         offset := (pagination.PageNumber - 1) * limit
 
@@ -1296,9 +1296,9 @@ func (o *orderDatabase) GetShopOrders(ctx echo.Context, userID string, paginatio
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">fmt.Print(&amp;shopOrders)
+        <span class="cov8" title="1">fmt.Print(&amp;shopOrders)
 
-        for _, shopOrder := range shopOrders </span><span class="cov0" title="0">{
+        for _, shopOrder := range shopOrders </span><span class="cov8" title="1">{
                 var productItemInfos []response.ProductItemInfo
 
                 var shopOrderProductItems []domain.ShopOrderProductItem
@@ -1306,7 +1306,7 @@ func (o *orderDatabase) GetShopOrders(ctx echo.Context, userID string, paginatio
                         return nil, err
                 }</span>
 
-                <span class="cov0" title="0">for _, productItem := range shopOrderProductItems </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">for _, productItem := range shopOrderProductItems </span><span class="cov8" title="1">{
                         var variationValues []response.VariationValues
 
                         var shopOrderVariations []domain.ShopOrderVariation
@@ -1314,7 +1314,7 @@ func (o *orderDatabase) GetShopOrders(ctx echo.Context, userID string, paginatio
                                 return nil, err
                         }</span>
 
-                        <span class="cov0" title="0">for _, variation := range shopOrderVariations </span><span class="cov0" title="0">{
+                        <span class="cov8" title="1">for _, variation := range shopOrderVariations </span><span class="cov8" title="1">{
                                 variationValues = append(variationValues, response.VariationValues{
                                         VariationID:       variation.VariationID,
                                         Name:              variation.Variation.Name,
@@ -1323,14 +1323,14 @@ func (o *orderDatabase) GetShopOrders(ctx echo.Context, userID string, paginatio
                                 })
                         }</span>
 
-                        <span class="cov0" title="0">productItemInfos = append(productItemInfos, response.ProductItemInfo{
+                        <span class="cov8" title="1">productItemInfos = append(productItemInfos, response.ProductItemInfo{
                                 ProductItemID:   productItem.ProductItemID,
                                 Count:           productItem.Count,
                                 VariationValues: &amp;variationValues,
                         })</span>
                 }
 
-                <span class="cov0" title="0">orders = append(orders, response.Order{
+                <span class="cov8" title="1">orders = append(orders, response.Order{
                         UserID:          shopOrder.UserID,
                         ShopOrderId:     strconv.Itoa(int(shopOrder.ID)),
                         ProductItemInfo: productItemInfos,
@@ -1347,7 +1347,7 @@ func (o *orderDatabase) GetShopOrders(ctx echo.Context, userID string, paginatio
         }
 
         //nolint:nakedret
-        <span class="cov0" title="0">return</span>
+        <span class="cov8" title="1">return</span>
 }
 </pre>
 		
@@ -1375,24 +1375,24 @@ func NewProductRepository(db *gorm.DB) interfaces.ProductRepository <span class=
         }
 }</span>
 
-func (c *productDatabase) Transactions(ctx echo.Context, trxFn func(repo interfaces.ProductRepository) error) error <span class="cov0" title="0">{
+func (c *productDatabase) Transactions(ctx echo.Context, trxFn func(repo interfaces.ProductRepository) error) error <span class="cov8" title="1">{
         trx := c.DB.Begin()
 
         repo := NewProductRepository(trx)
 
-        if err := trxFn(repo); err != nil </span><span class="cov0" title="0">{
+        if err := trxFn(repo); err != nil </span><span class="cov8" title="1">{
                 trx.Rollback()
 
                 return err
         }</span>
 
-        <span class="cov0" title="0">if err := trx.Commit().Error; err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := trx.Commit().Error; err != nil </span><span class="cov0" title="0">{
                 trx.Rollback()
 
                 return err
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
 // To check the category name exist.
