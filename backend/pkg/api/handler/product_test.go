@@ -994,15 +994,15 @@ func TestProductHandler_GetAllProductItemsUser(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().FindAllProductItems(gomock.Any(), gomock.Any()).Return([]response.ProductItems{
 					{
-						ID:          1,
-						Name:        "Test Product Item",
-						ProductID:   1,
-						ItemName:    "Test Item",
-						Price:       1000,
-						QtyInStock:  10,
+						ID:           1,
+						Name:         "Test Product Item",
+						ProductID:    1,
+						ItemName:     "Test Item",
+						Price:        1000,
+						QtyInStock:   10,
 						CategoryName: "Test Category",
-						BrandID:     1,
-						BrandName:   "Test Brand",
+						BrandID:      1,
+						BrandName:    "Test Brand",
 						VariationValues: []response.ProductVariationValue{
 							{
 								VariationID:       1,

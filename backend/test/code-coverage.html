@@ -67,7 +67,7 @@
 				
 				<option value="file5">github.com/shion0625/FYP/backend/pkg/repository/order.go (0.0%)</option>
 				
-				<option value="file6">github.com/shion0625/FYP/backend/pkg/repository/product.go (0.0%)</option>
+				<option value="file6">github.com/shion0625/FYP/backend/pkg/repository/product.go (86.6%)</option>
 				
 				<option value="file7">github.com/shion0625/FYP/backend/pkg/repository/user.go (0.0%)</option>
 				
@@ -1369,7 +1369,7 @@ type productDatabase struct {
         DB *gorm.DB
 }
 
-func NewProductRepository(db *gorm.DB) interfaces.ProductRepository <span class="cov0" title="0">{
+func NewProductRepository(db *gorm.DB) interfaces.ProductRepository <span class="cov8" title="1">{
         return &amp;productDatabase{
                 DB: db,
         }
@@ -1396,14 +1396,16 @@ func (c *productDatabase) Transactions(ctx echo.Context, trxFn func(repo interfa
 }
 
 // To check the category name exist.
-func (c *productDatabase) IsCategoryNameExist(ctx echo.Context, name string) (exist bool, err error) <span class="cov0" title="0">{
-        err = c.DB.Table("categories").Where("name = ? AND category_id IS NULL", name).First(&amp;exist).Error
+func (c *productDatabase) IsCategoryNameExist(ctx echo.Context, name string) (exist bool, err error) <span class="cov8" title="1">{
+        var category domain.Category
+        err = c.DB.Table("categories").Where("name = ? AND category_id IS NULL", name).First(&amp;category).Error
+        exist = err == nil
 
         return
 }</span>
 
 // Save Category.
-func (c *productDatabase) SaveCategory(ctx echo.Context, categoryName string) (err error) <span class="cov0" title="0">{
+func (c *productDatabase) SaveCategory(ctx echo.Context, categoryName string) (err error) <span class="cov8" title="1">{
         err = c.DB.Table("categories").Create(&amp;domain.Category{Name: categoryName}).Error
 
         return err
@@ -1412,7 +1414,7 @@ func (c *productDatabase) SaveCategory(ctx echo.Context, categoryName string) (e
 // Find all main category(its not have a category_id).
 func (c *productDatabase) FindAllMainCategories(ctx echo.Context,
         pagination request.Pagination,
-) (categories []response.Category, err error) <span class="cov0" title="0">{
+) (categories []response.Category, err error) <span class="cov8" title="1">{
         limit := pagination.Count
         offset := (pagination.PageNumber - 1) * limit
 
@@ -1424,7 +1426,7 @@ func (c *productDatabase) FindAllMainCategories(ctx echo.Context,
 // Find all variations which related to given category id.
 func (c *productDatabase) FindAllVariationsByCategoryID(ctx echo.Context,
         categoryID uint,
-) (variations []response.Variation, err error) <span class="cov0" title="0">{
+) (variations []response.Variation, err error) <span class="cov8" title="1">{
         err = c.DB.Table("variations").Where("category_id = ?", categoryID).Find(&amp;variations).Error
 
         return
@@ -1433,7 +1435,7 @@ func (c *productDatabase) FindAllVariationsByCategoryID(ctx echo.Context,
 // Find all variation options which related to given variation id.
 func (c productDatabase) FindAllVariationOptionsByVariationID(ctx echo.Context,
         variationID uint,
-) (variationOptions []response.VariationOption, err error) <span class="cov0" title="0">{
+) (variationOptions []response.VariationOption, err error) <span class="cov8" title="1">{
         err = c.DB.Table("variation_options").Where("variation_id = ?", variationID).Find(&amp;variationOptions).Error
 
         return
@@ -1442,8 +1444,10 @@ func (c productDatabase) FindAllVariationOptionsByVariationID(ctx echo.Context,
 // To check a variation exist for the given category.
 func (c *productDatabase) IsVariationNameExistForCategory(ctx echo.Context,
         name string, categoryID uint,
-) (exist bool, err error) <span class="cov0" title="0">{
-        err = c.DB.Table("variations").Where("name = ? AND category_id = ?", name, categoryID).First(&amp;exist).Error
+) (exist bool, err error) <span class="cov8" title="1">{
+        var variation domain.Variation
+        err = c.DB.Table("variations").Where("name = ? AND category_id = ?", name, categoryID).First(&amp;variation).Error
+        exist = err == nil
 
         return
 }</span>
@@ -1451,28 +1455,30 @@ func (c *productDatabase) IsVariationNameExistForCategory(ctx echo.Context,
 // To check a variation value exist for the given variation.
 func (c *productDatabase) IsVariationValueExistForVariation(ctx echo.Context,
         value string, variationID uint,
-) (exist bool, err error) <span class="cov0" title="0">{
-        err = c.DB.Table("variation_options").Where("value = ? AND variation_id = ?", value, variationID).First(&amp;exist).Error
+) (exist bool, err error) <span class="cov8" title="1">{
+        var variationOption domain.VariationOption
+        err = c.DB.Table("variation_options").Where("value = ? AND variation_id = ?", value, variationID).First(&amp;variationOption).Error
+        exist = err == nil
 
         return
 }</span>
 
 // Save Variation for category.
-func (c *productDatabase) SaveVariation(ctx echo.Context, categoryID uint, variationName string) error <span class="cov0" title="0">{
+func (c *productDatabase) SaveVariation(ctx echo.Context, categoryID uint, variationName string) error <span class="cov8" title="1">{
         err := c.DB.Table("variations").Create(&amp;domain.Variation{CategoryID: categoryID, Name: variationName}).Error
 
         return err
 }</span>
 
 // add variation option.
-func (c *productDatabase) SaveVariationOption(ctx echo.Context, variationID uint, variationValue string) error <span class="cov0" title="0">{
+func (c *productDatabase) SaveVariationOption(ctx echo.Context, variationID uint, variationValue string) error <span class="cov8" title="1">{
         err := c.DB.Table("variation_options").Create(&amp;domain.VariationOption{VariationID: variationID, Value: variationValue}).Error
 
         return err
 }</span>
 
 // find product by id.
-func (c *productDatabase) FindProductByID(ctx echo.Context, productID uint) (product response.Product, err error) <span class="cov0" title="0">{
+func (c *productDatabase) FindProductByID(ctx echo.Context, productID uint) (product response.Product, err error) <span class="cov8" title="1">{
         err = c.DB.Table("products").Where("id = ?", productID).Find(&amp;product).Error
 
         return
@@ -1480,20 +1486,24 @@ func (c *productDatabase) FindProductByID(ctx echo.Context, productID uint) (pro
 
 func (c *productDatabase) IsProductNameExistForOtherProduct(ctx echo.Context,
         name string, productID uint,
-) (exist bool, err error) <span class="cov0" title="0">{
-        err = c.DB.Table("products").Where("name = ? AND id != ?", name, productID).First(&amp;exist).Error
+) (exist bool, err error) <span class="cov8" title="1">{
+        var product domain.Product
+        err = c.DB.Table("products").Where("name = ? AND id != ?", name, productID).First(&amp;product).Error
+        exist = err == nil
 
         return
 }</span>
 
-func (c *productDatabase) IsProductNameExist(ctx echo.Context, productName string) (exist bool, err error) <span class="cov0" title="0">{
-        err = c.DB.Table("products").Where("name = ?", productName).First(&amp;exist).Error
+func (c *productDatabase) IsProductNameExist(ctx echo.Context, productName string) (exist bool, err error) <span class="cov8" title="1">{
+        var product domain.Product
+        err = c.DB.Table("products").Where("name = ?", productName).First(&amp;product).Error
+        exist = err == nil
 
         return
 }</span>
 
 // to add a new product in database.
-func (c *productDatabase) SaveProduct(ctx echo.Context, product domain.Product) error <span class="cov0" title="0">{
+func (c *productDatabase) SaveProduct(ctx echo.Context, product domain.Product) error <span class="cov8" title="1">{
         product.CreatedAt = time.Now()
         err := c.DB.Table("products").Create(&amp;product).Error
 
@@ -1501,7 +1511,7 @@ func (c *productDatabase) SaveProduct(ctx echo.Context, product domain.Product) 
 }</span>
 
 // update product.
-func (c *productDatabase) UpdateProduct(ctx echo.Context, product domain.Product) error <span class="cov0" title="0">{
+func (c *productDatabase) UpdateProduct(ctx echo.Context, product domain.Product) error <span class="cov8" title="1">{
         product.UpdatedAt = time.Now()
 
         err := c.DB.Table("products").Where("id = ?", product.ID).Updates(&amp;product).Error
@@ -1510,7 +1520,7 @@ func (c *productDatabase) UpdateProduct(ctx echo.Context, product domain.Product
 }</span>
 
 // get all products from database.
-func (c *productDatabase) FindAllProducts(ctx echo.Context, pagination request.Pagination, categoryID *uint, brandID *uint) (products []response.Product, err error) <span class="cov0" title="0">{
+func (c *productDatabase) FindAllProducts(ctx echo.Context, pagination request.Pagination, categoryID *uint, brandID *uint) (products []response.Product, err error) <span class="cov8" title="1">{
         limit := int(pagination.Count)
         offset := (int(pagination.PageNumber) - 1) * limit
 
@@ -1526,24 +1536,24 @@ func (c *productDatabase) FindAllProducts(ctx echo.Context, pagination request.P
                 db = db.Where("p.category_id = ?", *categoryID)
         }</span>
 
-        <span class="cov0" title="0">if brandID != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if brandID != nil </span><span class="cov0" title="0">{
                 db = db.Where("p.brand_id = ?", *brandID)
         }</span>
 
-        <span class="cov0" title="0">err = db.Scan(&amp;products).Error
+        <span class="cov8" title="1">err = db.Scan(&amp;products).Error
 
         return</span>
 }
 
 // to get productItem id.
-func (c *productDatabase) FindProductItemByID(ctx echo.Context, productItemID uint) (productItem domain.ProductItem, err error) <span class="cov0" title="0">{
+func (c *productDatabase) FindProductItemByID(ctx echo.Context, productItemID uint) (productItem domain.ProductItem, err error) <span class="cov8" title="1">{
         err = c.DB.Table("product_items").Where("id = ?", productItemID).Find(&amp;productItem).Error
 
         return productItem, err
 }</span>
 
 // to get how many variations are available for a product.
-func (c *productDatabase) FindVariationCountForProduct(ctx echo.Context, productID uint) (variationCount uint, err error) <span class="cov0" title="0">{
+func (c *productDatabase) FindVariationCountForProduct(ctx echo.Context, productID uint) (variationCount uint, err error) <span class="cov8" title="1">{
         var count int64
         err = c.DB.Table("variations v").
                 Joins("INNER JOIN categories c ON c.id = v.category_id").
@@ -1557,7 +1567,7 @@ func (c *productDatabase) FindVariationCountForProduct(ctx echo.Context, product
 // To find all product item ids which related to the given product id and variation option id.
 func (c *productDatabase) FindAllProductItemIDsByProductIDAndVariationOptionID(ctx context.Context, productID,
         variationOptionID uint,
-) (productItemIDs []uint, err error) <span class="cov0" title="0">{
+) (productItemIDs []uint, err error) <span class="cov8" title="1">{
         err = c.DB.Table("product_items pi").
                 Joins("INNER JOIN product_configurations pc ON pi.id = pc.product_item_id").
                 Where("pi.product_id = ? AND variation_option_id = ?", productID, variationOptionID).Find(&amp;productItemIDs).Error
@@ -1565,13 +1575,13 @@ func (c *productDatabase) FindAllProductItemIDsByProductIDAndVariationOptionID(c
         return
 }</span>
 
-func (c *productDatabase) SaveProductConfiguration(ctx echo.Context, productItemID, variationOptionID uint) error <span class="cov0" title="0">{
+func (c *productDatabase) SaveProductConfiguration(ctx echo.Context, productItemID, variationOptionID uint) error <span class="cov8" title="1">{
         err := c.DB.Table("product_configurations").Create(&amp;domain.ProductConfiguration{ProductItemID: productItemID, VariationOptionID: variationOptionID}).Error
 
         return err
 }</span>
 
-func (c *productDatabase) SaveProductItem(ctx echo.Context, productItem domain.ProductItem) (productItemID uint, err error) <span class="cov0" title="0">{
+func (c *productDatabase) SaveProductItem(ctx echo.Context, productItem domain.ProductItem) (productItemID uint, err error) <span class="cov8" title="1">{
         productItem.CreatedAt = time.Now()
         err = c.DB.Table("product_items").Create(&amp;productItem).Scan(&amp;productItemID).Error
 
@@ -1581,7 +1591,7 @@ func (c *productDatabase) SaveProductItem(ctx echo.Context, productItem domain.P
 // for get all products items for a product.
 func (c *productDatabase) FindAllProductItems(ctx echo.Context,
         productID uint,
-) (productItems []response.ProductItemsDB, err error) <span class="cov0" title="0">{
+) (productItems []response.ProductItemsDB, err error) <span class="cov8" title="1">{
         // first find all product_items
         err = c.DB.Table("product_items pi").
                 Select("p.name, pi.id,  pi.product_id,pi.name AS item_name, pi.price, pi.discount_price, pi.qty_in_stock, pi.sku, p.category_id, sc.name AS category_name, p.brand_id, b.name AS brand_name").
@@ -1596,7 +1606,7 @@ func (c *productDatabase) FindAllProductItems(ctx echo.Context,
 // Find all variation and value of a product item.
 func (c *productDatabase) FindAllVariationValuesOfProductItem(ctx echo.Context,
         productItemID uint,
-) (productVariationsValues []response.ProductVariationValue, err error) <span class="cov0" title="0">{
+) (productVariationsValues []response.ProductVariationValue, err error) <span class="cov8" title="1">{
         err = c.DB.Table("product_configurations pc").
                 Select("v.id AS variation_id, v.name, vo.id AS variation_option_id, vo.value").
                 Joins("INNER JOIN variation_options vo ON vo.id = pc.variation_option_id").
@@ -1607,14 +1617,14 @@ func (c *productDatabase) FindAllVariationValuesOfProductItem(ctx echo.Context,
 }</span>
 
 // To save image for product item.
-func (c *productDatabase) SaveProductItemImage(ctx echo.Context, productItemID uint, image string) error <span class="cov0" title="0">{
+func (c *productDatabase) SaveProductItemImage(ctx echo.Context, productItemID uint, image string) error <span class="cov8" title="1">{
         err := c.DB.Table("product_images").Create(&amp;domain.ProductImage{ProductItemID: productItemID, Image: image}).Error
 
         return err
 }</span>
 
 // To find all images of a product item.
-func (c *productDatabase) FindAllProductItemImages(ctx echo.Context, productItemID uint) (images []string, err error) <span class="cov0" title="0">{
+func (c *productDatabase) FindAllProductItemImages(ctx echo.Context, productItemID uint) (images []string, err error) <span class="cov8" title="1">{
         err = c.DB.Table("product_images").Select("image").Where("product_item_id = ?", productItemID).Find(&amp;images).Error
 
         return

@@ -44,7 +44,9 @@ func (c *productDatabase) Transactions(ctx echo.Context, trxFn func(repo interfa
 
 // To check the category name exist.
 func (c *productDatabase) IsCategoryNameExist(ctx echo.Context, name string) (exist bool, err error) {
-	err = c.DB.Table("categories").Where("name = ? AND category_id IS NULL", name).First(&exist).Error
+	var category domain.Category
+	err = c.DB.Table("categories").Where("name = ? AND category_id IS NULL", name).First(&category).Error
+	exist = err == nil
 
 	return
 }
@@ -90,7 +92,9 @@ func (c productDatabase) FindAllVariationOptionsByVariationID(ctx echo.Context,
 func (c *productDatabase) IsVariationNameExistForCategory(ctx echo.Context,
 	name string, categoryID uint,
 ) (exist bool, err error) {
-	err = c.DB.Table("variations").Where("name = ? AND category_id = ?", name, categoryID).First(&exist).Error
+	var variation domain.Variation
+	err = c.DB.Table("variations").Where("name = ? AND category_id = ?", name, categoryID).First(&variation).Error
+	exist = err == nil
 
 	return
 }
@@ -99,7 +103,9 @@ func (c *productDatabase) IsVariationNameExistForCategory(ctx echo.Context,
 func (c *productDatabase) IsVariationValueExistForVariation(ctx echo.Context,
 	value string, variationID uint,
 ) (exist bool, err error) {
-	err = c.DB.Table("variation_options").Where("value = ? AND variation_id = ?", value, variationID).First(&exist).Error
+	var variationOption domain.VariationOption
+	err = c.DB.Table("variation_options").Where("value = ? AND variation_id = ?", value, variationID).First(&variationOption).Error
+	exist = err == nil
 
 	return
 }
@@ -128,13 +134,17 @@ func (c *productDatabase) FindProductByID(ctx echo.Context, productID uint) (pro
 func (c *productDatabase) IsProductNameExistForOtherProduct(ctx echo.Context,
 	name string, productID uint,
 ) (exist bool, err error) {
-	err = c.DB.Table("products").Where("name = ? AND id != ?", name, productID).First(&exist).Error
+	var product domain.Product
+	err = c.DB.Table("products").Where("name = ? AND id != ?", name, productID).First(&product).Error
+	exist = err == nil
 
 	return
 }
 
 func (c *productDatabase) IsProductNameExist(ctx echo.Context, productName string) (exist bool, err error) {
-	err = c.DB.Table("products").Where("name = ?", productName).First(&exist).Error
+	var product domain.Product
+	err = c.DB.Table("products").Where("name = ?", productName).First(&product).Error
+	exist = err == nil
 
 	return
 }
