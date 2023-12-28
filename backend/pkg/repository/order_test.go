@@ -2,6 +2,8 @@ package repository_test
 
 import (
 	"errors"
+	"testing"
+
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/labstack/echo/v4"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/request"
@@ -9,7 +11,6 @@ import (
 	"github.com/shion0625/FYP/backend/pkg/repository/interfaces"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"testing"
 )
 
 func TestOrderRepository_Transactions(t *testing.T) {

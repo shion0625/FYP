@@ -69,7 +69,7 @@
 				
 				<option value="file6">github.com/shion0625/FYP/backend/pkg/repository/product.go (95.1%)</option>
 				
-				<option value="file7">github.com/shion0625/FYP/backend/pkg/repository/user.go (0.0%)</option>
+				<option value="file7">github.com/shion0625/FYP/backend/pkg/repository/user.go (67.6%)</option>
 				
 				<option value="file8">github.com/shion0625/FYP/backend/pkg/usecase/auth.go (98.5%)</option>
 				
@@ -1653,29 +1653,29 @@ type userDatabase struct {
         DB *gorm.DB
 }
 
-func NewUserRepository(db *gorm.DB) interfaces.UserRepository <span class="cov0" title="0">{
+func NewUserRepository(db *gorm.DB) interfaces.UserRepository <span class="cov8" title="1">{
         return &amp;userDatabase{DB: db}
 }</span>
 
-func (c *userDatabase) FindUserByUserID(ctx echo.Context, userID string) (user domain.User, err error) <span class="cov0" title="0">{
+func (c *userDatabase) FindUserByUserID(ctx echo.Context, userID string) (user domain.User, err error) <span class="cov8" title="1">{
         err = c.DB.Where("id = ?", userID).First(&amp;user).Error
 
         return user, err
 }</span>
 
-func (c *userDatabase) FindUserByUserName(ctx echo.Context, userName string) (user domain.User, err error) <span class="cov0" title="0">{
+func (c *userDatabase) FindUserByUserName(ctx echo.Context, userName string) (user domain.User, err error) <span class="cov8" title="1">{
         err = c.DB.Where("user_name = ?", userName).First(&amp;user).Error
 
         return user, err
 }</span>
 
-func (c *userDatabase) FindUserByEmail(ctx echo.Context, email string) (user domain.User, err error) <span class="cov0" title="0">{
+func (c *userDatabase) FindUserByEmail(ctx echo.Context, email string) (user domain.User, err error) <span class="cov8" title="1">{
         err = c.DB.Where("email = ?", email).First(&amp;user).Error
 
         return user, err
 }</span>
 
-func (c *userDatabase) FindUserByPhoneNumber(ctx echo.Context, phoneNumber string) (user domain.User, err error) <span class="cov0" title="0">{
+func (c *userDatabase) FindUserByPhoneNumber(ctx echo.Context, phoneNumber string) (user domain.User, err error) <span class="cov8" title="1">{
         err = c.DB.Where("phone = ?", phoneNumber).First(&amp;user).Error
 
         return user, err
@@ -1683,14 +1683,14 @@ func (c *userDatabase) FindUserByPhoneNumber(ctx echo.Context, phoneNumber strin
 
 func (c *userDatabase) FindUserByUserNameEmailOrPhone(ctx echo.Context,
         userDetails domain.User,
-) (user domain.User, err error) <span class="cov0" title="0">{
+) (user domain.User, err error) <span class="cov8" title="1">{
         err = c.DB.Where("user_name = ? OR email = ? OR phone = ?",
                 userDetails.UserName, userDetails.Email, userDetails.Phone).Find(&amp;user).Error
 
         return user, err
 }</span>
 
-func (c *userDatabase) SaveUser(ctx echo.Context, user domain.User) (userID string, err error) <span class="cov0" title="0">{
+func (c *userDatabase) SaveUser(ctx echo.Context, user domain.User) (userID string, err error) <span class="cov8" title="1">{
         // save the user details
         user = domain.User{
                 Age:         user.Age,
@@ -1708,7 +1708,7 @@ func (c *userDatabase) SaveUser(ctx echo.Context, user domain.User) (userID stri
         return user.ID, result.Error
 }</span>
 
-func (c *userDatabase) FindAllAddressByUserID(ctx echo.Context, userID string) (addresses []response.Address, err error) <span class="cov0" title="0">{
+func (c *userDatabase) FindAllAddressByUserID(ctx echo.Context, userID string) (addresses []response.Address, err error) <span class="cov8" title="1">{
         err = c.DB.
                 Table("user_addresses").
                 Select("addresses.id, addresses.house, addresses.name, addresses.phone_number, addresses.area, addresses.land_mark, addresses.city, addresses.pincode, addresses.country_name, user_addresses.is_default").
@@ -1719,7 +1719,7 @@ func (c *userDatabase) FindAllAddressByUserID(ctx echo.Context, userID string) (
         return addresses, err
 }</span>
 
-func (c *userDatabase) FindAddressByUserIDAndAddressID(ctx echo.Context, userID string, addressID uint) (address domain.Address, err error) <span class="cov0" title="0">{
+func (c *userDatabase) FindAddressByUserIDAndAddressID(ctx echo.Context, userID string, addressID uint) (address domain.Address, err error) <span class="cov8" title="1">{
         err = c.DB.
                 Table("user_addresses").
                 Select("addresses.id, addresses.house, addresses.name, addresses.phone_number, addresses.area, addresses.land_mark, addresses.city, addresses.pincode, addresses.country_name, user_addresses.is_default").
@@ -1730,7 +1730,7 @@ func (c *userDatabase) FindAddressByUserIDAndAddressID(ctx echo.Context, userID 
         return address, err
 }</span>
 
-func (c *userDatabase) IsAddressAlreadyExistForUser(ctx echo.Context, address domain.Address, userID string) (exist bool, err error) <span class="cov0" title="0">{
+func (c *userDatabase) IsAddressAlreadyExistForUser(ctx echo.Context, address domain.Address, userID string) (exist bool, err error) <span class="cov8" title="1">{
         var addressRes domain.Address
         err = c.DB.Table("user_addresses").
                 Select("addresses.id").
@@ -1742,10 +1742,10 @@ func (c *userDatabase) IsAddressAlreadyExistForUser(ctx echo.Context, address do
                 return false, nil
         }</span>
 
-        <span class="cov0" title="0">return true, err</span>
+        <span class="cov8" title="1">return true, err</span>
 }
 
-func (c *userDatabase) IsAddressIDExist(ctx echo.Context, addressID uint) (exist bool, err error) <span class="cov0" title="0">{
+func (c *userDatabase) IsAddressIDExist(ctx echo.Context, addressID uint) (exist bool, err error) <span class="cov8" title="1">{
         var addressModel domain.Address
         err = c.DB.Table("addresses").
                 Select("addresses.id").
@@ -1756,10 +1756,10 @@ func (c *userDatabase) IsAddressIDExist(ctx echo.Context, addressID uint) (exist
                 return false, nil
         }</span>
 
-        <span class="cov0" title="0">return true, err</span>
+        <span class="cov8" title="1">return true, err</span>
 }
 
-func (c *userDatabase) SaveAddress(ctx echo.Context, address domain.Address) (addressID uint, err error) <span class="cov0" title="0">{
+func (c *userDatabase) SaveAddress(ctx echo.Context, address domain.Address) (addressID uint, err error) <span class="cov8" title="1">{
         address.CreatedAt = time.Now()
         result := c.DB.Create(&amp;address)
 
@@ -1767,7 +1767,7 @@ func (c *userDatabase) SaveAddress(ctx echo.Context, address domain.Address) (ad
                 return addressID, errors.New("failed to insert address on database")
         }</span>
 
-        <span class="cov0" title="0">return address.ID, nil</span>
+        <span class="cov8" title="1">return address.ID, nil</span>
 }
 
 func (c *userDatabase) SaveUserAddress(ctx echo.Context, userAddress domain.UserAddress) error <span class="cov0" title="0">{
@@ -1789,13 +1789,15 @@ func (c *userDatabase) SaveUserAddress(ctx echo.Context, userAddress domain.User
 
         // insert the user address
         <span class="cov0" title="0">if err := c.DB.Table("user_addresses").Create(&amp;userAddress).Error; err != nil </span><span class="cov0" title="0">{
+                fmt.Print(err)
                 return errors.New("failed to insert userAddress into database")
         }</span>
 
         <span class="cov0" title="0">return nil</span>
 }
 
-func (c *userDatabase) UpdateAddress(ctx echo.Context, address domain.Address) error <span class="cov0" title="0">{
+func (c *userDatabase) UpdateAddress(ctx echo.Context, address domain.Address) error <span class="cov8" title="1">{
+        fmt.Print("海都")
         if err := c.DB.Model(&amp;address).Where("id = ?", address.ID).Updates(map[string]interface{}{
                 "name":         address.Name,
                 "phone_number": address.PhoneNumber,
@@ -1807,16 +1809,17 @@ func (c *userDatabase) UpdateAddress(ctx echo.Context, address domain.Address) e
                 "country_name": address.CountryName,
                 "updated_at":   time.Now(),
         }).Error; err != nil </span><span class="cov0" title="0">{
+                fmt.Print(err)
                 return errors.New("failed to update the address for edit address")
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
-func (c *userDatabase) UpdateUser(ctx echo.Context, user domain.User) (err error) <span class="cov0" title="0">{
+func (c *userDatabase) UpdateUser(ctx echo.Context, user domain.User) (err error) <span class="cov8" title="1">{
         updatedAt := time.Now()
         // check password need to update or not
-        if user.Password != "" </span><span class="cov0" title="0">{
+        if user.Password != "" </span><span class="cov8" title="1">{
                 err = c.DB.Model(&amp;user).Where("id = ?", user.ID).Updates(map[string]interface{}{
                         "user_name":  user.UserName,
                         "first_name": user.FirstName,
@@ -1839,30 +1842,30 @@ func (c *userDatabase) UpdateUser(ctx echo.Context, user domain.User) (err error
                 }).Error
         }</span>
 
-        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err != nil </span><span class="cov0" title="0">{
                 return fmt.Errorf("failed to update user detail of user with user_id %s", user.ID)
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
-func (c *userDatabase) UpdateUserAddress(ctx echo.Context, userAddress domain.UserAddress) error <span class="cov0" title="0">{
+func (c *userDatabase) UpdateUserAddress(ctx echo.Context, userAddress domain.UserAddress) error <span class="cov8" title="1">{
         // if it needs to be set as default, then change the old default
-        if userAddress.IsDefault </span><span class="cov0" title="0">{
+        if userAddress.IsDefault </span><span class="cov8" title="1">{
                 if err := c.DB.Model(&amp;domain.UserAddress{}).Where("user_id = ?", userAddress.UserID).Update("is_default", false).Error; err != nil </span><span class="cov0" title="0">{
                         return errors.New("failed to remove default status of address")
                 }</span>
         }
 
         // update the user address
-        <span class="cov0" title="0">if err := c.DB.Model(&amp;userAddress).Where("address_id = ? AND user_id = ?", userAddress.AddressID, userAddress.UserID).Update("is_default", userAddress.IsDefault).Error; err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := c.DB.Model(&amp;userAddress).Where("address_id = ? AND user_id = ?", userAddress.AddressID, userAddress.UserID).Update("is_default", userAddress.IsDefault).Error; err != nil </span><span class="cov0" title="0">{
                 return errors.New("failed to update user address")
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
-func (c *userDatabase) FindAllPaymentMethodsByUserID(ctx echo.Context, userID string) (paymentMethods []response.PaymentMethod, err error) <span class="cov0" title="0">{
+func (c *userDatabase) FindAllPaymentMethodsByUserID(ctx echo.Context, userID string) (paymentMethods []response.PaymentMethod, err error) <span class="cov8" title="1">{
         err = c.DB.
                 Table("payment_methods").
                 Select("id, number", "card_company").
@@ -1872,7 +1875,7 @@ func (c *userDatabase) FindAllPaymentMethodsByUserID(ctx echo.Context, userID st
         return paymentMethods, err
 }</span>
 
-func (c *userDatabase) SavePaymentMethod(ctx echo.Context, paymentMethod domain.PaymentMethod) (paymentMethodID uint, err error) <span class="cov0" title="0">{
+func (c *userDatabase) SavePaymentMethod(ctx echo.Context, paymentMethod domain.PaymentMethod) (paymentMethodID uint, err error) <span class="cov8" title="1">{
         paymentMethod.CreatedAt = time.Now()
         result := c.DB.Create(&amp;paymentMethod)
 
@@ -1880,7 +1883,7 @@ func (c *userDatabase) SavePaymentMethod(ctx echo.Context, paymentMethod domain.
                 return paymentMethodID, errors.New("failed to insert address on database")
         }</span>
 
-        <span class="cov0" title="0">return paymentMethod.ID, nil</span>
+        <span class="cov8" title="1">return paymentMethod.ID, nil</span>
 }
 </pre>
 		
