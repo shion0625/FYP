@@ -163,7 +163,7 @@ func TestProductRepository_SaveCategory(t *testing.T) {
 
 			err := productRepo.SaveCategory(echo.New().AcquireContext(), tt.input)
 
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -459,7 +459,7 @@ func TestProductRepository_SaveVariation(t *testing.T) {
 
 			err := productRepo.SaveVariation(echo.New().AcquireContext(), tt.inputCategory, tt.inputVariation)
 
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -512,7 +512,7 @@ func TestProductRepository_SaveVariationOption(t *testing.T) {
 
 			err := productRepo.SaveVariationOption(echo.New().AcquireContext(), tt.inputVariationID, tt.inputVariationVal)
 
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -728,7 +728,7 @@ func TestProductRepository_SaveProduct(t *testing.T) {
 
 			err := productRepo.SaveProduct(echo.New().AcquireContext(), tt.input.product)
 
-			if err != tt.want.wantErr {
+			if !errors.Is(err, tt.want.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.want.wantErr, err)
 			}
 
@@ -778,7 +778,7 @@ func TestProductRepository_UpdateProduct(t *testing.T) {
 
 			err := productRepo.UpdateProduct(echo.New().AcquireContext(), tt.inputProduct)
 
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -874,7 +874,7 @@ func TestProductDatabase_FindProductItemByID(t *testing.T) {
 			tt.prepareMockFn()
 
 			_, err = productRepo.FindProductItemByID(echo.New().AcquireContext(), tt.inputProductItemID)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -918,7 +918,7 @@ func TestProductDatabase_FindVariationCountForProduct(t *testing.T) {
 			tt.prepareMockFn()
 
 			_, err = productRepo.FindVariationCountForProduct(echo.New().AcquireContext(), tt.inputProductID)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -964,7 +964,7 @@ func TestProductDatabase_FindAllProductItemIDsByProductIDAndVariationOptionID(t 
 			tt.prepareMockFn()
 
 			_, err = productRepo.FindAllProductItemIDsByProductIDAndVariationOptionID(context.Background(), tt.inputProductID, tt.inputVariationOptionID)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -1012,7 +1012,7 @@ func TestProductDatabase_SaveProductConfiguration(t *testing.T) {
 			tt.prepareMockFn()
 
 			err = productRepo.SaveProductConfiguration(echo.New().AcquireContext(), tt.inputProductItemID, tt.inputVariationOptionID)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -1068,7 +1068,7 @@ func TestProductDatabase_SaveProductItem(t *testing.T) {
 			tt.prepareMockFn()
 
 			_, err = productRepo.SaveProductItem(echo.New().AcquireContext(), tt.inputProductItem)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -1112,7 +1112,7 @@ func TestProductDatabase_FindAllProductItems(t *testing.T) {
 			tt.prepareMockFn()
 
 			_, err = productRepo.FindAllProductItems(echo.New().AcquireContext(), tt.inputProductID)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -1156,7 +1156,7 @@ func TestProductDatabase_FindAllVariationValuesOfProductItem(t *testing.T) {
 			tt.prepareMockFn()
 
 			_, err = productRepo.FindAllVariationValuesOfProductItem(echo.New().AcquireContext(), tt.inputProductItemID)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -1208,7 +1208,7 @@ func TestProductDatabase_SaveProductItemImage(t *testing.T) {
 			tt.prepareMockFn()
 
 			err = productRepo.SaveProductItemImage(echo.New().AcquireContext(), tt.inputProductItemID, tt.inputImage)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -1252,7 +1252,7 @@ func TestProductDatabase_FindAllProductItemImages(t *testing.T) {
 			tt.prepareMockFn()
 
 			_, err = productRepo.FindAllProductItemImages(echo.New().AcquireContext(), tt.inputProductItemID)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -16,6 +17,7 @@ import (
 	"github.com/shion0625/FYP/backend/pkg/api/handler/response"
 	usecaseMock "github.com/shion0625/FYP/backend/pkg/usecase/mock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -29,25 +31,26 @@ func createMultipartFileHeader(fileName string, fileContent string) (*multipart.
 	// Create a new form-data header with the provided file name
 	part, err := writer.CreateFormFile("file", fileName)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create form file: %w", err)
 	}
 
 	// Write the file content to the part
 	_, err = part.Write([]byte(fileContent))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create form file: %w", err)
 	}
 
 	// Populate the file header
 	err = writer.Close()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to close writer: %w", err)
 	}
 
 	// Create a new request to parse the form data
-	req, err := http.NewRequest("POST", "/upload", body)
+	req := httptest.NewRequest(echo.POST, "/upload", body)
+
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create new request: %w", err)
 	}
 
 	// Set the content type of the request
@@ -56,7 +59,7 @@ func createMultipartFileHeader(fileName string, fileContent string) (*multipart.
 	// Parse the form data of the request
 	err = req.ParseMultipartForm(10 << 20) // 10 MB
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to parse multipart form: %w", err)
 	}
 
 	// Get the file header
@@ -115,7 +118,7 @@ func TestProductHandler_GetAllCategories(t *testing.T) {
 			ctx := e.NewContext(req, rec)
 
 			err := productHandler.GetAllCategories(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -183,7 +186,7 @@ func TestProductHandler_SaveCategory(t *testing.T) {
 			ctx := e.NewContext(req, rec)
 
 			err := productHandler.SaveCategory(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -261,7 +264,7 @@ func TestProductHandler_UpdateProduct(t *testing.T) {
 			ctx := e.NewContext(req, rec)
 
 			err := productHandler.UpdateProduct(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -335,7 +338,7 @@ func TestProductHandler_SaveVariation(t *testing.T) {
 			ctx.SetParamValues(tt.input.categoryIDStr)
 
 			err := productHandler.SaveVariation(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -409,7 +412,7 @@ func TestProductHandler_SaveVariationOption(t *testing.T) {
 			ctx.SetParamValues(tt.input.variationIDStr)
 
 			err := productHandler.SaveVariationOption(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -480,7 +483,7 @@ func TestProductHandler_GetAllVariations(t *testing.T) {
 			ctx.SetParamValues(tt.input.categoryIDStr)
 
 			err := productHandler.GetAllVariations(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -559,7 +562,7 @@ func TestProductHandler_SaveProduct(t *testing.T) {
 			ctx := e.NewContext(req, rec)
 
 			err := productHandler.SaveProduct(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -634,7 +637,7 @@ func TestProductHandler_GetAllProductsAdmin(t *testing.T) {
 			ctx := e.NewContext(req, rec)
 
 			err := productHandler.GetAllProductsAdmin()(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -709,7 +712,7 @@ func TestProductHandler_GetAllProductsUser(t *testing.T) {
 			ctx := e.NewContext(req, rec)
 
 			err := productHandler.GetAllProductsUser()(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -782,7 +785,7 @@ func TestProductHandler_GetProduct(t *testing.T) {
 			ctx.SetParamValues(tt.input.productIDStr)
 
 			err := productHandler.GetProduct(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -864,7 +867,7 @@ func TestProductHandler_SaveProductItem(t *testing.T) {
 			ctx.SetParamValues(tt.input.productIDStr)
 
 			err := productHandler.SaveProductItem(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -957,7 +960,7 @@ func TestProductHandler_GetAllProductItemsAdmin(t *testing.T) {
 			ctx.SetParamValues(tt.input.productIDStr)
 
 			err := productHandler.GetAllProductItemsAdmin()(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -1047,7 +1050,7 @@ func TestProductHandler_GetAllProductItemsUser(t *testing.T) {
 			ctx.SetParamValues(tt.input.productIDStr)
 
 			err := productHandler.GetAllProductItemsUser()(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})

@@ -1,6 +1,7 @@
 package repository_test
 
 import (
+	"errors"
 	"testing"
 	"time"
 
@@ -46,7 +47,7 @@ func TestUserRepository_FindUserByUserName(t *testing.T) {
 			tt.prepareMockFn()
 
 			_, err := userRepo.FindUserByUserName(echo.New().AcquireContext(), tt.userName)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -91,7 +92,7 @@ func TestUserRepository_FindUserByEmail(t *testing.T) {
 			tt.prepareMockFn()
 
 			_, err := userRepo.FindUserByEmail(echo.New().AcquireContext(), tt.email)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -136,7 +137,7 @@ func TestUserRepository_FindUserByUserID(t *testing.T) {
 			tt.prepareMockFn()
 
 			_, err := userRepo.FindUserByUserID(echo.New().AcquireContext(), tt.userID)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -181,7 +182,7 @@ func TestUserRepository_FindUserByPhoneNumber(t *testing.T) {
 			tt.prepareMockFn()
 
 			_, err := userRepo.FindUserByPhoneNumber(echo.New().AcquireContext(), tt.phoneNumber)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -231,7 +232,7 @@ func TestUserRepository_FindUserByUserNameEmailOrPhone(t *testing.T) {
 			tt.prepareMockFn()
 
 			_, err := userRepo.FindUserByUserNameEmailOrPhone(echo.New().AcquireContext(), tt.userDetails)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -295,7 +296,7 @@ func TestUserRepository_SaveUser(t *testing.T) {
 			tt.prepareMockFn()
 
 			_, err := userRepo.SaveUser(echo.New().AcquireContext(), tt.user)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -340,7 +341,7 @@ func TestUserRepository_FindAllAddressByUserID(t *testing.T) {
 			tt.prepareMockFn()
 
 			_, err := userRepo.FindAllAddressByUserID(echo.New().AcquireContext(), tt.userID)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -387,7 +388,7 @@ func TestUserRepository_FindAddressByUserIDAndAddressID(t *testing.T) {
 			tt.prepareMockFn()
 
 			_, err := userRepo.FindAddressByUserIDAndAddressID(echo.New().AcquireContext(), tt.userID, tt.addressID)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -441,7 +442,7 @@ func TestUserRepository_IsAddressAlreadyExistForUser(t *testing.T) {
 			tt.prepareMockFn()
 
 			exist, err := userRepo.IsAddressAlreadyExistForUser(echo.New().AcquireContext(), tt.address, tt.userID)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -492,7 +493,7 @@ func TestUserRepository_IsAddressIDExist(t *testing.T) {
 			tt.prepareMockFn()
 
 			exist, err := userRepo.IsAddressIDExist(echo.New().AcquireContext(), tt.addressID)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -556,7 +557,7 @@ func TestUserRepository_SaveAddress(t *testing.T) {
 			tt.prepareMockFn()
 
 			_, err := userRepo.SaveAddress(echo.New().AcquireContext(), tt.address)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -611,7 +612,7 @@ func TestUserRepository_UpdateAddress(t *testing.T) {
 			tt.prepareMockFn()
 
 			err := userRepo.UpdateAddress(echo.New().AcquireContext(), tt.address)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -665,7 +666,7 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 			tt.prepareMockFn()
 
 			err := userRepo.UpdateUser(echo.New().AcquireContext(), tt.user)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -718,7 +719,7 @@ func TestUserRepository_UpdateUserAddress(t *testing.T) {
 			tt.prepareMockFn()
 
 			err := userRepo.UpdateUserAddress(echo.New().AcquireContext(), tt.userAddress)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -763,7 +764,7 @@ func TestUserRepository_FindAllPaymentMethodsByUserID(t *testing.T) {
 			tt.prepareMockFn()
 
 			_, err := userRepo.FindAllPaymentMethodsByUserID(echo.New().AcquireContext(), tt.userID)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -817,7 +818,7 @@ func TestUserRepository_SavePaymentMethod(t *testing.T) {
 			tt.prepareMockFn()
 
 			_, err := userRepo.SavePaymentMethod(echo.New().AcquireContext(), tt.paymentMethod)
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 

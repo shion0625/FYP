@@ -148,7 +148,7 @@ func TestOrderRepository_SaveOrder(t *testing.T) {
 
 			err := orderRepo.SaveOrder(echo.New().AcquireContext(), tt.inputUserID, tt.inputPayOrder)
 
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -202,7 +202,7 @@ func TestOrderRepository_UpdateProductItemStock(t *testing.T) {
 
 			newStock, err := orderRepo.UpdateProductItemStock(nil, tt.inputProductItemID, tt.inputPurchaseQuantity)
 
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -249,7 +249,7 @@ func TestOrderRepository_PayOrder(t *testing.T) {
 
 			err := orderRepo.PayOrder(echo.New().AcquireContext(), tt.inputPaymentMethodID)
 
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 
@@ -309,7 +309,7 @@ func TestOrderRepository_GetShopOrders(t *testing.T) {
 
 			_, err := orderRepo.GetShopOrders(echo.New().AcquireContext(), tt.inputUserID, tt.inputPagination)
 
-			if err != tt.wantErr {
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("expected %v, but got %v", tt.wantErr, err)
 			}
 

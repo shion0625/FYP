@@ -31,7 +31,9 @@ func TestUserUseCase_FindProfile(t *testing.T) {
 	req := httptest.NewRequest(echo.GET, "/", nil)
 	rec := httptest.NewRecorder()
 	ctx := echo.New().NewContext(req, rec)
-	userID := "testUserID"
+
+	const userID = "testUserID"
+
 	userDomain := domain.User{ID: "testUserID"}
 
 	type input struct {
@@ -170,7 +172,9 @@ func TestUserUseCase_SaveAddress(t *testing.T) {
 	req := httptest.NewRequest(echo.GET, "/", nil)
 	rec := httptest.NewRecorder()
 	ctx := echo.New().NewContext(req, rec)
-	userID := "testUserID"
+
+	const userID = "testUserID"
+
 	address := domain.Address{ID: 1, Name: "Test Street"}
 
 	type input struct {
@@ -256,7 +260,9 @@ func TestUserUseCase_UpdateAddress(t *testing.T) {
 	req := httptest.NewRequest(echo.GET, "/", nil)
 	rec := httptest.NewRecorder()
 	ctx := echo.New().NewContext(req, rec)
-	userID := "testUserID"
+
+	const userID = "testUserID"
+
 	addressBody := request.EditAddress{ID: 1, Name: "Change Street", IsDefault: new(bool)}
 
 	type input struct {
@@ -341,7 +347,9 @@ func TestUserUseCase_FindAddresses(t *testing.T) {
 	req := httptest.NewRequest(echo.GET, "/", nil)
 	rec := httptest.NewRecorder()
 	ctx := echo.New().NewContext(req, rec)
-	userID := "testUserID"
+
+	const userID = "testUserID"
+
 	addresses := []response.Address{{ID: 1, Name: "Test Street"}}
 
 	type input struct {

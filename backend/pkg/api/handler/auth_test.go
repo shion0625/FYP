@@ -17,6 +17,7 @@ import (
 	"github.com/shion0625/FYP/backend/pkg/usecase"
 	usecaseMock "github.com/shion0625/FYP/backend/pkg/usecase/mock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -107,7 +108,8 @@ func TestAuthHandler_UserLogin(t *testing.T) {
 			ctx := e.NewContext(req, rec)
 
 			err := authHandler.UserLogin(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
+
 			if tt.want.wantErr != nil {
 				assert.Equal(t, tt.want.wantCode, rec.Code)
 				assert.Contains(t, rec.Body.String(), tt.want.wantErr.Error())
@@ -192,7 +194,8 @@ func TestAuthHandler_UserSignUp(t *testing.T) {
 			ctx := e.NewContext(req, rec)
 
 			err := authHandler.UserSignUp(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
+
 			if tt.want.wantErr != nil {
 				assert.Equal(t, tt.want.wantCode, rec.Code)
 				assert.Contains(t, rec.Body.String(), tt.want.wantErr.Error())
@@ -303,7 +306,8 @@ func TestAuthHandler_UserRenewAccessToken(t *testing.T) {
 			ctx := e.NewContext(req, rec)
 
 			err := authHandler.UserRenewAccessToken()(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
+
 			if tt.want.wantErr != nil {
 				assert.Equal(t, tt.want.wantCode, rec.Code)
 				assert.Contains(t, rec.Body.String(), tt.want.wantErr.Error())

@@ -15,6 +15,7 @@ import (
 	"github.com/shion0625/FYP/backend/pkg/api/handler/response"
 	usecaseMock "github.com/shion0625/FYP/backend/pkg/usecase/mock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -98,7 +99,7 @@ func TestOrderHandler_PayOrder(t *testing.T) {
 			ctx.Set("userId", tt.input.payOrderRequest.UserID)
 
 			err := orderHandler.PayOrder(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -177,7 +178,7 @@ func TestOrderHandler_GetOrderHistory(t *testing.T) {
 			ctx.Set("userId", tt.input.userId)
 
 			err := orderHandler.GetOrderHistory(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})

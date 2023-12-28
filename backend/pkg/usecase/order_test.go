@@ -207,6 +207,7 @@ func TestOrderUseCase_updateStockAndPayOrder(t *testing.T) {
 								mr.EXPECT().PayOrder(gomock.Any(), gomock.Any()).Return(nil).Times(1),
 								mr.EXPECT().SaveOrder(gomock.Any(), gomock.Any(), gomock.Any()).Return(errors.New("save error")).Times(1),
 							)
+
 							return f(mr)
 						}),
 				)

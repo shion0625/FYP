@@ -17,6 +17,7 @@ import (
 	"github.com/shion0625/FYP/backend/pkg/domain"
 	usecaseMock "github.com/shion0625/FYP/backend/pkg/usecase/mock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -31,6 +32,7 @@ func TestUserHandler_GetProfile(t *testing.T) {
 	type input struct {
 		userId string
 	}
+
 	type output struct {
 		wantCode int
 		wantStr  string
@@ -84,7 +86,7 @@ func TestUserHandler_GetProfile(t *testing.T) {
 			ctx.Set("userId", tt.input.userId)
 
 			err := userHandler.GetProfile(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -170,7 +172,7 @@ func TestUserHandler_UpdateProfile(t *testing.T) {
 			ctx.Set("userId", tt.input.userId)
 
 			err := userHandler.UpdateProfile(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -258,7 +260,7 @@ func TestUserHandler_SaveAddress(t *testing.T) {
 			ctx.Set("userId", tt.input.userId)
 
 			err := userHandler.SaveAddress(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -318,7 +320,7 @@ func TestUserHandler_GetAllAddresses(t *testing.T) {
 			ctx.Set("userId", tt.input.userId)
 
 			err := userHandler.GetAllAddresses(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -381,7 +383,7 @@ func TestUserHandler_GetAddressById(t *testing.T) {
 			ctx.SetParamValues(tt.input.addressId)
 
 			err := userHandler.GetAddressById(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -400,6 +402,7 @@ func TestUserHandler_UpdateAddress(t *testing.T) {
 		userId string
 		body   request.EditAddress
 	}
+
 	type output struct {
 		wantCode int
 		wantStr  string
@@ -470,7 +473,7 @@ func TestUserHandler_UpdateAddress(t *testing.T) {
 			ctx.Set("userId", tt.input.userId)
 
 			err := userHandler.UpdateAddress(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -534,7 +537,7 @@ func TestUserHandler_GetAllPaymentMethods(t *testing.T) {
 			ctx.Set("userId", tt.input.userId)
 
 			err := userHandler.GetAllPaymentMethods(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
@@ -553,6 +556,7 @@ func TestUserHandler_SavePaymentMethod(t *testing.T) {
 		userId string
 		body   request.PaymentMethod
 	}
+
 	type output struct {
 		wantCode int
 		wantStr  string
@@ -611,7 +615,7 @@ func TestUserHandler_SavePaymentMethod(t *testing.T) {
 			ctx.Set("userId", tt.input.userId)
 
 			err := userHandler.SavePaymentMethod(ctx)
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.want.wantCode, rec.Code)
 			assert.Contains(t, rec.Body.String(), tt.want.wantStr)
 		})
