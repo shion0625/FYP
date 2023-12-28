@@ -697,7 +697,6 @@ func TestProductUseCase_SaveProductItem(t *testing.T) {
 		t.Run(testName, func(t *testing.T) {
 			tt.prepareMockFn(mockProductRepo, mockCloudService)
 			err := product.SaveProductItem(ctx, tt.input.productID, tt.input.productItem)
-			fmt.Print(err)
 			if err != nil {
 				assert.Equal(t, tt.want.wantErr.Error(), err.Error())
 			} else {

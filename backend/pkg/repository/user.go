@@ -156,7 +156,6 @@ func (c *userDatabase) SaveUserAddress(ctx echo.Context, userAddress domain.User
 
 	// insert the user address
 	if err := c.DB.Table("user_addresses").Create(&userAddress).Error; err != nil {
-		fmt.Print(err)
 		return errors.New("failed to insert userAddress into database")
 	}
 
@@ -164,7 +163,6 @@ func (c *userDatabase) SaveUserAddress(ctx echo.Context, userAddress domain.User
 }
 
 func (c *userDatabase) UpdateAddress(ctx echo.Context, address domain.Address) error {
-	fmt.Print("海都")
 	if err := c.DB.Model(&address).Where("id = ?", address.ID).Updates(map[string]interface{}{
 		"name":         address.Name,
 		"phone_number": address.PhoneNumber,
@@ -176,7 +174,6 @@ func (c *userDatabase) UpdateAddress(ctx echo.Context, address domain.Address) e
 		"country_name": address.CountryName,
 		"updated_at":   time.Now(),
 	}).Error; err != nil {
-		fmt.Print(err)
 		return errors.New("failed to update the address for edit address")
 	}
 

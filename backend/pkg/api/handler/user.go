@@ -180,7 +180,6 @@ func (u *UserHandler) GetAddressById(ctx echo.Context) error {
 	}
 
 	addressIDStr := ctx.Param("address_id")
-	fmt.Print(addressIDStr)
 
 	addressID, err := utils.ParseStringToUint32(addressIDStr)
 	if err != nil {

@@ -4,7 +4,6 @@ import (
 	// "errors".
 	"context"
 	"errors"
-	"fmt"
 	"reflect"
 	"testing"
 
@@ -728,8 +727,10 @@ func TestProductRepository_SaveProduct(t *testing.T) {
 			tt.prepareMockFn()
 
 			err := productRepo.SaveProduct(echo.New().AcquireContext(), tt.input.product)
-			fmt.Print("err")
-			fmt.Print(err)
+
+			if err != tt.want.wantErr {
+				t.Errorf("expected %v, but got %v", tt.want.wantErr, err)
+			}
 
 			if err := mock.ExpectationsWereMet(); err != nil {
 				t.Errorf("there were unfulfilled expectations: %s", err)

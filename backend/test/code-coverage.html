@@ -61,7 +61,7 @@
 				
 				<option value="file2">github.com/shion0625/FYP/backend/pkg/api/handler/product.go (70.0%)</option>
 				
-				<option value="file3">github.com/shion0625/FYP/backend/pkg/api/handler/user.go (66.4%)</option>
+				<option value="file3">github.com/shion0625/FYP/backend/pkg/api/handler/user.go (66.2%)</option>
 				
 				<option value="file4">github.com/shion0625/FYP/backend/pkg/repository/auth.go (85.7%)</option>
 				
@@ -69,7 +69,7 @@
 				
 				<option value="file6">github.com/shion0625/FYP/backend/pkg/repository/product.go (95.1%)</option>
 				
-				<option value="file7">github.com/shion0625/FYP/backend/pkg/repository/user.go (67.6%)</option>
+				<option value="file7">github.com/shion0625/FYP/backend/pkg/repository/user.go (69.1%)</option>
 				
 				<option value="file8">github.com/shion0625/FYP/backend/pkg/usecase/auth.go (98.5%)</option>
 				
@@ -1008,7 +1008,6 @@ func (u *UserHandler) GetAddressById(ctx echo.Context) error <span class="cov8" 
         }</span>
 
         <span class="cov8" title="1">addressIDStr := ctx.Param("address_id")
-        fmt.Print(addressIDStr)
 
         addressID, err := utils.ParseStringToUint32(addressIDStr)
         if err != nil </span><span class="cov0" title="0">{
@@ -1789,7 +1788,6 @@ func (c *userDatabase) SaveUserAddress(ctx echo.Context, userAddress domain.User
 
         // insert the user address
         <span class="cov0" title="0">if err := c.DB.Table("user_addresses").Create(&amp;userAddress).Error; err != nil </span><span class="cov0" title="0">{
-                fmt.Print(err)
                 return errors.New("failed to insert userAddress into database")
         }</span>
 
@@ -1797,7 +1795,6 @@ func (c *userDatabase) SaveUserAddress(ctx echo.Context, userAddress domain.User
 }
 
 func (c *userDatabase) UpdateAddress(ctx echo.Context, address domain.Address) error <span class="cov8" title="1">{
-        fmt.Print("海都")
         if err := c.DB.Model(&amp;address).Where("id = ?", address.ID).Updates(map[string]interface{}{
                 "name":         address.Name,
                 "phone_number": address.PhoneNumber,
@@ -1809,7 +1806,6 @@ func (c *userDatabase) UpdateAddress(ctx echo.Context, address domain.Address) e
                 "country_name": address.CountryName,
                 "updated_at":   time.Now(),
         }).Error; err != nil </span><span class="cov0" title="0">{
-                fmt.Print(err)
                 return errors.New("failed to update the address for edit address")
         }</span>
 
