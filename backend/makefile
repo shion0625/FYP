@@ -75,10 +75,10 @@ mockgen: # Generate mock files for the test
 	mockgen -source=pkg/usecase/interfaces/user.go -destination=pkg/usecase/mock/user_mock.go
 
 docker-up: ## To up the docker compose file
-	docker-compose up -d
+	docker compose up -d
 
 docker-down: ## To down the docker compose file
-	docker-compose down
+	docker compose down
 
 docker-build: ## To build newdocker file for this project
 	docker build -t nikhil382/ecommerce-gin-clean-arch .

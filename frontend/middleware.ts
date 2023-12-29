@@ -10,35 +10,46 @@ export async function middleware(req: NextRequest) {
   const isBlockedLoginRoot =
     req.nextUrl.pathname.startsWith('/user/login') ||
     req.nextUrl.pathname.startsWith('/user/signup');
+
+  const isBlockedLogoutRoot = req.nextUrl.pathname.startsWith('/user/logout');
   const isProtectedAPI = req.nextUrl.pathname.startsWith('/api/auth');
 
-  let res = NextResponse.next();
+  const response = NextResponse.next();
 
   if (isBlockedRoot) {
-    res = await handlingAccessToken(res);
-    if (res.ok) return res;
+    const res = await handlingAccessToken(response);
+    if (res.ok) return response;
     return NextResponse.redirect(new URL('/user/login', req.url));
   }
 
   if (isBlockedLoginRoot) {
-    res = await handlingAccessToken(res);
+    const res = await handlingAccessToken(response);
     if (res.ok) {
       const redirectUrl = req.headers.get('referer') || '/';
       return NextResponse.redirect(new URL(redirectUrl, req.url));
     }
-    return res;
+    return response;
+  }
+
+  if (isBlockedLogoutRoot) {
+    const res = await handlingAccessToken(response);
+    if (res.ok) {
+      return response;
+    }
+    const redirectUrl = req.headers.get('referer') || '/';
+    return NextResponse.redirect(new URL(redirectUrl, req.url));
   }
 
   if (isProtectedAPI) {
-    res = await handlingAccessToken(res);
+    const res = await handlingAccessToken(response);
     return res;
   }
 
-  return res;
+  return response;
 }
 
 export const config = {
-  matcher: ['/cart/:path*', '/api/:path*', '/user/login', '/user/signup'],
+  matcher: ['/cart/:path*', '/api/:path*', '/user/login', '/user/signup', '/user/logout'],
 };
 
 const handlingAccessToken = async (
@@ -77,10 +88,10 @@ const handlingAccessToken = async (
         expires: expiryDate,
       });
     }
+    return response;
   } catch (error) {
     return respondWithInternalServerError();
   }
-  return response;
 };
 
 function respondWithInternalServerError() {
