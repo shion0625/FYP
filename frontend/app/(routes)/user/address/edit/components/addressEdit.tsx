@@ -20,14 +20,12 @@ const AddressView = () => {
   const [userAddress, setUserAddress] = useState<UpdateAddressBody>();
 
   useEffect(() => {
-    console.log('jhihi');
     getUserAddress(address_id).then((address) => {
       setUserAddress(address);
       reset(address); // userAddressが更新されたときにフォームのデフォルト値を更新
     });
   }, [address_id]);
 
-  console.log('userAddress', userAddress);
   const {
     register,
     handleSubmit,

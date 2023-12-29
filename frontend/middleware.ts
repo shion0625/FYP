@@ -11,7 +11,9 @@ export async function middleware(req: NextRequest) {
     req.nextUrl.pathname.startsWith('/user/login') ||
     req.nextUrl.pathname.startsWith('/user/signup');
 
-  const isBlockedLogoutRoot = req.nextUrl.pathname.startsWith('/user/logout');
+  const isBlockedLogoutRoot =
+    req.nextUrl.pathname.startsWith('/user/logout') || req.nextUrl.pathname.startsWith('/user');
+
   const isProtectedAPI = req.nextUrl.pathname.startsWith('/api/auth');
 
   const response = NextResponse.next();
@@ -49,7 +51,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/cart/:path*', '/api/:path*', '/user/login', '/user/signup', '/user/logout'],
+  matcher: ['/cart/:path*', '/api/:path*', '/user/login', '/user/signup', '/user/logout', '/user'],
 };
 
 const handlingAccessToken = async (

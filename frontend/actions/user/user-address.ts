@@ -58,7 +58,6 @@ export const UseUserAddress = (): UseUserAddressesReturn => {
   };
 
   const updateUserAddress = async (body: UpdateAddressBody): Promise<null> => {
-    console.log('fwae');
     const response = await axiosPutFetcher(URL, body);
     mutate(response, false); // Update the local data immediately, but disable revalidation
     return response.data;

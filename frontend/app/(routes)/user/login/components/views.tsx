@@ -24,9 +24,8 @@ const LoginView = () => {
   const { login } = UseLogin();
   const router = useRouter();
   const onSubmit = async (data: LoginBody) => {
-    let response;
     try {
-      response = await login({
+      const response = await login({
         ...data,
       });
       toast.success(response.message);
