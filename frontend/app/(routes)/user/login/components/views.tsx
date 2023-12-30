@@ -6,6 +6,7 @@ import { Label, TextInput, Button } from 'flowbite-react';
 import { useRouter } from 'next/navigation';
 import { HiLockClosed, HiMail } from 'react-icons/hi';
 import { UseLogin, LoginBody, loginSchema } from '@/actions/user';
+import useLoginState from '@/hooks/use-login';
 
 const LoginView = () => {
   const {
@@ -22,12 +23,15 @@ const LoginView = () => {
   });
 
   const { login } = UseLogin();
+  const loginState = useLoginState();
+
   const router = useRouter();
   const onSubmit = async (data: LoginBody) => {
     try {
       const response = await login({
         ...data,
       });
+      loginState.onLogin();
       toast.success(response.message);
       router.push('/user');
     } catch (error: unknown) {
