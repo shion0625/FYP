@@ -11,6 +11,7 @@ import {
   HiTable,
 } from 'react-icons/hi';
 import { twMerge } from 'tailwind-merge';
+import useLoginState from '@/hooks/use-login';
 import useSidebar from '@/hooks/use-sidebar';
 import { Category } from '@/types';
 
@@ -21,7 +22,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ data }) => {
   const pathname = usePathname();
   const sidebar = useSidebar();
-
+  const loginState = useLoginState();
   const categories = data?.map((category) => ({
     href: `/category/${category.id}`,
     label: category.name,
@@ -64,9 +65,11 @@ const Sidebar: React.FC<SidebarProps> = ({ data }) => {
           >
             <SidebarFlow.Items>
               <SidebarFlow.ItemGroup>
-                <SidebarFlow.Item href="/user" icon={HiChartPie}>
-                  My page
-                </SidebarFlow.Item>
+                {loginState.isLogin && (
+                  <SidebarFlow.Item href="/user" icon={HiChartPie}>
+                    My page
+                  </SidebarFlow.Item>
+                )}
                 <SidebarFlow.Item href="/" icon={HiShoppingBag}>
                   Products
                 </SidebarFlow.Item>
@@ -94,15 +97,20 @@ const Sidebar: React.FC<SidebarProps> = ({ data }) => {
                     <div>No categories available</div>
                   )}
                 </SidebarFlow.Collapse>
-                <SidebarFlow.Item href="/user/login" icon={HiArrowSmRight}>
-                  login
-                </SidebarFlow.Item>
-                <SidebarFlow.Item href="/user/signup" icon={HiTable}>
-                  Sign up
-                </SidebarFlow.Item>
-                <SidebarFlow.Item href="/user/logout" icon={HiTable}>
-                  logout
-                </SidebarFlow.Item>
+                {!loginState.isLogin ? (
+                  <>
+                    <SidebarFlow.Item href="/user/login" icon={HiArrowSmRight}>
+                      login
+                    </SidebarFlow.Item>
+                    <SidebarFlow.Item href="/user/signup" icon={HiTable}>
+                      Sign up
+                    </SidebarFlow.Item>
+                  </>
+                ) : (
+                  <SidebarFlow.Item href="/user/logout" icon={HiTable}>
+                    logout
+                  </SidebarFlow.Item>
+                )}
               </SidebarFlow.ItemGroup>
             </SidebarFlow.Items>
           </SidebarFlow>
