@@ -44,3 +44,8 @@ export function setAccessTokenCookie(accessToken: string) {
     expires: expiryDate,
   });
 }
+
+export function deleteToken() {
+  cookies().delete('access_token');
+  cookies().delete('refresh_token');
+}
