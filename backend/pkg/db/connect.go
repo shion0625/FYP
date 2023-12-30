@@ -40,10 +40,6 @@ func ConnectDatabase(cfg *config.Config) (*gorm.DB, error) {
 		domain.ProductConfiguration{},
 		domain.ProductImage{},
 
-		// offer
-		domain.Offer{},
-		domain.OfferProduct{},
-
 		// order
 		domain.ShopOrder{},
 		domain.ShopOrderProductItem{},

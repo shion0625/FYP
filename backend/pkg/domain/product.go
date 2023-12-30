@@ -76,24 +76,6 @@ type ProductImage struct {
 	Image         string      `gorm:"not null"            json:"image"`
 }
 
-// offer.
-type Offer struct {
-	ID           uint      `gorm:"primaryKey;not null" json:"id"           swaggerignore:"true"`
-	Name         string    `gorm:"not null;unique"     json:"name"`
-	Description  string    `gorm:"not null"            json:"description"`
-	DiscountRate uint      `gorm:"not null"            json:"discountRate"`
-	StartDate    time.Time `gorm:"not null"            json:"startDate"`
-	EndDate      time.Time `gorm:"not null"            json:"endDate"`
-}
-
-type OfferProduct struct {
-	ID        uint    `gorm:"primaryKey;not null" json:"id"`
-	OfferID   uint    `gorm:"not null"            json:"offerId"`
-	Offer     Offer   `json:"-"`
-	ProductID uint    `gorm:"not null"            json:"productId"`
-	Product   Product `json:"-"`
-}
-
 // no need database.
 type ServiceAccount struct {
 	//nolint:tagliatelle

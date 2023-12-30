@@ -80,22 +80,3 @@ type ProductVariationValue struct {
 	VariationOptionID uint   `json:"variationOptionId"`
 	Value             string `json:"value"`
 }
-
-// offer response.
-type OfferCategory struct {
-	OfferCategoryID uint   `json:"offerCategoryId"`
-	CategoryID      uint   `json:"categoryId"`
-	CategoryName    string `json:"categoryName"`
-	DiscountRate    uint   `json:"discountRate"`
-	OfferID         uint   `json:"offerId"`
-	OfferName       string `json:"offerName"`
-}
-
-type OfferProduct struct {
-	OfferProductID uint   `json:"offerProductId"`
-	ProductID      uint   `json:"productId"`
-	ProductName    string `json:"productName"`
-	DiscountRate   uint   `json:"discountRate"`
-	OfferID        uint   `json:"offerId"`
-	OfferName      string `json:"offerName"`
-}

@@ -94,27 +94,6 @@ func CreateProductDomain(db *gorm.DB, options ...func(*domain.User)) error {
 		return err
 	}
 
-	offer := domain.Offer{
-		Name:         gofakeit.Company(),
-		Description:  gofakeit.Sentence(MaxSentenceLength),
-		DiscountRate: uint(gofakeit.Number(1, MaxQtyInStock)),
-		StartDate:    gofakeit.Date(),
-		EndDate:      gofakeit.Date(),
-	}
-	if err := db.Create(&offer).Error; err != nil {
-		return err
-	}
-
-	offerProduct := domain.OfferProduct{
-		OfferID:   offer.ID,
-		Offer:     offer,
-		ProductID: product.ID,
-		Product:   product,
-	}
-	if err := db.Create(&offerProduct).Error; err != nil {
-		return err
-	}
-
 	return nil
 }
 
