@@ -40,9 +40,9 @@ const AddressView = () => {
   const onSubmit = async (data: UpdateAddressBody) => {
     try {
       await updateUserAddress(data);
-      toast.success('success to add address');
+      toast.success('success to edit address');
     } catch (error: unknown) {
-      toast.error('failed to add address');
+      toast.error('failed to edit address');
     }
   };
 
