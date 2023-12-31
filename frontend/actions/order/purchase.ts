@@ -22,6 +22,9 @@ export const UsePurchase = (): UsePurchaseReturn => {
   const purchaseOrder = async (body: Body): Promise<Response<unknown>> => {
     const response = await axiosPostFetcher(URL, body);
     mutate(response, false);
+    if (!response.data.status) {
+      throw new Error(response.data.message);
+    }
     return response.data;
   };
 

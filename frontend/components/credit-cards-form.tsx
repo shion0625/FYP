@@ -12,7 +12,11 @@ import {
   CreditCardSchema,
 } from '@/actions/user/payment-method';
 
-const CreditCardsForm = () => {
+interface CreditCardsFormProps {
+  setIsSubmitted: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const CreditCardsForm: React.FC<CreditCardsFormProps> = ({ setIsSubmitted }) => {
   const {
     register,
     handleSubmit,
@@ -42,6 +46,7 @@ const CreditCardsForm = () => {
     try {
       await savePaymentMethod(data);
       toast.success('success to add address');
+      setIsSubmitted(true);
     } catch (error: unknown) {
       toast.error('failed to add address');
     }

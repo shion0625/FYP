@@ -1,7 +1,6 @@
 package request
 
 type PayOrder struct {
-	UserID          string            `json:"userId"          validate:"required"`
 	AddressID       uint              `json:"addressId"       validate:"required,number,gte=1"`
 	ProductItemInfo []ProductItemInfo `json:"productItemInfo" validate:"required,min=1"`
 	TotalFee        uint              `json:"totalFee"        validate:"required,numeric"`

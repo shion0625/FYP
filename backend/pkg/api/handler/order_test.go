@@ -28,6 +28,7 @@ func TestOrderHandler_PayOrder(t *testing.T) {
 	orderHandler := handler.NewOrderHandler(mockOrderUseCase)
 
 	type input struct {
+		userID          string
 		payOrderRequest request.PayOrder
 	}
 
@@ -44,8 +45,8 @@ func TestOrderHandler_PayOrder(t *testing.T) {
 	}{
 		"Normal Case: PayOrder": {
 			input{
-				request.PayOrder{
-					UserID:    "testUserID",
+				userID: "testUserID",
+				payOrderRequest: request.PayOrder{
 					AddressID: 1,
 					ProductItemInfo: []request.ProductItemInfo{
 						{
@@ -64,8 +65,8 @@ func TestOrderHandler_PayOrder(t *testing.T) {
 		},
 		"Abnormal Case: PayOrder": {
 			input{
-				request.PayOrder{
-					UserID:    "testUserID",
+				userID: "testUserID",
+				payOrderRequest: request.PayOrder{
 					AddressID: 1,
 					ProductItemInfo: []request.ProductItemInfo{
 						{
@@ -96,7 +97,7 @@ func TestOrderHandler_PayOrder(t *testing.T) {
 			e := echo.New()
 			e.Validator = &CustomValidator{validator: validator.New(validator.WithRequiredStructEnabled())}
 			ctx := e.NewContext(req, rec)
-			ctx.Set("userId", tt.input.payOrderRequest.UserID)
+			ctx.Set("userId", tt.input.userID)
 
 			err := orderHandler.PayOrder(ctx)
 			require.NoError(t, err)

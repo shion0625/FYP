@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Button, Card } from 'flowbite-react';
 import { useRouter } from 'next/navigation';
@@ -17,6 +17,7 @@ interface DataState {
   paymentMethod: PaymentMethod[];
   userAddress: Address[];
 }
+
 const Summary = () => {
   const router = useRouter();
   const items = useCart((state) => state.items);
@@ -24,6 +25,8 @@ const Summary = () => {
   const { purchaseOrder } = UsePurchase();
   const { getUserAddresses } = UseUserAddress();
   const { getPaymentMethod } = UsePaymentMethod();
+  const [isSubmittedPaymentMethod, setIsSubmitted] = useState(false);
+
   const [responseData, setData] = useState<DataState>({
     paymentMethod: [],
     userAddress: [],
@@ -36,32 +39,30 @@ const Summary = () => {
       setData({ paymentMethod, userAddress });
     };
     fetchData();
-  }, []);
+  }, [isSubmittedPaymentMethod]);
 
   const totalPrice = items.reduce((total, item) => total + Number(item.price), 0);
 
-  const clickedAddressId = useRef(0);
-
-  const handleCardClick = (id: number) => {
-    clickedAddressId.current = id;
-  };
+  const [clickedAddressId, setClickedAddressId] = useState(0);
+  const [clickedPaymentMethodId, setClickedPaymentMethodId] = useState(0);
 
   const onCheckout = async () => {
     const convertProductItemInfo = items.map((item) => ({
       productItemId: item.id,
       variationValues: item.variationValues,
-      count: item.count || 0, // Countがundefinedの場合は0とする
+      count: item.count || 0,
     }));
     try {
       const response = await purchaseOrder({
-        addressId: clickedAddressId.current,
+        addressId: clickedAddressId,
         productItemInfo: convertProductItemInfo,
         totalFee: totalPrice,
-        paymentMethodID: 11,
+        paymentMethodID: clickedPaymentMethodId,
       });
       toast.success(response.message);
-      removeAll();
+      // removeAll();
     } catch (error: unknown) {
+      console.log(error);
       toast.error('failed to purchase');
     }
   };
@@ -86,7 +87,11 @@ const Summary = () => {
         {responseData.userAddress &&
           responseData.userAddress.length > 0 &&
           responseData.userAddress.map((address, index) => (
-            <Card className="mt-4" key={index} onClick={() => handleCardClick(address.id)}>
+            <Card
+              className={`mt-4 ${address.id === clickedAddressId ? 'bg-blue-200' : ''}`}
+              key={index}
+              onClick={() => setClickedAddressId(address.id)}
+            >
               <h2 className="text-2xl mb-4 font-semibold">{address.name}</h2>
               <p className="space-y-2 text-gray-700">
                 {address.house}
@@ -108,12 +113,16 @@ const Summary = () => {
           buttonText="add payment method"
           headerText="Add Payment Method"
         >
-          <CreditCardsForm />
+          <CreditCardsForm setIsSubmitted={setIsSubmitted} />
         </BackdropModal>
         {responseData.paymentMethod &&
           responseData.paymentMethod.length > 0 &&
           responseData.paymentMethod.map((paymentMethod) => (
-            <Card className="mt-4" key={paymentMethod.id}>
+            <Card
+              className={`mt-4 ${paymentMethod.id === clickedPaymentMethodId ? 'bg-blue-200' : ''}`}
+              key={paymentMethod.id}
+              onClick={() => setClickedPaymentMethodId(paymentMethod.id)}
+            >
               <p>
                 <CardIcon cardCompany={paymentMethod.cardCompany} />
                 <span className="font-bold">Card ID:</span> {paymentMethod.id}
@@ -125,7 +134,11 @@ const Summary = () => {
             </Card>
           ))}
       </div>
-      <Button onClick={onCheckout} disabled={items.length === 0} className="w-full mt-6">
+      <Button
+        onClick={onCheckout}
+        disabled={items.length === 0 || clickedAddressId == 0 || clickedPaymentMethodId == 0}
+        className="w-full mt-6"
+      >
         Checkout
       </Button>
     </div>
