@@ -60,7 +60,7 @@ const Summary = () => {
         paymentMethodID: clickedPaymentMethodId,
       });
       toast.success(response.message);
-      // removeAll();
+      removeAll();
     } catch (error: unknown) {
       console.log(error);
       toast.error('failed to purchase');
