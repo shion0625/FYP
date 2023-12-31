@@ -39,7 +39,12 @@ const MyUserView = () => {
   return (
     <div className="space-y-10 pb-10">
       {responseData.userProfile && responseData.userProfile ? (
-        <div className="flex flex-col items-center bg-white shadow-lg rounded-lg p-10">
+        <div
+          className="flex flex-col items-center bg-white shadow-lg rounded-lg p-10"
+          onClick={() => {
+            router.push('/user/edit');
+          }}
+        >
           <h1 className="text-4xl mb-4 font-semibold">{`${responseData.userProfile.firstName} ${responseData.userProfile.lastName}`}</h1>
           <ul className="space-y-2 text-gray-700">
             <li>

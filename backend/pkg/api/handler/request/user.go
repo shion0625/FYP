@@ -33,8 +33,8 @@ type EditUser struct {
 	Age             uint   `json:"age"             validate:"required,number,gte=0,lte=120"`
 	Email           string `json:"email"           validate:"required,email"`
 	Phone           string `json:"phone"           validate:"required,e164"`
-	Password        string `json:"password"        validate:"required"`
-	ConfirmPassword string `json:"confirmPassword" validate:"required,eqfield=Password"`
+	Password        string `json:"password"`
+	ConfirmPassword string `json:"confirmPassword" validate:"eqfield=Password"`
 }
 
 type PaymentMethod struct {
