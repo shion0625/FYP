@@ -8,7 +8,7 @@ import (
 
 func CreateProductDomain(db *gorm.DB, options ...func(*domain.User)) error {
 	const (
-		MaxSentenceLength = 200
+		MaxSentenceLength = 50
 		MaxPrice          = 1000
 		ImageSize         = 100
 		MaxQtyInStock     = 100
