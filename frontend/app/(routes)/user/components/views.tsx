@@ -1,4 +1,5 @@
 'use client';
+import React, { useEffect, useState } from 'react';
 import { Button, Card } from 'flowbite-react';
 import { useRouter } from 'next/navigation';
 import { UseGetMyPage } from '@/app/(routes)/user/hooks/get-mypage';
@@ -6,29 +7,54 @@ import CreditCardsForm from '@/components/credit-cards-form';
 import BackdropModal from '@/components/ui/backdrop-modal';
 import CardIcon from '@/components/ui/credit-cards';
 import NoResults from '@/components/ui/no-results';
+import { Address, User, PaymentMethod } from '@/types';
+
+interface DataState {
+  userProfile: User | undefined;
+  userAddressList: Address[] | undefined;
+  userPaymentMethod: PaymentMethod[] | undefined;
+}
 
 const MyUserView = () => {
   const router = useRouter();
-  const { userProfile, userAddressList, userPaymentMethod } = UseGetMyPage();
+  const [responseData, setData] = useState<DataState>({
+    userProfile: undefined,
+    userAddressList: [],
+    userPaymentMethod: [],
+  });
+  const [isSubmittedPaymentMethod, setIsSubmitted] = useState(false);
+  const { getProfile } = UseGetMyPage();
+  useEffect(() => {
+    const fetchData = async () => {
+      const profile = await getProfile();
+      setData({
+        userProfile: profile.userProfile,
+        userAddressList: profile.userAddressList,
+        userPaymentMethod: profile.userPaymentMethod,
+      });
+    };
+    fetchData();
+  }, [isSubmittedPaymentMethod]);
+
   return (
     <div className="space-y-10 pb-10">
-      {userProfile && userProfile.data ? (
+      {responseData.userProfile && responseData.userProfile ? (
         <div className="flex flex-col items-center bg-white shadow-lg rounded-lg p-10">
-          <h1 className="text-4xl mb-4 font-semibold">{`${userProfile.data.firstName} ${userProfile.data.lastName}`}</h1>
+          <h1 className="text-4xl mb-4 font-semibold">{`${responseData.userProfile.firstName} ${responseData.userProfile.lastName}`}</h1>
           <ul className="space-y-2 text-gray-700">
             <li>
               <p>
-                <span className="font-bold">Username:</span> {userProfile.data.userName}
+                <span className="font-bold">Username:</span> {responseData.userProfile.userName}
               </p>
             </li>
             <li>
               <p>
-                <span className="font-bold">Age:</span> {userProfile.data.age}
+                <span className="font-bold">Age:</span> {responseData.userProfile.age}
               </p>
             </li>
             <li>
               <p>
-                <span className="font-bold">Email:</span> {userProfile.data.email}
+                <span className="font-bold">Email:</span> {responseData.userProfile.email}
               </p>
             </li>
           </ul>
@@ -44,9 +70,9 @@ const MyUserView = () => {
         >
           add address
         </Button>
-        {userAddressList?.data &&
-          userAddressList.data.length > 0 &&
-          userAddressList.data.map((address) => (
+        {responseData.userAddressList &&
+          responseData.userAddressList.length > 0 &&
+          responseData.userAddressList.map((address) => (
             <Card
               key={address.id}
               onClick={() => router.push(`/user/address/edit?address_id=${address.id}`)}
@@ -72,11 +98,11 @@ const MyUserView = () => {
           buttonText="add payment method"
           headerText="Add Payment Method"
         >
-          <CreditCardsForm />
+          <CreditCardsForm setIsSubmitted={setIsSubmitted} />
         </BackdropModal>
-        {userPaymentMethod?.data &&
-          userPaymentMethod?.data.length > 0 &&
-          userPaymentMethod.data.map((paymentMethod) => {
+        {responseData.userPaymentMethod &&
+          responseData.userPaymentMethod.length > 0 &&
+          responseData.userPaymentMethod.map((paymentMethod) => {
             return (
               <Card key={paymentMethod.id}>
                 <p>

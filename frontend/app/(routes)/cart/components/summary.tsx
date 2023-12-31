@@ -62,7 +62,6 @@ const Summary = () => {
       toast.success(response.message);
       removeAll();
     } catch (error: unknown) {
-      console.log(error);
       toast.error('failed to purchase');
     }
   };

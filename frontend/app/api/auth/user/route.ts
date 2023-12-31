@@ -1,7 +1,7 @@
 import { getAccessTokenCookie } from '@/utils/cookie';
 
 const ProfileURL = `${process.env.NEXT_PUBLIC_API_URL}/account/`;
-const AddressURL = `${process.env.NEXT_PUBLIC_API_URL}/account/address`;
+const AddressURL = `${process.env.NEXT_PUBLIC_API_URL}/account/addresses`;
 const PaymentMethodURL = `${process.env.NEXT_PUBLIC_API_URL}/account/payment-method`;
 
 export async function GET() {
