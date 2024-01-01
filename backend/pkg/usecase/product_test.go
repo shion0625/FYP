@@ -56,7 +56,7 @@ func TestProductUseCase_FindAllCategories(t *testing.T) {
 			func(mr *productMock.MockProductRepository) {
 				mr.EXPECT().FindAllMainCategories(gomock.Any(), pagination).Return(nil, errors.New("error"))
 			},
-			output{nil, fmt.Errorf("failed find all main categories: %w", errors.New("error"))},
+			output{nil, fmt.Errorf("unable to find all main categories: %w", errors.New("error"))},
 		},
 	}
 
@@ -121,7 +121,7 @@ func TestProductUseCase_SaveCategory(t *testing.T) {
 				mr.EXPECT().IsCategoryNameExist(gomock.Any(), categoryName).Return(false, errors.New("error")).Times(1)
 				mr.EXPECT().SaveCategory(gomock.Any(), categoryName).Return(nil).Times(0)
 			},
-			output{fmt.Errorf("failed to check category already exist: error")},
+			output{fmt.Errorf("unable to check if category already exists: error")},
 		},
 		"Abnormal Case: SaveCategory2": {
 			input{categoryName},
@@ -129,7 +129,7 @@ func TestProductUseCase_SaveCategory(t *testing.T) {
 				mr.EXPECT().IsCategoryNameExist(gomock.Any(), categoryName).Return(false, nil).Times(1)
 				mr.EXPECT().SaveCategory(gomock.Any(), categoryName).Return(errors.New("error")).Times(1)
 			},
-			output{fmt.Errorf("failed to save category: error")},
+			output{fmt.Errorf("unable to save category: error")},
 		},
 	}
 
@@ -197,7 +197,7 @@ func TestProductUseCase_SaveVariation(t *testing.T) {
 					},
 				)
 			},
-			output{fmt.Errorf("failed to save variation: failed to check variation already exist: error")},
+			output{fmt.Errorf("unable to save variation: unable to check if variation already exists: error")},
 		},
 		"Abnormal Case: SaveVariation": {
 			input{categoryID, variationNames},
@@ -209,7 +209,7 @@ func TestProductUseCase_SaveVariation(t *testing.T) {
 					},
 				)
 			},
-			output{fmt.Errorf("failed to save variation: variation name %s: %w", variationNames[0], usecase.ErrVariationAlreadyExist)},
+			output{fmt.Errorf("unable to save variation: variation name %s: %w", variationNames[0], usecase.ErrVariationAlreadyExist)},
 		},
 		"Abnormal Case: SaveVariation2": {
 			input{categoryID, variationNames},
@@ -222,7 +222,7 @@ func TestProductUseCase_SaveVariation(t *testing.T) {
 					},
 				)
 			},
-			output{fmt.Errorf("failed to save variation: failed to save variation: error")},
+			output{fmt.Errorf("unable to save variation: unable to save variation: error")},
 		},
 	}
 
@@ -290,7 +290,7 @@ func TestProductUseCase_SaveVariationOption(t *testing.T) {
 					},
 				)
 			},
-			output{fmt.Errorf("failed to save variation option: failed to check variation already exist: error")},
+			output{fmt.Errorf("unable to save variation option: unable to check if variation already exists: error")},
 		},
 		"Abnormal Case: SaveVariationOption": {
 			input{variationID, variationOptionValues},
@@ -302,7 +302,7 @@ func TestProductUseCase_SaveVariationOption(t *testing.T) {
 					},
 				)
 			},
-			output{fmt.Errorf("failed to save variation option: variation option value %s: %w", variationOptionValues[0], usecase.ErrVariationOptionAlreadyExist)},
+			output{fmt.Errorf("unable to save variation option: variation option value %s: %w", variationOptionValues[0], usecase.ErrVariationOptionAlreadyExist)},
 		},
 		"Abnormal Case: SaveVariationOption2": {
 			input{variationID, variationOptionValues},
@@ -316,7 +316,7 @@ func TestProductUseCase_SaveVariationOption(t *testing.T) {
 					},
 				)
 			},
-			output{fmt.Errorf("failed to save variation option: failed to save variation option: error")},
+			output{fmt.Errorf("unable to save variation option: unable to save variation option: error")},
 		},
 	}
 
@@ -389,7 +389,7 @@ func TestProductUseCase_FindAllVariationsAndItsValues(t *testing.T) {
 			func(mr *productMock.MockProductRepository) {
 				mr.EXPECT().FindAllVariationsByCategoryID(gomock.Any(), categoryID).Return(nil, errors.New("error"))
 			},
-			output{nil, fmt.Errorf("failed to find all variations of category: error")},
+			output{nil, fmt.Errorf("unable to find all variations of category: error")},
 		},
 		"Abnormal Case: FindAllVariationsAndItsValues1": {
 			input{categoryID},
@@ -397,7 +397,7 @@ func TestProductUseCase_FindAllVariationsAndItsValues(t *testing.T) {
 				mr.EXPECT().FindAllVariationsByCategoryID(gomock.Any(), categoryID).Return(variations, nil)
 				mr.EXPECT().FindAllVariationOptionsByVariationID(gomock.Any(), variations[0].ID).Return(nil, errors.New("error")).Times(1)
 			},
-			output{nil, fmt.Errorf("failed to get variation option: error")},
+			output{nil, fmt.Errorf("unable to get variation option: error")},
 		},
 	}
 
@@ -473,7 +473,7 @@ func TestProductUseCase_FindAllProducts(t *testing.T) {
 			func(mr *productMock.MockProductRepository, cs *cloudMock.MockCloudService) {
 				mr.EXPECT().FindAllProducts(gomock.Any(), pagination, &categoryID, &brandID).Return(nil, errors.New("error"))
 			},
-			output{nil, fmt.Errorf("failed to get product details from database: %w", errors.New("error"))},
+			output{nil, fmt.Errorf("unable to get product details from database: %w", errors.New("error"))},
 		},
 	}
 	for testName, tt := range tests {
@@ -528,7 +528,7 @@ func TestProductUseCase_GetProduct(t *testing.T) {
 			func(mr *productMock.MockProductRepository, cs *cloudMock.MockCloudService) {
 				mr.EXPECT().FindProductByID(gomock.Any(), productID).Return(response.Product{}, errors.New("error"))
 			},
-			output{response.Product{}, fmt.Errorf("failed to get product from database: %w", errors.New("error"))},
+			output{response.Product{}, fmt.Errorf("unable to get product from database: %w", errors.New("error"))},
 		},
 		"Abnormal Case: GetProduct1": {
 			input{productID},
@@ -536,7 +536,7 @@ func TestProductUseCase_GetProduct(t *testing.T) {
 				mr.EXPECT().FindProductByID(gomock.Any(), productID).Return(response.Product{}, nil)
 				cs.EXPECT().GetFileUrl(gomock.Any(), gomock.Any()).Return("", errors.New("error"))
 			},
-			output{response.Product{}, fmt.Errorf("failed to get image url from could service: error")},
+			output{response.Product{}, fmt.Errorf("unable to get image url from cloud service: error")},
 		},
 	}
 
@@ -599,7 +599,7 @@ func TestProductUseCase_SaveProduct(t *testing.T) {
 			func(mr *productMock.MockProductRepository, cs *cloudMock.MockCloudService) {
 				mr.EXPECT().IsProductNameExist(gomock.Any(), productReq.Name).Return(false, errors.New("error"))
 			},
-			output{fmt.Errorf("failed to check product name already exist: error")},
+			output{fmt.Errorf("unable to check if product name already exists: error")},
 		},
 		"Abnormal Case: SaveProduct": {
 			input{productReq},
@@ -614,7 +614,7 @@ func TestProductUseCase_SaveProduct(t *testing.T) {
 				mr.EXPECT().IsProductNameExist(gomock.Any(), productReq.Name).Return(false, nil).Times(1)
 				cs.EXPECT().SaveFile(gomock.Any(), productReq.ImageFileHeader).Return("", errors.New("error")).Times(1)
 			},
-			output{fmt.Errorf("failed to save image on cloud storage: error")},
+			output{fmt.Errorf("unable to save image on cloud storage: error")},
 		},
 		"Abnormal Case: SaveProduct3": {
 			input{productReq},
@@ -623,7 +623,7 @@ func TestProductUseCase_SaveProduct(t *testing.T) {
 				cs.EXPECT().SaveFile(gomock.Any(), productReq.ImageFileHeader).Return("", nil).Times(1)
 				mr.EXPECT().SaveProduct(gomock.Any(), gomock.Any()).Return(errors.New("error")).Times(1)
 			},
-			output{fmt.Errorf("failed to save product: error")},
+			output{fmt.Errorf("unable to save product: error")},
 		},
 	}
 
@@ -755,14 +755,14 @@ func TestProductUseCase_SaveProductItemAbnormal(t *testing.T) {
 				mr.EXPECT().FindVariationCountForProduct(gomock.Any(), productID).Return(uint(len(productItem.VariationOptionIDs)), nil).Times(1)
 				mr.EXPECT().FindAllProductItemIDsByProductIDAndVariationOptionID(gomock.Any(), productID, gomock.Any()).Return([]uint{}, errors.New("error")).Times(1)
 			},
-			output{fmt.Errorf("failed to find product item ids from database using product id and variation option id: error")},
+			output{fmt.Errorf("unable to find product item ids from database using product id and variation option id: error")},
 		},
 		"Abnormal Case: SaveProductItem1": {
 			input{productID, productItem},
 			func(mr *productMock.MockProductRepository, cs *cloudMock.MockCloudService) {
 				mr.EXPECT().FindVariationCountForProduct(gomock.Any(), productID).Return(uint(0), errors.New("error"))
 			},
-			output{fmt.Errorf("failed to get variation count of product from database: error")},
+			output{fmt.Errorf("unable to get variation count of product from database: error")},
 		},
 
 		"Abnormal Case: SaveProductItem3": {
@@ -930,7 +930,7 @@ func TestProductUseCase_FindAllProductItemsAbnormal3(t *testing.T) {
 				mr.EXPECT().FindAllProductItemImages(gomock.Any(), gomock.Any()).Return([]string{"image1dec", "image2dec"}, nil).Times(1)
 				cs.EXPECT().GetFileUrl(gomock.Any(), gomock.Any()).Return("", errors.New("error")).AnyTimes()
 			},
-			output{nil, fmt.Errorf("failed to get image url from could service: error")},
+			output{nil, fmt.Errorf("unable to get image url from cloud service: error")},
 		},
 	}
 
@@ -987,7 +987,7 @@ func TestProductUseCase_UpdateProduct(t *testing.T) {
 			func(mr *productMock.MockProductRepository) {
 				mr.EXPECT().IsProductNameExistForOtherProduct(gomock.Any(), updateDetails.Name, updateDetails.ID).Return(true, errors.New("error"))
 			},
-			output{fmt.Errorf("failed to check product name already exist for other product: error")},
+			output{fmt.Errorf("unable to check if product name already exists for other product: error")},
 		},
 		"Abnormal Case: UpdateProduct": {
 			input{updateDetails},

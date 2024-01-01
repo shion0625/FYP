@@ -32,7 +32,7 @@ const numGoroutines = 2
 func (p *productUseCase) FindAllCategories(ctx echo.Context, pagination request.Pagination) ([]response.Category, error) {
 	categories, err := p.productRepo.FindAllMainCategories(ctx, pagination)
 	if err != nil {
-		return nil, fmt.Errorf("failed find all main categories: %w", err)
+		return nil, fmt.Errorf("unable to find all main categories: %w", err)
 	}
 
 	return categories, nil
@@ -42,7 +42,7 @@ func (p *productUseCase) FindAllCategories(ctx echo.Context, pagination request.
 func (p *productUseCase) SaveCategory(ctx echo.Context, categoryName string) error {
 	categoryExist, err := p.productRepo.IsCategoryNameExist(ctx, categoryName)
 	if err != nil {
-		return fmt.Errorf("failed to check category already exist: %w", err)
+		return fmt.Errorf("unable to check if category already exists: %w", err)
 	}
 
 	if categoryExist {
@@ -51,7 +51,7 @@ func (p *productUseCase) SaveCategory(ctx echo.Context, categoryName string) err
 
 	err = p.productRepo.SaveCategory(ctx, categoryName)
 	if err != nil {
-		return fmt.Errorf("failed to save category: %w", err)
+		return fmt.Errorf("unable to save category: %w", err)
 	}
 
 	return nil
@@ -63,7 +63,7 @@ func (p *productUseCase) SaveVariation(ctx echo.Context, categoryID uint, variat
 		for _, variationName := range variationNames {
 			variationExist, err := repo.IsVariationNameExistForCategory(ctx, variationName, categoryID)
 			if err != nil {
-				return fmt.Errorf("failed to check variation already exist: %w", err)
+				return fmt.Errorf("unable to check if variation already exists: %w", err)
 			}
 
 			if variationExist {
@@ -72,14 +72,14 @@ func (p *productUseCase) SaveVariation(ctx echo.Context, categoryID uint, variat
 
 			err = p.productRepo.SaveVariation(ctx, categoryID, variationName)
 			if err != nil {
-				return fmt.Errorf("failed to save variation: %w", err)
+				return fmt.Errorf("unable to save variation: %w", err)
 			}
 		}
 
 		return nil
 	})
 	if err != nil {
-		return fmt.Errorf("failed to save variation: %w", err)
+		return fmt.Errorf("unable to save variation: %w", err)
 	}
 
 	return nil
@@ -91,7 +91,7 @@ func (p *productUseCase) SaveVariationOption(ctx echo.Context, variationID uint,
 		for _, variationValue := range variationOptionValues {
 			valueExist, err := repo.IsVariationValueExistForVariation(ctx, variationValue, variationID)
 			if err != nil {
-				return fmt.Errorf("failed to check variation already exist: %w", err)
+				return fmt.Errorf("unable to check if variation already exists: %w", err)
 			}
 			if valueExist {
 				return fmt.Errorf("variation option value %s: %w", variationValue, ErrVariationOptionAlreadyExist)
@@ -99,14 +99,14 @@ func (p *productUseCase) SaveVariationOption(ctx echo.Context, variationID uint,
 
 			err = repo.SaveVariationOption(ctx, variationID, variationValue)
 			if err != nil {
-				return fmt.Errorf("failed to save variation option: %w", err)
+				return fmt.Errorf("unable to save variation option: %w", err)
 			}
 		}
 
 		return nil
 	})
 	if err != nil {
-		return fmt.Errorf("failed to save variation option: %w", err)
+		return fmt.Errorf("unable to save variation option: %w", err)
 	}
 
 	return nil
@@ -115,14 +115,14 @@ func (p *productUseCase) SaveVariationOption(ctx echo.Context, variationID uint,
 func (p *productUseCase) FindAllVariationsAndItsValues(ctx echo.Context, categoryID uint) ([]response.Variation, error) {
 	variations, err := p.productRepo.FindAllVariationsByCategoryID(ctx, categoryID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to find all variations of category: %w", err)
+		return nil, fmt.Errorf("unable to find all variations of category: %w", err)
 	}
 
 	// get all variation values of each variations
 	for i, variation := range variations {
 		variationOption, err := p.productRepo.FindAllVariationOptionsByVariationID(ctx, variation.ID)
 		if err != nil {
-			return nil, fmt.Errorf("failed to get variation option: %w", err)
+			return nil, fmt.Errorf("unable to get variation option: %w", err)
 		}
 
 		variations[i].VariationOptions = variationOption
@@ -135,7 +135,7 @@ func (p *productUseCase) FindAllVariationsAndItsValues(ctx echo.Context, categor
 func (p *productUseCase) FindAllProducts(ctx echo.Context, pagination request.Pagination, categoryID *uint, brandID *uint) ([]response.Product, error) {
 	products, err := p.productRepo.FindAllProducts(ctx, pagination, categoryID, brandID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get product details from database: %w", err)
+		return nil, fmt.Errorf("unable to get product details from database: %w", err)
 	}
 
 	for i := range products {
@@ -153,12 +153,12 @@ func (p *productUseCase) FindAllProducts(ctx echo.Context, pagination request.Pa
 func (p *productUseCase) GetProduct(ctx echo.Context, productID uint) (response.Product, error) {
 	product, err := p.productRepo.FindProductByID(ctx, productID)
 	if err != nil {
-		return response.Product{}, fmt.Errorf("failed to get product from database: %w", err)
+		return response.Product{}, fmt.Errorf("unable to get product from database: %w", err)
 	}
 
 	url, err := p.cloudService.GetFileUrl(ctx, product.Image)
 	if err != nil {
-		return response.Product{}, fmt.Errorf("failed to get image url from could service: %w", err)
+		return response.Product{}, fmt.Errorf("unable to get image url from cloud service: %w", err)
 	}
 
 	product.Image = url
@@ -170,7 +170,7 @@ func (p *productUseCase) GetProduct(ctx echo.Context, productID uint) (response.
 func (p *productUseCase) SaveProduct(ctx echo.Context, product request.Product) error {
 	productNameExist, err := p.productRepo.IsProductNameExist(ctx, product.Name)
 	if err != nil {
-		return fmt.Errorf("failed to check product name already exist: %w", err)
+		return fmt.Errorf("unable to check if product name already exists: %w", err)
 	}
 
 	if productNameExist {
@@ -179,7 +179,7 @@ func (p *productUseCase) SaveProduct(ctx echo.Context, product request.Product) 
 
 	uploadID, err := p.cloudService.SaveFile(ctx, product.ImageFileHeader)
 	if err != nil {
-		return fmt.Errorf("failed to save image on cloud storage: %w", err)
+		return fmt.Errorf("unable to save image on cloud storage: %w", err)
 	}
 
 	err = p.productRepo.SaveProduct(ctx, domain.Product{
@@ -191,7 +191,7 @@ func (p *productUseCase) SaveProduct(ctx echo.Context, product request.Product) 
 		Image:       uploadID,
 	})
 	if err != nil {
-		return fmt.Errorf("failed to save product: %w", err)
+		return fmt.Errorf("unable to save product: %w", err)
 	}
 
 	return nil
@@ -201,7 +201,7 @@ func (p *productUseCase) SaveProduct(ctx echo.Context, product request.Product) 
 func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, productItem request.ProductItem) error {
 	variationCount, err := p.productRepo.FindVariationCountForProduct(ctx, productID)
 	if err != nil {
-		return fmt.Errorf("failed to get variation count of product from database: %w", err)
+		return fmt.Errorf("unable to get variation count of product from database: %w", err)
 	}
 
 	if len(productItem.VariationOptionIDs) != int(variationCount) {
@@ -221,7 +221,7 @@ func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, produ
 	err = p.productRepo.Transactions(ctx, func(trxRepo interfaces.ProductRepository) error {
 		sku, err := utils.GenerateSKU()
 		if err != nil {
-			return fmt.Errorf("failed to generate SKU: %w", err)
+			return fmt.Errorf("unable to generate SKU: %w", err)
 		}
 
 		newProductItem := domain.ProductItem{
@@ -233,7 +233,7 @@ func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, produ
 
 		productItemID, err := trxRepo.SaveProductItem(ctx, newProductItem)
 		if err != nil {
-			return fmt.Errorf("failed to save product item: %w", err)
+			return fmt.Errorf("unable to save product item: %w", err)
 		}
 
 		errChan := make(chan error, numGoroutines)
@@ -250,7 +250,7 @@ func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, produ
 				default:
 					err = trxRepo.SaveProductConfiguration(ctx, productItemID, variationOptionID)
 					if err != nil {
-						errChan <- fmt.Errorf("failed to save product_item configuration: %w", err)
+						errChan <- fmt.Errorf("unable to save product_item configuration: %w", err)
 
 						return
 					}
@@ -269,14 +269,14 @@ func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, produ
 					// upload image on cloud
 					uploadID, err := p.cloudService.SaveFile(ctx, imageFile)
 					if err != nil {
-						errChan <- fmt.Errorf("failed to upload image to cloud: %w", err)
+						errChan <- fmt.Errorf("unable to upload image to cloud: %w", err)
 
 						return
 					}
 					// save upload id on database
 					err = trxRepo.SaveProductItemImage(ctx, productItemID, uploadID)
 					if err != nil {
-						errChan <- fmt.Errorf("failed to save image for product item on database: %w", err)
+						errChan <- fmt.Errorf("unable to save image for product item on database: %w", err)
 
 						return
 					}
@@ -302,7 +302,7 @@ func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, produ
 	})
 
 	if err != nil {
-		return fmt.Errorf("failed to save product item: %w", err)
+		return fmt.Errorf("unable to save product item: %w", err)
 	}
 
 	return nil
@@ -315,7 +315,7 @@ func (p *productUseCase) isProductVariationCombinationExist(productID uint, vari
 		productItemIds, err := p.productRepo.FindAllProductItemIDsByProductIDAndVariationOptionID(context.TODO(),
 			productID, variationOptionID)
 		if err != nil {
-			return false, fmt.Errorf("failed to find product item ids from database using product id and variation option id: %w", err)
+			return false, fmt.Errorf("unable to find product item ids from database using product id and variation option id: %w", err)
 		}
 
 		if len(productItemIds) == 0 {
@@ -358,7 +358,7 @@ func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) (
 	}
 
 	if err != nil {
-		return completeProductItems, fmt.Errorf("failed to find all product items: %w", err)
+		return completeProductItems, fmt.Errorf("unable to find all product items: %w", err)
 	}
 
 	errChan := make(chan error, numGoroutines)
@@ -375,7 +375,7 @@ func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) (
 			default:
 				variationValues, err := p.productRepo.FindAllVariationValuesOfProductItem(ctx, completeProductItems[i].ID)
 				if err != nil {
-					errChan <- fmt.Errorf("failed to find variation values product item: %w", err)
+					errChan <- fmt.Errorf("unable to find variation values product item: %w", err)
 
 					return
 				}
@@ -400,14 +400,14 @@ func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) (
 				for j := range images {
 					url, err := p.cloudService.GetFileUrl(ctx, images[j])
 					if err != nil {
-						errChan <- fmt.Errorf("failed to get image url from could service: %w", err)
+						errChan <- fmt.Errorf("unable to get image url from cloud service: %w", err)
 					}
 
 					imageUrls[j] = url
 				}
 
 				if err != nil {
-					errChan <- fmt.Errorf("failed to find images of product item: %w", err)
+					errChan <- fmt.Errorf("unable to find images of product item: %w", err)
 
 					return
 				}
@@ -437,7 +437,7 @@ func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) (
 func (p *productUseCase) UpdateProduct(ctx echo.Context, updateDetails domain.Product) error {
 	nameExistForOther, err := p.productRepo.IsProductNameExistForOtherProduct(ctx, updateDetails.Name, updateDetails.ID)
 	if err != nil {
-		return fmt.Errorf("failed to check product name already exist for other product: %w", err)
+		return fmt.Errorf("unable to check if product name already exists for other product: %w", err)
 	}
 
 	if nameExistForOther {
