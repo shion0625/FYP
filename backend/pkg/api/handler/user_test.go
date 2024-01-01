@@ -61,14 +61,14 @@ func TestUserHandler_GetProfile(t *testing.T) {
 					UpdatedAt:   time.Now(),
 				}, nil)
 			},
-			output{http.StatusOK, "Successfully retrieved user details", nil},
+			output{http.StatusOK, "User details retrieved successfully", nil},
 		},
 		"Abnormal Case: GetProfile": {
 			input{userId: "testUserId"},
 			func(m *usecaseMock.MockUserUseCase) {
 				m.EXPECT().FindProfile(gomock.Any(), gomock.Any()).Return(domain.User{}, errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to retrieve user details", nil},
+			output{http.StatusInternalServerError, "Unable to retrieve user details", nil},
 		},
 	}
 
@@ -134,7 +134,7 @@ func TestUserHandler_UpdateProfile(t *testing.T) {
 			func(m *usecaseMock.MockUserUseCase) {
 				m.EXPECT().UpdateProfile(gomock.Any(), gomock.Any()).Return(nil)
 			},
-			output{http.StatusOK, "Successfully profile updated", nil},
+			output{http.StatusOK, "Profile updated successfully", nil},
 		},
 		"Abnormal Case: UpdateProfile": {
 			input{
@@ -153,7 +153,7 @@ func TestUserHandler_UpdateProfile(t *testing.T) {
 			func(m *usecaseMock.MockUserUseCase) {
 				m.EXPECT().UpdateProfile(gomock.Any(), gomock.Any()).Return(errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to update profile", nil},
+			output{http.StatusInternalServerError, "Unable to update profile", nil},
 		},
 	}
 
@@ -221,7 +221,7 @@ func TestUserHandler_SaveAddress(t *testing.T) {
 			func(m *usecaseMock.MockUserUseCase) {
 				m.EXPECT().SaveAddress(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
 			},
-			output{http.StatusCreated, "Successfully address saved", nil},
+			output{http.StatusCreated, "Address saved successfully", nil},
 		},
 		"Abnormal Case: SaveAddress": {
 			input{
@@ -241,7 +241,7 @@ func TestUserHandler_SaveAddress(t *testing.T) {
 			func(m *usecaseMock.MockUserUseCase) {
 				m.EXPECT().SaveAddress(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to save address", nil},
+			output{http.StatusInternalServerError, "Unable to save address", nil},
 		},
 	}
 
@@ -295,14 +295,14 @@ func TestUserHandler_GetAllAddresses(t *testing.T) {
 			func(m *usecaseMock.MockUserUseCase) {
 				m.EXPECT().FindAddresses(gomock.Any(), gomock.Any()).Return([]response.Address{}, nil)
 			},
-			output{http.StatusOK, "Successfully retrieved all user addresses", nil},
+			output{http.StatusOK, "All user addresses retrieved successfully", nil},
 		},
 		"Abnormal Case: GetAllAddresses": {
 			input{userId: "testUserId"},
 			func(m *usecaseMock.MockUserUseCase) {
 				m.EXPECT().FindAddresses(gomock.Any(), gomock.Any()).Return([]response.Address{}, errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to get user addresses", nil},
+			output{http.StatusInternalServerError, "Unable to get user addresses", nil},
 		},
 	}
 
@@ -356,14 +356,14 @@ func TestUserHandler_GetAddressById(t *testing.T) {
 			func(m *usecaseMock.MockUserUseCase) {
 				m.EXPECT().FindAddress(gomock.Any(), gomock.Any(), gomock.Any()).Return(domain.Address{}, nil)
 			},
-			output{http.StatusOK, "Successfully retrieved all user addresses", nil},
+			output{http.StatusOK, "All user addresses retrieved successfully", nil},
 		},
 		"Abnormal Case: GetAddressById": {
 			input{userId: "testUserId", addressId: "1"},
 			func(m *usecaseMock.MockUserUseCase) {
 				m.EXPECT().FindAddress(gomock.Any(), gomock.Any(), gomock.Any()).Return(domain.Address{}, errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to get user addresses", nil},
+			output{http.StatusInternalServerError, "Unable to get user addresses", nil},
 		},
 	}
 
@@ -433,7 +433,7 @@ func TestUserHandler_UpdateAddress(t *testing.T) {
 			func(m *usecaseMock.MockUserUseCase) {
 				m.EXPECT().UpdateAddress(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
 			},
-			output{http.StatusOK, "successfully addresses updated", nil},
+			output{http.StatusOK, "Addresses updated successfully", nil},
 		},
 		"Abnormal Case: UpdateAddress": {
 			input{
@@ -454,7 +454,7 @@ func TestUserHandler_UpdateAddress(t *testing.T) {
 			func(m *usecaseMock.MockUserUseCase) {
 				m.EXPECT().UpdateAddress(gomock.Any(), gomock.Any(), gomock.Any()).Return(errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to update user address", nil},
+			output{http.StatusInternalServerError, "Unable to update user address", nil},
 		},
 	}
 
@@ -512,14 +512,14 @@ func TestUserHandler_GetAllPaymentMethods(t *testing.T) {
 					CardCompany: "Test Card Company",
 				}}, nil)
 			},
-			output{http.StatusOK, "Successfully retrieved all user addresses", nil},
+			output{http.StatusOK, "All user addresses retrieved successfully", nil},
 		},
 		"Abnormal Case: GetAllPaymentMethods": {
 			input{userId: "testUserId"},
 			func(m *usecaseMock.MockUserUseCase) {
 				m.EXPECT().FindPaymentMethods(gomock.Any(), gomock.Any()).Return([]response.PaymentMethod{}, errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "GetAllPaymentMethods", nil},
+			output{http.StatusInternalServerError, "Unable to retrieve all payment methods", nil},
 		},
 	}
 
@@ -581,7 +581,7 @@ func TestUserHandler_SavePaymentMethod(t *testing.T) {
 			func(m *usecaseMock.MockUserUseCase) {
 				m.EXPECT().SavePaymentMethod(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
 			},
-			output{http.StatusOK, "successfully addresses updated", nil},
+			output{http.StatusOK, "Addresses updated successfully", nil},
 		},
 		"Abnormal Case: SavePaymentMethod": {
 			input{
@@ -596,7 +596,7 @@ func TestUserHandler_SavePaymentMethod(t *testing.T) {
 			func(m *usecaseMock.MockUserUseCase) {
 				m.EXPECT().SavePaymentMethod(gomock.Any(), gomock.Any(), gomock.Any()).Return(errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to update user address", nil},
+			output{http.StatusInternalServerError, "Unable to update user address", nil},
 		},
 	}
 

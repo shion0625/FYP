@@ -27,14 +27,14 @@ func NewUserHandler(userUsecase usecaseInterface.UserUseCase) interfaces.UserHan
 func (u *UserHandler) GetProfile(ctx echo.Context) error {
 	userID, err := utils.GetUserIdFromContext(ctx)
 	if err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to retrieve user details", err, nil)
 
 		return nil
 	}
 
 	user, err := u.userUseCase.FindProfile(ctx, userID)
 	if err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to retrieve user details", err, nil)
 
 		return nil
 	}
@@ -53,7 +53,7 @@ func (u *UserHandler) GetProfile(ctx echo.Context) error {
 		UpdatedAt:   user.UpdatedAt,
 	}
 
-	response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved user details", responseUser)
+	response.SuccessResponse(ctx, http.StatusOK, "User details retrieved successfully", responseUser)
 
 	return nil
 }
@@ -61,7 +61,7 @@ func (u *UserHandler) GetProfile(ctx echo.Context) error {
 func (u *UserHandler) UpdateProfile(ctx echo.Context) error {
 	userID, err := utils.GetUserIdFromContext(ctx)
 	if err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to retrieve user details", err, nil)
 
 		return nil
 	}
@@ -82,7 +82,7 @@ func (u *UserHandler) UpdateProfile(ctx echo.Context) error {
 
 	var user domain.User
 	if err := copier.Copy(&user, &body); err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to copy user data", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to copy user data", err, nil)
 
 		return nil
 	}
@@ -90,12 +90,12 @@ func (u *UserHandler) UpdateProfile(ctx echo.Context) error {
 	user.ID = userID
 
 	if err := u.userUseCase.UpdateProfile(ctx, user); err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to update profile", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to update profile", err, nil)
 
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusOK, "Successfully profile updated", nil)
+	response.SuccessResponse(ctx, http.StatusOK, "Profile updated successfully", nil)
 
 	return nil
 }
@@ -116,7 +116,7 @@ func (u *UserHandler) SaveAddress(ctx echo.Context) error {
 
 	userID, err := utils.GetUserIdFromContext(ctx)
 	if err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to retrieve user details", err, nil)
 
 		return nil
 	}
@@ -124,7 +124,7 @@ func (u *UserHandler) SaveAddress(ctx echo.Context) error {
 	var address domain.Address
 
 	if err := copier.Copy(&address, &body); err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to copy address data", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to copy address data", err, nil)
 
 		return nil
 	}
@@ -135,12 +135,12 @@ func (u *UserHandler) SaveAddress(ctx echo.Context) error {
 	}
 
 	if err := u.userUseCase.SaveAddress(ctx, userID, address, *body.IsDefault); err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to save address", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to save address", err, nil)
 
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusCreated, "Successfully address saved", nil)
+	response.SuccessResponse(ctx, http.StatusCreated, "Address saved successfully", nil)
 
 	return nil
 }
@@ -148,14 +148,14 @@ func (u *UserHandler) SaveAddress(ctx echo.Context) error {
 func (u *UserHandler) GetAllAddresses(ctx echo.Context) error {
 	userID, err := utils.GetUserIdFromContext(ctx)
 	if err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to retrieve user details", err, nil)
 
 		return nil
 	}
 
 	addresses, err := u.userUseCase.FindAddresses(ctx, userID)
 	if err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get user addresses", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to get user addresses", err, nil)
 
 		return nil
 	}
@@ -166,7 +166,7 @@ func (u *UserHandler) GetAllAddresses(ctx echo.Context) error {
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all user addresses", addresses)
+	response.SuccessResponse(ctx, http.StatusOK, "All user addresses retrieved successfully", addresses)
 
 	return nil
 }
@@ -174,7 +174,7 @@ func (u *UserHandler) GetAllAddresses(ctx echo.Context) error {
 func (u *UserHandler) GetAddressById(ctx echo.Context) error {
 	userID, err := utils.GetUserIdFromContext(ctx)
 	if err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to retrieve user details", err, nil)
 
 		return nil
 	}
@@ -190,12 +190,12 @@ func (u *UserHandler) GetAddressById(ctx echo.Context) error {
 
 	addresses, err := u.userUseCase.FindAddress(ctx, userID, addressID)
 	if err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get user addresses", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to get user addresses", err, nil)
 
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all user addresses", addresses)
+	response.SuccessResponse(ctx, http.StatusOK, "All user addresses retrieved successfully", addresses)
 
 	return nil
 }
@@ -203,7 +203,7 @@ func (u *UserHandler) GetAddressById(ctx echo.Context) error {
 func (u *UserHandler) UpdateAddress(ctx echo.Context) error {
 	userID, err := utils.GetUserIdFromContext(ctx)
 	if err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to retrieve user details", err, nil)
 
 		return nil
 	}
@@ -228,12 +228,12 @@ func (u *UserHandler) UpdateAddress(ctx echo.Context) error {
 	}
 
 	if err := u.userUseCase.UpdateAddress(ctx, body, userID); err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to update user address", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to update user address", err, nil)
 
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusOK, "successfully addresses updated", body)
+	response.SuccessResponse(ctx, http.StatusOK, "Addresses updated successfully", body)
 
 	return nil
 }
@@ -241,14 +241,14 @@ func (u *UserHandler) UpdateAddress(ctx echo.Context) error {
 func (u *UserHandler) GetAllPaymentMethods(ctx echo.Context) error {
 	userID, err := utils.GetUserIdFromContext(ctx)
 	if err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "GetAllPaymentMethods", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to retrieve all payment methods", err, nil)
 
 		return nil
 	}
 
 	paymentMethod, err := u.userUseCase.FindPaymentMethods(ctx, userID)
 	if err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "GetAllPaymentMethods", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to retrieve all payment methods", err, nil)
 
 		return nil
 	}
@@ -259,7 +259,7 @@ func (u *UserHandler) GetAllPaymentMethods(ctx echo.Context) error {
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all user addresses", paymentMethod)
+	response.SuccessResponse(ctx, http.StatusOK, "All user addresses retrieved successfully", paymentMethod)
 
 	return nil
 }
@@ -267,7 +267,7 @@ func (u *UserHandler) GetAllPaymentMethods(ctx echo.Context) error {
 func (u *UserHandler) SavePaymentMethod(ctx echo.Context) error {
 	userID, err := utils.GetUserIdFromContext(ctx)
 	if err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to retrieve user details", err, nil)
 
 		return nil
 	}
@@ -287,12 +287,12 @@ func (u *UserHandler) SavePaymentMethod(ctx echo.Context) error {
 	}
 
 	if err := u.userUseCase.SavePaymentMethod(ctx, userID, body); err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to update user address", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to update user address", err, nil)
 
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusOK, "successfully addresses updated", body)
+	response.SuccessResponse(ctx, http.StatusOK, "Addresses updated successfully", body)
 
 	return nil
 }
@@ -300,7 +300,7 @@ func (u *UserHandler) SavePaymentMethod(ctx echo.Context) error {
 func (u *UserHandler) UpdatePaymentMethods(ctx echo.Context) error {
 	userID, err := utils.GetUserIdFromContext(ctx)
 	if err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to retrieve user details", err, nil)
 
 		return nil
 	}
@@ -320,12 +320,12 @@ func (u *UserHandler) UpdatePaymentMethods(ctx echo.Context) error {
 	}
 
 	if err := u.userUseCase.UpdatePaymentMethod(ctx, userID, body); err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to update user address", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to update user address", err, nil)
 
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusOK, "successfully paymentMethod updated", body)
+	response.SuccessResponse(ctx, http.StatusOK, "Payment method updated successfully", body)
 
 	return nil
 }
