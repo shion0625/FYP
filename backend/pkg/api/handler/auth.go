@@ -43,7 +43,7 @@ func (a *AuthHandler) UserLogin(ctx echo.Context) error {
 	}
 
 	if err := ctx.Validate(body); err != nil {
-		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Request data is invalid", err, nil)
 
 		return nil
 	}
@@ -67,7 +67,7 @@ func (a *AuthHandler) UserLogin(ctx echo.Context) error {
 			statusCode = http.StatusInternalServerError
 		}
 
-		response.ErrorResponse(ctx, statusCode, "Failed to login", err, nil)
+		response.ErrorResponse(ctx, statusCode, "Login failed", err, nil)
 
 		return nil
 	}
@@ -88,14 +88,14 @@ func (c *AuthHandler) UserSignUp(ctx echo.Context) error {
 	}
 
 	if err := ctx.Validate(body); err != nil {
-		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Request data is invalid", err, nil)
 
 		return nil
 	}
 
 	var user domain.User
 	if err := copier.Copy(&user, body); err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "failed to copy details", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to copy user details", err, nil)
 
 		return nil
 	}
@@ -107,13 +107,13 @@ func (c *AuthHandler) UserSignUp(ctx echo.Context) error {
 			statusCode = http.StatusConflict
 		}
 
-		response.ErrorResponse(ctx, statusCode, "Failed to signup", err, nil)
+		response.ErrorResponse(ctx, statusCode, "Signup failed", err, nil)
 
 		return nil
 	}
 
 	response.SuccessResponse(ctx, http.StatusCreated,
-		"Successfully account created", nil)
+		"Account created successfully", nil)
 
 	return nil
 }
@@ -154,7 +154,7 @@ func (a *AuthHandler) setupTokenAndResponse(ctx echo.Context, tokenUser token.Us
 		RefreshToken: refreshToken,
 		UserID:       userID,
 	}
-	response.SuccessResponse(ctx, http.StatusOK, "Successfully logged in", tokenRes)
+	response.SuccessResponse(ctx, http.StatusOK, "Login successful", tokenRes)
 }
 
 func (a *AuthHandler) renewAccessToken(tokenUser token.UserType) echo.HandlerFunc {
@@ -162,13 +162,13 @@ func (a *AuthHandler) renewAccessToken(tokenUser token.UserType) echo.HandlerFun
 		var body request.RefreshToken
 
 		if err := ctx.Bind(&body); err != nil {
-			response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, body)
+			response.ErrorResponse(ctx, http.StatusBadRequest, "Failed to bind JSON", err, body)
 
 			return nil
 		}
 
 		if err := ctx.Validate(body); err != nil {
-			response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+			response.ErrorResponse(ctx, http.StatusBadRequest, "Request data is invalid", err, nil)
 
 			return nil
 		}
@@ -190,7 +190,7 @@ func (a *AuthHandler) renewAccessToken(tokenUser token.UserType) echo.HandlerFun
 				statusCode = http.StatusInternalServerError
 			}
 
-			response.ErrorResponse(ctx, statusCode, "Failed verify refresh token", err, nil)
+			response.ErrorResponse(ctx, statusCode, "Failed to verify refresh token", err, nil)
 
 			return nil
 		}
@@ -202,7 +202,7 @@ func (a *AuthHandler) renewAccessToken(tokenUser token.UserType) echo.HandlerFun
 
 		accessToken, err := a.authUseCase.GenerateAccessToken(ctx, accessTokenParams)
 		if err != nil {
-			response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed generate access token", err, nil)
+			response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to generate access token", err, nil)
 
 			return nil
 		}
@@ -211,7 +211,7 @@ func (a *AuthHandler) renewAccessToken(tokenUser token.UserType) echo.HandlerFun
 		ctx.Response().Header().Set(authorizationHeaderKey, authorizationValue)
 		ctx.Response().Header().Set("access_token", accessToken)
 
-		response.SuccessResponse(ctx, http.StatusOK, "Successfully generated access token using refresh token", accessToken)
+		response.SuccessResponse(ctx, http.StatusOK, "Access token generated successfully using refresh token", accessToken)
 
 		return nil
 	}

@@ -29,7 +29,7 @@ github.com/shion0625/FYP/backend/pkg/api/handler/auth.go:125.104,132.16 3 1
 github.com/shion0625/FYP/backend/pkg/api/handler/auth.go:132.16,136.3 2 1
 github.com/shion0625/FYP/backend/pkg/api/handler/auth.go:138.2,142.16 2 1
 github.com/shion0625/FYP/backend/pkg/api/handler/auth.go:142.16,146.3 2 1
-github.com/shion0625/FYP/backend/pkg/api/handler/auth.go:148.2,157.82 6 1
+github.com/shion0625/FYP/backend/pkg/api/handler/auth.go:148.2,157.76 6 1
 github.com/shion0625/FYP/backend/pkg/api/handler/auth.go:160.83,161.38 1 1
 github.com/shion0625/FYP/backend/pkg/api/handler/auth.go:161.38,164.41 2 1
 github.com/shion0625/FYP/backend/pkg/api/handler/auth.go:164.41,168.4 2 0

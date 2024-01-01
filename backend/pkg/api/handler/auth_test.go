@@ -66,7 +66,7 @@ func TestAuthHandler_UserLogin(t *testing.T) {
 				m.EXPECT().GenerateAccessToken(gomock.Any(), gomock.Any()).Return("accessToken", nil)
 				m.EXPECT().GenerateRefreshToken(gomock.Any(), gomock.Any()).Return("refreshToken", nil)
 			},
-			output{http.StatusOK, "Successfully logged in", nil},
+			output{http.StatusOK, "Login successful", nil},
 		},
 		"Abnormal Case: UserLogin1": {
 			input{request.Login{Email: "testUser", Password: "testPassword"}},
@@ -90,7 +90,7 @@ func TestAuthHandler_UserLogin(t *testing.T) {
 			func(m *usecaseMock.MockAuthUseCase) {
 				m.EXPECT().UserLogin(gomock.Any(), gomock.Any()).Return("", errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to login", nil},
+			output{http.StatusInternalServerError, "Login failed", nil},
 		},
 	}
 
@@ -160,7 +160,7 @@ func TestAuthHandler_UserSignUp(t *testing.T) {
 			func(m *usecaseMock.MockAuthUseCase) {
 				m.EXPECT().UserSignUp(gomock.Any(), gomock.Any()).Return("testUserID", nil)
 			},
-			output{http.StatusCreated, "Successfully account created", nil},
+			output{http.StatusCreated, "Account created successfully", nil},
 		},
 		"Abnormal Case: UserSignUp": {
 			input{request.SignUp{
@@ -176,7 +176,7 @@ func TestAuthHandler_UserSignUp(t *testing.T) {
 			func(m *usecaseMock.MockAuthUseCase) {
 				m.EXPECT().UserSignUp(gomock.Any(), gomock.Any()).Return("", errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to signup", nil},
+			output{http.StatusInternalServerError, "Signup failed", nil},
 		},
 	}
 
@@ -238,14 +238,14 @@ func TestAuthHandler_UserRenewAccessToken(t *testing.T) {
 				m.EXPECT().VerifyAndGetRefreshTokenSession(gomock.Any(), gomock.Any(), gomock.Any()).Return(domain.RefreshSession{UserID: "testUserID"}, nil)
 				m.EXPECT().GenerateAccessToken(gomock.Any(), gomock.Any()).Return("newAccessToken", nil)
 			},
-			output{http.StatusOK, "Successfully generated access token using refresh token", nil},
+			output{http.StatusOK, "Access token generated successfully using refresh token", nil},
 		},
 		"Abnormal Case: UserRenewAccessToken": {
 			input{request.RefreshToken{RefreshToken: "invalidRefreshToken"}},
 			func(m *usecaseMock.MockAuthUseCase) {
 				m.EXPECT().VerifyAndGetRefreshTokenSession(gomock.Any(), gomock.Any(), gomock.Any()).Return(domain.RefreshSession{}, errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed verify refresh token", nil},
+			output{http.StatusInternalServerError, "Failed to verify refresh token", nil},
 		},
 		"Abnormal Case: UserRenewAccessToken1": {
 			input{request.RefreshToken{RefreshToken: "validRefreshToken"}},
@@ -253,42 +253,42 @@ func TestAuthHandler_UserRenewAccessToken(t *testing.T) {
 				m.EXPECT().VerifyAndGetRefreshTokenSession(gomock.Any(), gomock.Any(), gomock.Any()).Return(domain.RefreshSession{UserID: "testUserID"}, nil)
 				m.EXPECT().GenerateAccessToken(gomock.Any(), gomock.Any()).Return("newAccessToken", errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed generate access token", nil},
+			output{http.StatusInternalServerError, "Failed to generate access token", nil},
 		},
 		"Abnormal Case: Invalid Refresh Token": {
 			input{request.RefreshToken{RefreshToken: "invalidRefreshToken"}},
 			func(m *usecaseMock.MockAuthUseCase) {
 				m.EXPECT().VerifyAndGetRefreshTokenSession(gomock.Any(), gomock.Any(), gomock.Any()).Return(domain.RefreshSession{}, usecase.ErrInvalidRefreshToken)
 			},
-			output{http.StatusUnauthorized, "Failed verify refresh token", nil},
+			output{http.StatusUnauthorized, "Failed to verify refresh token", nil},
 		},
 		"Abnormal Case: Refresh Session Not Exist": {
 			input{request.RefreshToken{RefreshToken: "invalidRefreshToken"}},
 			func(m *usecaseMock.MockAuthUseCase) {
 				m.EXPECT().VerifyAndGetRefreshTokenSession(gomock.Any(), gomock.Any(), gomock.Any()).Return(domain.RefreshSession{}, usecase.ErrRefreshSessionNotExist)
 			},
-			output{http.StatusNotFound, "Failed verify refresh token", nil},
+			output{http.StatusNotFound, "Failed to verify refresh token", nil},
 		},
 		"Abnormal Case: Refresh Session Expired": {
 			input{request.RefreshToken{RefreshToken: "expiredRefreshToken"}},
 			func(m *usecaseMock.MockAuthUseCase) {
 				m.EXPECT().VerifyAndGetRefreshTokenSession(gomock.Any(), gomock.Any(), gomock.Any()).Return(domain.RefreshSession{}, usecase.ErrRefreshSessionExpired)
 			},
-			output{http.StatusGone, "Failed verify refresh token", nil},
+			output{http.StatusGone, "Failed to verify refresh token", nil},
 		},
 		"Abnormal Case: Refresh Session Blocked": {
 			input{request.RefreshToken{RefreshToken: "blockedRefreshToken"}},
 			func(m *usecaseMock.MockAuthUseCase) {
 				m.EXPECT().VerifyAndGetRefreshTokenSession(gomock.Any(), gomock.Any(), gomock.Any()).Return(domain.RefreshSession{}, usecase.ErrRefreshSessionBlocked)
 			},
-			output{http.StatusForbidden, "Failed verify refresh token", nil},
+			output{http.StatusForbidden, "Failed to verify refresh token", nil},
 		},
 		"Abnormal Case: Other Error": {
 			input{request.RefreshToken{RefreshToken: "otherError"}},
 			func(m *usecaseMock.MockAuthUseCase) {
 				m.EXPECT().VerifyAndGetRefreshTokenSession(gomock.Any(), gomock.Any(), gomock.Any()).Return(domain.RefreshSession{}, errors.New("other error"))
 			},
-			output{http.StatusInternalServerError, "Failed verify refresh token", nil},
+			output{http.StatusInternalServerError, "Failed to verify refresh token", nil},
 		},
 	}
 
