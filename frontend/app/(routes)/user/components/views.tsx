@@ -164,6 +164,13 @@ const MyUserView = () => {
                 <p>
                   <span className="font-bold">Total Fee:</span> {order.totalFee}
                 </p>
+                {order.productItemInfo.map((productItem) => (
+                  <div
+                    key={
+                      'orderID' + order.shopOrderId + 'productItemID' + productItem.productItemId
+                    }
+                  ></div>
+                ))}
                 <p>
                   <span className="font-bold">Payment Method:</span>{' '}
                   {order.paymentMethod.cardCompany} **** **** **** {order.paymentMethod.number}

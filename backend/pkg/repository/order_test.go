@@ -288,7 +288,8 @@ func TestOrderRepository_GetShopOrders(t *testing.T) {
 			prepareMockFn: func() {
 				expectedSQL := `^SELECT \* FROM "shop_orders" WHERE user_id= (.+) LIMIT (.+) OFFSET (.+)`
 				expectedSQL1 := `^SELECT \* FROM "shop_order_product_items" WHERE shop_order_id = (.+)`
-				expectedSQL2 := `^SELECT \* FROM "shop_order_variations" WHERE shop_order_id = (.+) AND product_item_id = (.+)`
+				expectedSQL2 := `^SELECT shop_order_variations.id, variations.name, shop_order_variations.variation_option_id, variation_options.value FROM "shop_order_variations" INNER JOIN variations ON shop_order_variations.variation_id = variations.id INNER JOIN variation_options ON shop_order_variations.variation_option_id = variation_options.id WHERE shop_order_id = (.+) AND product_item_id = (.+)`
+				expectedSQL3 := `^SELECT \* FROM "product_items" WHERE id = (.+)`
 				mock.ExpectQuery(expectedSQL).
 					WithArgs("test_user").
 					WillReturnRows(sqlmock.NewRows([]string{"id", "user_id"}).AddRow(1, "test_user"))
@@ -297,7 +298,10 @@ func TestOrderRepository_GetShopOrders(t *testing.T) {
 					WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 				mock.ExpectQuery(expectedSQL2).
 					WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg()).
-					WillReturnRows(sqlmock.NewRows([]string{"id", "user_id"}).AddRow(1, "test_user"))
+					WillReturnRows(sqlmock.NewRows([]string{"VariationID", "Name", "VariationOptionID", "Value"}).AddRow(1, "Size", 1, "M"))
+				mock.ExpectQuery(expectedSQL3).
+					WithArgs(sqlmock.AnyArg()).
+					WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 			},
 			wantErr: nil,
 		},

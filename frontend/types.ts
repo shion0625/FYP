@@ -61,6 +61,7 @@ export interface ProductItem {
 
 export interface ProductItemInfo {
   productItemId: number;
+  name: string;
   variationValues: ProductVariationValue[];
   count: number;
 }

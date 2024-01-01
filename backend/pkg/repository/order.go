@@ -131,8 +131,6 @@ func (o *orderDatabase) GetShopOrders(ctx echo.Context, userID string, paginatio
 		return nil, err
 	}
 
-	fmt.Print(&shopOrders)
-
 	for _, shopOrder := range shopOrders {
 		var productItemInfos []response.ProductItemInfo
 
@@ -141,26 +139,26 @@ func (o *orderDatabase) GetShopOrders(ctx echo.Context, userID string, paginatio
 			return nil, err
 		}
 
-		for _, productItem := range shopOrderProductItems {
+		for _, shopOrderProductItem := range shopOrderProductItems {
 			var variationValues []response.VariationValues
 
-			var shopOrderVariations []domain.ShopOrderVariation
-			if err := o.DB.Where("shop_order_id = ? AND product_item_id = ?", shopOrder.ID, productItem.ProductItemID).Find(&shopOrderVariations).Error; err != nil {
+			if err := o.DB.Debug().Table("shop_order_variations").
+				Select("shop_order_variations.id, variations.name, shop_order_variations.variation_option_id, variation_options.value").
+				Joins("INNER JOIN variations ON shop_order_variations.variation_id = variations.id").
+				Joins("INNER JOIN variation_options ON shop_order_variations.variation_option_id = variation_options.id").
+				Where("shop_order_id = ? AND product_item_id = ?", shopOrder.ID, shopOrderProductItem.ProductItemID).Find(&variationValues).Error; err != nil {
 				return nil, err
 			}
 
-			for _, variation := range shopOrderVariations {
-				variationValues = append(variationValues, response.VariationValues{
-					VariationID:       variation.VariationID,
-					Name:              variation.Variation.Name,
-					VariationOptionID: variation.VariationOptionID,
-					Value:             variation.VariationOption.Value,
-				})
+			var productItem domain.ProductItem
+			if err := o.DB.Where("id = ?", shopOrderProductItem.ProductItemID).Find(&productItem).Error; err != nil {
+				return nil, err
 			}
 
 			productItemInfos = append(productItemInfos, response.ProductItemInfo{
-				ProductItemID:   productItem.ProductItemID,
-				Count:           productItem.Count,
+				ProductItemID:   productItem.ID,
+				Name:            productItem.Name,
+				Count:           productItem.Price,
 				VariationValues: &variationValues,
 			})
 		}

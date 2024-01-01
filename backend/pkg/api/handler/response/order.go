@@ -11,6 +11,7 @@ type Order struct {
 
 type ProductItemInfo struct {
 	ProductItemID   uint               `json:"productItemId"   validate:"required,number,gte=1"`
+	Name            string             `json:"name" validate:"required"`
 	Count           uint               `json:"count"           validate:"required,number"`
 	VariationValues *[]VariationValues `json:"variationValues"`
 }
