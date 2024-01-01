@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 import useSWR from 'swr';
-import { axiosFetcher, axiosPostFetcher } from '@/actions/fetcher';
+import { axiosFetcher, axiosPostFetcher, axiosPutFetcher } from '@/actions/fetcher';
 import { PaymentMethod } from '@/types';
 
 const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/paymentMethod`;
@@ -26,11 +26,20 @@ export const CreditCardSchema = yup.object().shape({
     .matches(/^[0-9]{3,4}$/, 'Must be a valid CVC number'),
 });
 
+export const UpdateCreditCardSchema = CreditCardSchema.concat(
+  yup.object({
+    id: yup.number().required('ID is required'),
+  })
+);
+
 export interface PaymentMethodBody extends yup.InferType<typeof CreditCardSchema> {}
+
+export interface UpdatePaymentMethodBody extends yup.InferType<typeof UpdateCreditCardSchema> {}
 
 interface UsePaymentMethodReturn {
   getPaymentMethod: () => Promise<PaymentMethod[]>;
   savePaymentMethod: (body: PaymentMethodBody) => Promise<null>;
+  updatePaymentMethod: (body: UpdatePaymentMethodBody) => Promise<null>;
   isError: unknown;
 }
 
@@ -39,6 +48,12 @@ export const UsePaymentMethod = (): UsePaymentMethodReturn => {
 
   const savePaymentMethod = async (body: PaymentMethodBody): Promise<null> => {
     const response = await axiosPostFetcher(URL, body);
+    mutate(response, false); // Update the local data immediately, but disable revalidation
+    return response.data;
+  };
+
+  const updatePaymentMethod = async (body: UpdatePaymentMethodBody): Promise<null> => {
+    const response = await axiosPutFetcher(URL, body);
     mutate(response, false); // Update the local data immediately, but disable revalidation
     return response.data;
   };
@@ -52,6 +67,7 @@ export const UsePaymentMethod = (): UsePaymentMethodReturn => {
   return {
     getPaymentMethod,
     savePaymentMethod,
+    updatePaymentMethod,
     isError: error,
   };
 };

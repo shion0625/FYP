@@ -32,4 +32,7 @@ type UserRepository interface {
 
 	FindAllPaymentMethodsByUserID(ctx echo.Context, userID string) ([]response.PaymentMethod, error)
 	SavePaymentMethod(ctx echo.Context, paymentMethod domain.PaymentMethod) (uint, error)
+	IsPaymentMethodIDExist(ctx echo.Context, paymentMethodID uint) (exist bool, err error)
+	UpdatePaymentMethod(ctx echo.Context, paymentMethod domain.PaymentMethod) error
+
 }

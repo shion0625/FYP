@@ -249,3 +249,31 @@ func (c *userDatabase) SavePaymentMethod(ctx echo.Context, paymentMethod domain.
 
 	return paymentMethod.ID, nil
 }
+
+func (c *userDatabase) IsPaymentMethodIDExist(ctx echo.Context, paymentMethodID uint) (exist bool, err error) {
+	var paymentMethodModel domain.PaymentMethod
+	err = c.DB.Model(&paymentMethodModel).
+		Select("id").
+		Where("id = ?", paymentMethodID).
+		First(&paymentMethodModel).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return false, nil
+	}
+
+	return true, err
+}
+
+func (c *userDatabase) UpdatePaymentMethod(ctx echo.Context, paymentMethod domain.PaymentMethod) error {
+	if err := c.DB.Model(&paymentMethod).Where("id = ?", paymentMethod.ID).Updates(map[string]interface{}{
+		"number":       paymentMethod.Number,
+		"expiry":       paymentMethod.Expiry,
+		"cvc":          paymentMethod.Cvc,
+		"card_company": paymentMethod.CardCompany,
+		"updated_at":   time.Now(),
+	}).Error; err != nil {
+		return errors.New("failed to update the address for edit address")
+	}
+
+	return nil
+}

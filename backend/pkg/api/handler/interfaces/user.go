@@ -13,4 +13,5 @@ type UserHandler interface {
 
 	SavePaymentMethod(ctx echo.Context) error
 	GetAllPaymentMethods(ctx echo.Context) error
+	UpdatePaymentMethods(ctx echo.Context) error
 }

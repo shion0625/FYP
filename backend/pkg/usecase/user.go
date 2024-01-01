@@ -193,3 +193,27 @@ func (u *userUserCase) SavePaymentMethod(ctx echo.Context, userID string, paymen
 
 	return nil
 }
+
+func (u *userUserCase) UpdatePaymentMethod(ctx echo.Context, userID string, paymentMethodBody request.UpdatePaymentMethod) error {
+	if exist, err := u.userRepo.IsPaymentMethodIDExist(ctx, paymentMethodBody.ID); err != nil {
+		return fmt.Errorf("failed to check payment method ID existence: %w", err)
+	} else if !exist {
+		return errors.New("invalid payment method id")
+	}
+
+	paymentMethod := domain.PaymentMethod{
+		ID:          paymentMethodBody.ID,
+		Number:      utils.Encrypt(paymentMethodBody.Number, userID+u.creditCardKey),
+		Expiry:      paymentMethodBody.Expiry,
+		Cvc:         paymentMethodBody.Cvc,
+		CardCompany: utils.GetCardIssuer(paymentMethodBody.Number),
+	}
+
+	if err := u.userRepo.UpdatePaymentMethod(ctx, paymentMethod); err != nil {
+		return fmt.Errorf("failed to update address: %w", err)
+	}
+
+	log.Printf("successfully payment method updated for user with user_id %s", userID)
+
+	return nil
+}

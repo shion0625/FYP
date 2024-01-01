@@ -1,9 +1,10 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Button, Card } from 'flowbite-react';
+import { Button, Card, Modal } from 'flowbite-react';
 import { useRouter } from 'next/navigation';
 import { UseGetMyPage } from '@/app/(routes)/user/hooks/get-mypage';
 import CreditCardsForm from '@/components/credit-cards-form';
+import EditCreditCardsForm from '@/components/edit-credit-cards-form';
 import BackdropModal from '@/components/ui/backdrop-modal';
 import CardIcon from '@/components/ui/credit-cards';
 import NoResults from '@/components/ui/no-results';
@@ -23,6 +24,8 @@ const MyUserView = () => {
     userPaymentMethod: [],
   });
   const [isSubmittedPaymentMethod, setIsSubmitted] = useState(false);
+  const [openModal, setOpenModal] = useState<number>(0);
+
   const { getProfile } = UseGetMyPage();
   useEffect(() => {
     const fetchData = async () => {
@@ -109,7 +112,12 @@ const MyUserView = () => {
           responseData.userPaymentMethod.length > 0 &&
           responseData.userPaymentMethod.map((paymentMethod) => {
             return (
-              <Card key={paymentMethod.id}>
+              <Card
+                key={paymentMethod.id}
+                onClick={() => {
+                  setOpenModal(paymentMethod.id);
+                }}
+              >
                 <p>
                   <CardIcon cardCompany={paymentMethod.cardCompany} />
                   <span className="font-bold">Card ID:</span> {paymentMethod.id}
@@ -121,6 +129,18 @@ const MyUserView = () => {
               </Card>
             );
           })}
+        <Modal
+          show={openModal != 0}
+          onClose={() => {
+            setOpenModal(0);
+            setIsSubmitted(false);
+          }}
+        >
+          <Modal.Header>Edit payment method id:{openModal}</Modal.Header>
+          <Modal.Body>
+            <EditCreditCardsForm setIsSubmitted={setIsSubmitted} paymentMethodID={openModal} />
+          </Modal.Body>
+        </Modal>
       </div>
     </div>
   );

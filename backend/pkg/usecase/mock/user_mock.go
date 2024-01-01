@@ -143,6 +143,20 @@ func (mr *MockUserUseCaseMockRecorder) UpdateAddress(ctx, addressBody, userID an
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAddress", reflect.TypeOf((*MockUserUseCase)(nil).UpdateAddress), ctx, addressBody, userID)
 }
 
+// UpdatePaymentMethod mocks base method.
+func (m *MockUserUseCase) UpdatePaymentMethod(ctx echo.Context, userID string, paymentMethodBody request.UpdatePaymentMethod) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdatePaymentMethod", ctx, userID, paymentMethodBody)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdatePaymentMethod indicates an expected call of UpdatePaymentMethod.
+func (mr *MockUserUseCaseMockRecorder) UpdatePaymentMethod(ctx, userID, paymentMethodBody any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePaymentMethod", reflect.TypeOf((*MockUserUseCase)(nil).UpdatePaymentMethod), ctx, userID, paymentMethodBody)
+}
+
 // UpdateProfile mocks base method.
 func (m *MockUserUseCase) UpdateProfile(ctx echo.Context, user domain.User) error {
 	m.ctrl.T.Helper()

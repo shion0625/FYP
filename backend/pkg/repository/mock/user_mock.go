@@ -190,6 +190,21 @@ func (mr *MockUserRepositoryMockRecorder) IsAddressIDExist(ctx, addressID any) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsAddressIDExist", reflect.TypeOf((*MockUserRepository)(nil).IsAddressIDExist), ctx, addressID)
 }
 
+// IsPaymentMethodIDExist mocks base method.
+func (m *MockUserRepository) IsPaymentMethodIDExist(ctx echo.Context, paymentMethodID uint) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsPaymentMethodIDExist", ctx, paymentMethodID)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IsPaymentMethodIDExist indicates an expected call of IsPaymentMethodIDExist.
+func (mr *MockUserRepositoryMockRecorder) IsPaymentMethodIDExist(ctx, paymentMethodID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsPaymentMethodIDExist", reflect.TypeOf((*MockUserRepository)(nil).IsPaymentMethodIDExist), ctx, paymentMethodID)
+}
+
 // SaveAddress mocks base method.
 func (m *MockUserRepository) SaveAddress(ctx echo.Context, address domain.Address) (uint, error) {
 	m.ctrl.T.Helper()
@@ -261,6 +276,20 @@ func (m *MockUserRepository) UpdateAddress(ctx echo.Context, address domain.Addr
 func (mr *MockUserRepositoryMockRecorder) UpdateAddress(ctx, address any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAddress", reflect.TypeOf((*MockUserRepository)(nil).UpdateAddress), ctx, address)
+}
+
+// UpdatePaymentMethod mocks base method.
+func (m *MockUserRepository) UpdatePaymentMethod(ctx echo.Context, paymentMethod domain.PaymentMethod) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdatePaymentMethod", ctx, paymentMethod)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdatePaymentMethod indicates an expected call of UpdatePaymentMethod.
+func (mr *MockUserRepositoryMockRecorder) UpdatePaymentMethod(ctx, paymentMethod any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePaymentMethod", reflect.TypeOf((*MockUserRepository)(nil).UpdatePaymentMethod), ctx, paymentMethod)
 }
 
 // UpdateUser mocks base method.

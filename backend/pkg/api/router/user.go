@@ -62,6 +62,8 @@ func UserRoutes(api *echo.Group, middleware middleware.Middleware, authHandler h
 				userHandler.SavePaymentMethod)
 			account.GET("/payment-method",
 				userHandler.GetAllPaymentMethods)
+			account.PUT("/payment-method",
+				userHandler.UpdatePaymentMethods)
 		}
 
 		// order

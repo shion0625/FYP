@@ -19,4 +19,5 @@ type UserUseCase interface {
 
 	FindPaymentMethods(ctx echo.Context, userID string) ([]response.PaymentMethod, error)
 	SavePaymentMethod(ctx echo.Context, userID string, paymentMethod request.PaymentMethod) error
+	UpdatePaymentMethod(ctx echo.Context, userID string, paymentMethodBody request.UpdatePaymentMethod) error
 }
