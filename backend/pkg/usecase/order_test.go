@@ -70,7 +70,7 @@ func TestOrderUseCase_PayOrder(t *testing.T) {
 			func(mr *orderMock.MockOrderRepository) {
 				mr.EXPECT().Transactions(gomock.Any(), gomock.Any()).Return(errors.New("error"))
 			},
-			output{fmt.Errorf("failed to pay order: error")},
+			output{fmt.Errorf("order payment failed: error")},
 		},
 	}
 
@@ -163,7 +163,7 @@ func TestOrderUseCase_updateStockAndPayOrder(t *testing.T) {
 						}),
 				)
 			},
-			output{fmt.Errorf("failed to pay order: failed to update productItem stock to %d: %w", 0, errors.New("update error"))},
+			output{fmt.Errorf("order payment failed: stock update for productItem failed, new stock: %d: %w", 0, errors.New("update error"))},
 		},
 		"異常系: pay error": {
 			input{userID, request.PayOrder{
@@ -189,7 +189,7 @@ func TestOrderUseCase_updateStockAndPayOrder(t *testing.T) {
 						}),
 				)
 			},
-			output{fmt.Errorf("failed to pay order: %w", errors.New("pay error"))},
+			output{fmt.Errorf("order payment failed: %w", errors.New("pay error"))},
 		},
 		"異常系: save error": {
 			input{userID, request.PayOrder{
@@ -215,7 +215,7 @@ func TestOrderUseCase_updateStockAndPayOrder(t *testing.T) {
 						}),
 				)
 			},
-			output{fmt.Errorf("failed to pay order: %w", errors.New("save error"))},
+			output{fmt.Errorf("order payment failed: %w", errors.New("save error"))},
 		},
 	}
 
@@ -272,7 +272,7 @@ func TestOrderUseCase_GetAllShopOrders(t *testing.T) {
 			func(mr *orderMock.MockOrderRepository) {
 				mr.EXPECT().GetShopOrders(gomock.Any(), userID, pagination).Return(nil, errors.New("error"))
 			},
-			output{nil, fmt.Errorf("failed to find addresses: %w", errors.New("error"))},
+			output{nil, fmt.Errorf("address retrieval failed: %w", errors.New("error"))},
 		},
 	}
 

@@ -29,7 +29,7 @@ func NewOrderUseCase(
 
 func (o *orderUseCase) PayOrder(ctx echo.Context, userID string, payOrder request.PayOrder) error {
 	if err := o.orderRepo.Transactions(ctx, o.updateStockAndPayOrder(ctx, userID, payOrder)); err != nil {
-		return fmt.Errorf("failed to pay order: %w", err)
+		return fmt.Errorf("order payment failed: %w", err)
 	}
 
 	return nil
@@ -40,7 +40,7 @@ func (o *orderUseCase) updateStockAndPayOrder(ctx echo.Context, userID string, p
 		for _, itemInfo := range payOrder.ProductItemInfo {
 			newStock, err := repo.UpdateProductItemStock(ctx, itemInfo.ProductItemID, itemInfo.Count)
 			if err != nil {
-				return fmt.Errorf("failed to update productItem stock to %d: %w", newStock, err)
+				return fmt.Errorf("stock update for productItem failed, new stock: %d: %w", newStock, err)
 			}
 		}
 
@@ -67,7 +67,7 @@ func (o *orderUseCase) GetAllShopOrders(ctx echo.Context, userID string, paginat
 	}
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to find addresses: %w", err)
+		return nil, fmt.Errorf("address retrieval failed: %w", err)
 	}
 
 	return orderHistory, nil
