@@ -62,7 +62,7 @@ func TestUserUseCase_FindProfile(t *testing.T) {
 			func(mr *userMock.MockUserRepository) {
 				mr.EXPECT().FindUserByUserID(gomock.Any(), userID).Return(domain.User{}, errors.New("error"))
 			},
-			output{domain.User{}, fmt.Errorf("failed to find user details: error")},
+			output{domain.User{}, fmt.Errorf("unable to retrieve user details: error")},
 		},
 	}
 
@@ -134,7 +134,7 @@ func TestUserUseCase_UpdateProfile(t *testing.T) {
 			func(mr *userMock.MockUserRepository) {
 				mr.EXPECT().FindUserByUserNameEmailOrPhone(gomock.Any(), userDomain).Return(domain.User{}, errors.New("error"))
 			},
-			output{fmt.Errorf("failed to find user: error")},
+			output{fmt.Errorf("unable to find user: error")},
 		},
 		"Abnormal Case: UpdateProfile1": {
 			input{userDomain},
@@ -142,7 +142,7 @@ func TestUserUseCase_UpdateProfile(t *testing.T) {
 				mr.EXPECT().FindUserByUserNameEmailOrPhone(gomock.Any(), userDomain).Return(userDomain, nil)
 				mr.EXPECT().UpdateUser(gomock.Any(), gomock.Any()).Return(errors.New("error"))
 			},
-			output{fmt.Errorf("failed to update user: error")},
+			output{fmt.Errorf("unable to update user: error")},
 		},
 	}
 
@@ -206,14 +206,14 @@ func TestUserUseCase_SaveAddress(t *testing.T) {
 			func(mr *userMock.MockUserRepository) {
 				mr.EXPECT().IsAddressAlreadyExistForUser(gomock.Any(), gomock.Any(), userID).Return(true, nil)
 			},
-			output{fmt.Errorf("given address already exist for user")},
+			output{fmt.Errorf("the provided address already exists for this user")},
 		},
 		"Abnormal Case: SaveAddress1": {
 			input{userID, address, true},
 			func(mr *userMock.MockUserRepository) {
 				mr.EXPECT().IsAddressAlreadyExistForUser(gomock.Any(), address, userID).Return(false, errors.New("error"))
 			},
-			output{fmt.Errorf("failed to check address already exist \nerror:error")},
+			output{fmt.Errorf("unable to check if address already exists \nerror:error")},
 		},
 		"Abnormal Case: SaveAddress2": {
 			input{userID, address, true},
@@ -221,7 +221,7 @@ func TestUserUseCase_SaveAddress(t *testing.T) {
 				mr.EXPECT().IsAddressAlreadyExistForUser(gomock.Any(), address, userID).Return(false, nil)
 				mr.EXPECT().SaveAddress(gomock.Any(), gomock.Any()).Return(uint(1), errors.New("error"))
 			},
-			output{fmt.Errorf("failed to save address: error")},
+			output{fmt.Errorf("unable to save address: error")},
 		},
 		"Abnormal Case: SaveAddress3": {
 			input{userID, address, true},
@@ -230,7 +230,7 @@ func TestUserUseCase_SaveAddress(t *testing.T) {
 				mr.EXPECT().SaveAddress(gomock.Any(), gomock.Any()).Return(uint(1), nil)
 				mr.EXPECT().SaveUserAddress(gomock.Any(), gomock.Any()).Return(errors.New("error"))
 			},
-			output{fmt.Errorf("failed to save user address: error")},
+			output{fmt.Errorf("unable to save user address: error")},
 		},
 	}
 
@@ -309,7 +309,7 @@ func TestUserUseCase_UpdateAddress(t *testing.T) {
 			func(mr *userMock.MockUserRepository) {
 				mr.EXPECT().IsAddressIDExist(gomock.Any(), gomock.Any()).Return(false, errors.New("error"))
 			},
-			output{fmt.Errorf("failed to check address ID existence: error")},
+			output{fmt.Errorf("unable to check address ID existence: error")},
 		},
 		"Abnormal Case: UpdateAddress1": {
 			input{addressBody, userID},
@@ -317,7 +317,7 @@ func TestUserUseCase_UpdateAddress(t *testing.T) {
 				mr.EXPECT().IsAddressIDExist(gomock.Any(), gomock.Any()).Return(true, nil)
 				mr.EXPECT().UpdateAddress(gomock.Any(), gomock.Any()).Return(errors.New("error"))
 			},
-			output{fmt.Errorf("failed to update address: error")},
+			output{fmt.Errorf("unable to update address: error")},
 		},
 	}
 
@@ -378,7 +378,7 @@ func TestUserUseCase_FindAddresses(t *testing.T) {
 			func(mr *userMock.MockUserRepository) {
 				mr.EXPECT().FindAllAddressByUserID(gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
 			},
-			output{nil, fmt.Errorf("failed to find addresses: error")},
+			output{nil, fmt.Errorf("unable to find addresses: error")},
 		},
 	}
 
@@ -439,7 +439,7 @@ func TestUserUseCase_FindAddress(t *testing.T) {
 			func(mr *userMock.MockUserRepository) {
 				mr.EXPECT().FindAddressByUserIDAndAddressID(gomock.Any(), gomock.Any(), gomock.Any()).Return(domain.Address{}, errors.New("error"))
 			},
-			output{domain.Address{}, fmt.Errorf("failed to find user details: error")},
+			output{domain.Address{}, fmt.Errorf("unable to find user details: error")},
 		},
 	}
 
@@ -498,7 +498,7 @@ func TestUserUseCase_FindPaymentMethods(t *testing.T) {
 			func(mr *userMock.MockUserRepository) {
 				mr.EXPECT().FindAllPaymentMethodsByUserID(gomock.Any(), userID).Return(nil, errors.New("error"))
 			},
-			output{nil, fmt.Errorf("failed to find payment method: error")},
+			output{nil, fmt.Errorf("unable to find payment method: error")},
 		},
 	}
 
@@ -557,7 +557,7 @@ func TestUserUseCase_SavePaymentMethod(t *testing.T) {
 			func(mr *userMock.MockUserRepository) {
 				mr.EXPECT().SavePaymentMethod(gomock.Any(), gomock.Any()).Return(uint(0), errors.New("error"))
 			},
-			output{fmt.Errorf("failed to save product: error")},
+			output{fmt.Errorf("unable to save product: error")},
 		},
 	}
 

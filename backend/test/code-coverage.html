@@ -2180,7 +2180,7 @@ func NewOrderUseCase(
 
 func (o *orderUseCase) PayOrder(ctx echo.Context, userID string, payOrder request.PayOrder) error <span class="cov8" title="1">{
         if err := o.orderRepo.Transactions(ctx, o.updateStockAndPayOrder(ctx, userID, payOrder)); err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to pay order: %w", err)
+                return fmt.Errorf("order payment failed: %w", err)
         }</span>
 
         <span class="cov8" title="1">return nil</span>
@@ -2191,7 +2191,7 @@ func (o *orderUseCase) updateStockAndPayOrder(ctx echo.Context, userID string, p
                 for _, itemInfo := range payOrder.ProductItemInfo </span><span class="cov8" title="1">{
                         newStock, err := repo.UpdateProductItemStock(ctx, itemInfo.ProductItemID, itemInfo.Count)
                         if err != nil </span><span class="cov8" title="1">{
-                                return fmt.Errorf("failed to update productItem stock to %d: %w", newStock, err)
+                                return fmt.Errorf("stock update for productItem failed, new stock: %d: %w", newStock, err)
                         }</span>
                 }
 
@@ -2218,7 +2218,7 @@ func (o *orderUseCase) GetAllShopOrders(ctx echo.Context, userID string, paginat
         }
 
         <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
-                return nil, fmt.Errorf("failed to find addresses: %w", err)
+                return nil, fmt.Errorf("address retrieval failed: %w", err)
         }</span>
 
         <span class="cov8" title="1">return orderHistory, nil</span>
@@ -2259,7 +2259,7 @@ const numGoroutines = 2
 func (p *productUseCase) FindAllCategories(ctx echo.Context, pagination request.Pagination) ([]response.Category, error) <span class="cov8" title="1">{
         categories, err := p.productRepo.FindAllMainCategories(ctx, pagination)
         if err != nil </span><span class="cov8" title="1">{
-                return nil, fmt.Errorf("failed find all main categories: %w", err)
+                return nil, fmt.Errorf("unable to find all main categories: %w", err)
         }</span>
 
         <span class="cov8" title="1">return categories, nil</span>
@@ -2269,7 +2269,7 @@ func (p *productUseCase) FindAllCategories(ctx echo.Context, pagination request.
 func (p *productUseCase) SaveCategory(ctx echo.Context, categoryName string) error <span class="cov8" title="1">{
         categoryExist, err := p.productRepo.IsCategoryNameExist(ctx, categoryName)
         if err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to check category already exist: %w", err)
+                return fmt.Errorf("unable to check if category already exists: %w", err)
         }</span>
 
         <span class="cov8" title="1">if categoryExist </span><span class="cov8" title="1">{
@@ -2278,7 +2278,7 @@ func (p *productUseCase) SaveCategory(ctx echo.Context, categoryName string) err
 
         <span class="cov8" title="1">err = p.productRepo.SaveCategory(ctx, categoryName)
         if err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to save category: %w", err)
+                return fmt.Errorf("unable to save category: %w", err)
         }</span>
 
         <span class="cov8" title="1">return nil</span>
@@ -2290,7 +2290,7 @@ func (p *productUseCase) SaveVariation(ctx echo.Context, categoryID uint, variat
                 for _, variationName := range variationNames </span><span class="cov8" title="1">{
                         variationExist, err := repo.IsVariationNameExistForCategory(ctx, variationName, categoryID)
                         if err != nil </span><span class="cov8" title="1">{
-                                return fmt.Errorf("failed to check variation already exist: %w", err)
+                                return fmt.Errorf("unable to check if variation already exists: %w", err)
                         }</span>
 
                         <span class="cov8" title="1">if variationExist </span><span class="cov8" title="1">{
@@ -2299,14 +2299,14 @@ func (p *productUseCase) SaveVariation(ctx echo.Context, categoryID uint, variat
 
                         <span class="cov8" title="1">err = p.productRepo.SaveVariation(ctx, categoryID, variationName)
                         if err != nil </span><span class="cov8" title="1">{
-                                return fmt.Errorf("failed to save variation: %w", err)
+                                return fmt.Errorf("unable to save variation: %w", err)
                         }</span>
                 }
 
                 <span class="cov8" title="1">return nil</span>
         })
         <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to save variation: %w", err)
+                return fmt.Errorf("unable to save variation: %w", err)
         }</span>
 
         <span class="cov8" title="1">return nil</span>
@@ -2318,7 +2318,7 @@ func (p *productUseCase) SaveVariationOption(ctx echo.Context, variationID uint,
                 for _, variationValue := range variationOptionValues </span><span class="cov8" title="1">{
                         valueExist, err := repo.IsVariationValueExistForVariation(ctx, variationValue, variationID)
                         if err != nil </span><span class="cov8" title="1">{
-                                return fmt.Errorf("failed to check variation already exist: %w", err)
+                                return fmt.Errorf("unable to check if variation already exists: %w", err)
                         }</span>
                         <span class="cov8" title="1">if valueExist </span><span class="cov8" title="1">{
                                 return fmt.Errorf("variation option value %s: %w", variationValue, ErrVariationOptionAlreadyExist)
@@ -2326,14 +2326,14 @@ func (p *productUseCase) SaveVariationOption(ctx echo.Context, variationID uint,
 
                         <span class="cov8" title="1">err = repo.SaveVariationOption(ctx, variationID, variationValue)
                         if err != nil </span><span class="cov8" title="1">{
-                                return fmt.Errorf("failed to save variation option: %w", err)
+                                return fmt.Errorf("unable to save variation option: %w", err)
                         }</span>
                 }
 
                 <span class="cov8" title="1">return nil</span>
         })
         <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to save variation option: %w", err)
+                return fmt.Errorf("unable to save variation option: %w", err)
         }</span>
 
         <span class="cov8" title="1">return nil</span>
@@ -2342,14 +2342,14 @@ func (p *productUseCase) SaveVariationOption(ctx echo.Context, variationID uint,
 func (p *productUseCase) FindAllVariationsAndItsValues(ctx echo.Context, categoryID uint) ([]response.Variation, error) <span class="cov8" title="1">{
         variations, err := p.productRepo.FindAllVariationsByCategoryID(ctx, categoryID)
         if err != nil </span><span class="cov8" title="1">{
-                return nil, fmt.Errorf("failed to find all variations of category: %w", err)
+                return nil, fmt.Errorf("unable to find all variations of category: %w", err)
         }</span>
 
         // get all variation values of each variations
         <span class="cov8" title="1">for i, variation := range variations </span><span class="cov8" title="1">{
                 variationOption, err := p.productRepo.FindAllVariationOptionsByVariationID(ctx, variation.ID)
                 if err != nil </span><span class="cov8" title="1">{
-                        return nil, fmt.Errorf("failed to get variation option: %w", err)
+                        return nil, fmt.Errorf("unable to get variation option: %w", err)
                 }</span>
 
                 <span class="cov8" title="1">variations[i].VariationOptions = variationOption</span>
@@ -2362,7 +2362,7 @@ func (p *productUseCase) FindAllVariationsAndItsValues(ctx echo.Context, categor
 func (p *productUseCase) FindAllProducts(ctx echo.Context, pagination request.Pagination, categoryID *uint, brandID *uint) ([]response.Product, error) <span class="cov8" title="1">{
         products, err := p.productRepo.FindAllProducts(ctx, pagination, categoryID, brandID)
         if err != nil </span><span class="cov8" title="1">{
-                return nil, fmt.Errorf("failed to get product details from database: %w", err)
+                return nil, fmt.Errorf("unable to get product details from database: %w", err)
         }</span>
 
         <span class="cov8" title="1">for i := range products </span><span class="cov8" title="1">{
@@ -2380,12 +2380,12 @@ func (p *productUseCase) FindAllProducts(ctx echo.Context, pagination request.Pa
 func (p *productUseCase) GetProduct(ctx echo.Context, productID uint) (response.Product, error) <span class="cov8" title="1">{
         product, err := p.productRepo.FindProductByID(ctx, productID)
         if err != nil </span><span class="cov8" title="1">{
-                return response.Product{}, fmt.Errorf("failed to get product from database: %w", err)
+                return response.Product{}, fmt.Errorf("unable to get product from database: %w", err)
         }</span>
 
         <span class="cov8" title="1">url, err := p.cloudService.GetFileUrl(ctx, product.Image)
         if err != nil </span><span class="cov8" title="1">{
-                return response.Product{}, fmt.Errorf("failed to get image url from could service: %w", err)
+                return response.Product{}, fmt.Errorf("unable to get image url from cloud service: %w", err)
         }</span>
 
         <span class="cov8" title="1">product.Image = url
@@ -2397,7 +2397,7 @@ func (p *productUseCase) GetProduct(ctx echo.Context, productID uint) (response.
 func (p *productUseCase) SaveProduct(ctx echo.Context, product request.Product) error <span class="cov8" title="1">{
         productNameExist, err := p.productRepo.IsProductNameExist(ctx, product.Name)
         if err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to check product name already exist: %w", err)
+                return fmt.Errorf("unable to check if product name already exists: %w", err)
         }</span>
 
         <span class="cov8" title="1">if productNameExist </span><span class="cov8" title="1">{
@@ -2406,7 +2406,7 @@ func (p *productUseCase) SaveProduct(ctx echo.Context, product request.Product) 
 
         <span class="cov8" title="1">uploadID, err := p.cloudService.SaveFile(ctx, product.ImageFileHeader)
         if err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to save image on cloud storage: %w", err)
+                return fmt.Errorf("unable to save image on cloud storage: %w", err)
         }</span>
 
         <span class="cov8" title="1">err = p.productRepo.SaveProduct(ctx, domain.Product{
@@ -2418,7 +2418,7 @@ func (p *productUseCase) SaveProduct(ctx echo.Context, product request.Product) 
                 Image:       uploadID,
         })
         if err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to save product: %w", err)
+                return fmt.Errorf("unable to save product: %w", err)
         }</span>
 
         <span class="cov8" title="1">return nil</span>
@@ -2428,7 +2428,7 @@ func (p *productUseCase) SaveProduct(ctx echo.Context, product request.Product) 
 func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, productItem request.ProductItem) error <span class="cov8" title="1">{
         variationCount, err := p.productRepo.FindVariationCountForProduct(ctx, productID)
         if err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to get variation count of product from database: %w", err)
+                return fmt.Errorf("unable to get variation count of product from database: %w", err)
         }</span>
 
         <span class="cov8" title="1">if len(productItem.VariationOptionIDs) != int(variationCount) </span><span class="cov8" title="1">{
@@ -2448,7 +2448,7 @@ func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, produ
         <span class="cov8" title="1">err = p.productRepo.Transactions(ctx, func(trxRepo interfaces.ProductRepository) error </span><span class="cov8" title="1">{
                 sku, err := utils.GenerateSKU()
                 if err != nil </span><span class="cov0" title="0">{
-                        return fmt.Errorf("failed to generate SKU: %w", err)
+                        return fmt.Errorf("unable to generate SKU: %w", err)
                 }</span>
 
                 <span class="cov8" title="1">newProductItem := domain.ProductItem{
@@ -2460,7 +2460,7 @@ func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, produ
 
                 productItemID, err := trxRepo.SaveProductItem(ctx, newProductItem)
                 if err != nil </span><span class="cov0" title="0">{
-                        return fmt.Errorf("failed to save product item: %w", err)
+                        return fmt.Errorf("unable to save product item: %w", err)
                 }</span>
 
                 <span class="cov8" title="1">errChan := make(chan error, numGoroutines)
@@ -2477,7 +2477,7 @@ func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, produ
                                 default:<span class="cov8" title="1">
                                         err = trxRepo.SaveProductConfiguration(ctx, productItemID, variationOptionID)
                                         if err != nil </span><span class="cov0" title="0">{
-                                                errChan &lt;- fmt.Errorf("failed to save product_item configuration: %w", err)
+                                                errChan &lt;- fmt.Errorf("unable to save product_item configuration: %w", err)
 
                                                 return
                                         }</span>
@@ -2496,14 +2496,14 @@ func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, produ
                                         // upload image on cloud
                                         uploadID, err := p.cloudService.SaveFile(ctx, imageFile)
                                         if err != nil </span><span class="cov0" title="0">{
-                                                errChan &lt;- fmt.Errorf("failed to upload image to cloud: %w", err)
+                                                errChan &lt;- fmt.Errorf("unable to upload image to cloud: %w", err)
 
                                                 return
                                         }</span>
                                         // save upload id on database
                                         <span class="cov8" title="1">err = trxRepo.SaveProductItemImage(ctx, productItemID, uploadID)
                                         if err != nil </span><span class="cov0" title="0">{
-                                                errChan &lt;- fmt.Errorf("failed to save image for product item on database: %w", err)
+                                                errChan &lt;- fmt.Errorf("unable to save image for product item on database: %w", err)
 
                                                 return
                                         }</span>
@@ -2529,7 +2529,7 @@ func (p *productUseCase) SaveProductItem(ctx echo.Context, productID uint, produ
         })
 
         <span class="cov8" title="1">if err != nil </span><span class="cov0" title="0">{
-                return fmt.Errorf("failed to save product item: %w", err)
+                return fmt.Errorf("unable to save product item: %w", err)
         }</span>
 
         <span class="cov8" title="1">return nil</span>
@@ -2542,7 +2542,7 @@ func (p *productUseCase) isProductVariationCombinationExist(productID uint, vari
                 productItemIds, err := p.productRepo.FindAllProductItemIDsByProductIDAndVariationOptionID(context.TODO(),
                         productID, variationOptionID)
                 if err != nil </span><span class="cov8" title="1">{
-                        return false, fmt.Errorf("failed to find product item ids from database using product id and variation option id: %w", err)
+                        return false, fmt.Errorf("unable to find product item ids from database using product id and variation option id: %w", err)
                 }</span>
 
                 <span class="cov8" title="1">if len(productItemIds) == 0 </span><span class="cov8" title="1">{
@@ -2585,7 +2585,7 @@ func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) (
         }</span>
 
         <span class="cov8" title="1">if err != nil </span><span class="cov0" title="0">{
-                return completeProductItems, fmt.Errorf("failed to find all product items: %w", err)
+                return completeProductItems, fmt.Errorf("unable to find all product items: %w", err)
         }</span>
 
         <span class="cov8" title="1">errChan := make(chan error, numGoroutines)
@@ -2602,7 +2602,7 @@ func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) (
                         default:<span class="cov8" title="1">
                                 variationValues, err := p.productRepo.FindAllVariationValuesOfProductItem(ctx, completeProductItems[i].ID)
                                 if err != nil </span><span class="cov0" title="0">{
-                                        errChan &lt;- fmt.Errorf("failed to find variation values product item: %w", err)
+                                        errChan &lt;- fmt.Errorf("unable to find variation values product item: %w", err)
 
                                         return
                                 }</span>
@@ -2627,14 +2627,14 @@ func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) (
                                 for j := range images </span><span class="cov8" title="1">{
                                         url, err := p.cloudService.GetFileUrl(ctx, images[j])
                                         if err != nil </span><span class="cov8" title="1">{
-                                                errChan &lt;- fmt.Errorf("failed to get image url from could service: %w", err)
+                                                errChan &lt;- fmt.Errorf("unable to get image url from cloud service: %w", err)
                                         }</span>
 
                                         <span class="cov8" title="1">imageUrls[j] = url</span>
                                 }
 
                                 <span class="cov8" title="1">if err != nil </span><span class="cov0" title="0">{
-                                        errChan &lt;- fmt.Errorf("failed to find images of product item: %w", err)
+                                        errChan &lt;- fmt.Errorf("unable to find images of product item: %w", err)
 
                                         return
                                 }</span>
@@ -2664,7 +2664,7 @@ func (p *productUseCase) FindAllProductItems(ctx echo.Context, productID uint) (
 func (p *productUseCase) UpdateProduct(ctx echo.Context, updateDetails domain.Product) error <span class="cov8" title="1">{
         nameExistForOther, err := p.productRepo.IsProductNameExistForOtherProduct(ctx, updateDetails.Name, updateDetails.ID)
         if err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to check product name already exist for other product: %w", err)
+                return fmt.Errorf("unable to check if product name already exists for other product: %w", err)
         }</span>
 
         <span class="cov8" title="1">if nameExistForOther </span><span class="cov8" title="1">{
@@ -2721,7 +2721,7 @@ func NewUserUseCase(cfg *config.Config, userRepo interfaces.UserRepository) serv
 func (u *userUserCase) FindProfile(ctx echo.Context, userID string) (domain.User, error) <span class="cov8" title="1">{
         user, err := u.userRepo.FindUserByUserID(ctx, userID)
         if err != nil </span><span class="cov8" title="1">{
-                return domain.User{}, fmt.Errorf("failed to find user details: %w", err)
+                return domain.User{}, fmt.Errorf("unable to retrieve user details: %w", err)
         }</span>
 
         <span class="cov8" title="1">return user, nil</span>
@@ -2731,12 +2731,12 @@ func (u *userUserCase) UpdateProfile(ctx echo.Context, user domain.User) error <
         // first check any other user exist with this entered unique fields
         checkUser, err := u.userRepo.FindUserByUserNameEmailOrPhone(ctx, user)
         if err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to find user: %w", err)
+                return fmt.Errorf("unable to find user: %w", err)
         }</span>
 
         <span class="cov8" title="1">if checkUser.ID != "" </span><span class="cov8" title="1">{ // if there is an user exist with given details then make it as error
                 if err := utils.CompareUserExistingDetails(user, checkUser); err == nil </span><span class="cov0" title="0">{
-                        return fmt.Errorf("failed to compare user details: %w", err)
+                        return fmt.Errorf("unable to compare user details: %w", err)
                 }</span>
         }
 
@@ -2744,7 +2744,7 @@ func (u *userUserCase) UpdateProfile(ctx echo.Context, user domain.User) error <
         <span class="cov8" title="1">if user.Password != "" </span><span class="cov8" title="1">{
                 hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcryptCost)
                 if err != nil </span><span class="cov0" title="0">{
-                        return fmt.Errorf("failed to generate hash password for user: %w", err)
+                        return fmt.Errorf("unable to generate hash password for user: %w", err)
                 }</span>
 
                 <span class="cov8" title="1">user.Password = string(hash)</span>
@@ -2753,7 +2753,7 @@ func (u *userUserCase) UpdateProfile(ctx echo.Context, user domain.User) error <
         <span class="cov8" title="1">err = u.userRepo.UpdateUser(ctx, user)
 
         if err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to update user: %w", err)
+                return fmt.Errorf("unable to update user: %w", err)
         }</span>
 
         <span class="cov8" title="1">return nil</span>
@@ -2763,17 +2763,17 @@ func (u *userUserCase) UpdateProfile(ctx echo.Context, user domain.User) error <
 func (u *userUserCase) SaveAddress(ctx echo.Context, userID string, address domain.Address, isDefault bool) error <span class="cov8" title="1">{
         exist, err := u.userRepo.IsAddressAlreadyExistForUser(ctx, address, userID)
         if err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to check address already exist \nerror:%v", err.Error())
+                return fmt.Errorf("unable to check if address already exists \nerror:%v", err.Error())
         }</span>
 
         <span class="cov8" title="1">if exist </span><span class="cov8" title="1">{
-                return fmt.Errorf("given address already exist for user")
+                return fmt.Errorf("the provided address already exists for this user")
         }</span>
 
         // save the address on database
         <span class="cov8" title="1">addressID, err := u.userRepo.SaveAddress(ctx, address)
         if err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to save address: %w", err)
+                return fmt.Errorf("unable to save address: %w", err)
         }</span>
 
         <span class="cov8" title="1">userAddress := domain.UserAddress{
@@ -2786,7 +2786,7 @@ func (u *userUserCase) SaveAddress(ctx echo.Context, userID string, address doma
         err = u.userRepo.SaveUserAddress(ctx, userAddress)
 
         if err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to save user address: %w", err)
+                return fmt.Errorf("unable to save user address: %w", err)
         }</span>
 
         <span class="cov8" title="1">return nil</span>
@@ -2794,18 +2794,18 @@ func (u *userUserCase) SaveAddress(ctx echo.Context, userID string, address doma
 
 func (u *userUserCase) UpdateAddress(ctx echo.Context, addressBody request.EditAddress, userID string) error <span class="cov8" title="1">{
         if exist, err := u.userRepo.IsAddressIDExist(ctx, addressBody.ID); err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to check address ID existence: %w", err)
+                return fmt.Errorf("unable to check address ID existence: %w", err)
         }</span> else<span class="cov8" title="1"> if !exist </span><span class="cov8" title="1">{
                 return errors.New("invalid address id")
         }</span>
 
         <span class="cov8" title="1">var address domain.Address
         if err := copier.Copy(&amp;address, &amp;addressBody); err != nil </span><span class="cov0" title="0">{
-                return fmt.Errorf("failed to copy address: %w", err)
+                return fmt.Errorf("unable to copy address: %w", err)
         }</span>
 
         <span class="cov8" title="1">if err := u.userRepo.UpdateAddress(ctx, address); err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to update address: %w", err)
+                return fmt.Errorf("unable to update address: %w", err)
         }</span>
 
         // check the user address need to set default or not if it need then set it as default
@@ -2818,11 +2818,11 @@ func (u *userUserCase) UpdateAddress(ctx echo.Context, addressBody request.EditA
 
                 err := u.userRepo.UpdateUserAddress(ctx, userAddress)
                 if err != nil </span><span class="cov0" title="0">{
-                        return fmt.Errorf("failed to update user address: %w", err)
+                        return fmt.Errorf("unable to update user address: %w", err)
                 }</span>
         }
 
-        <span class="cov8" title="1">log.Printf("successfully address saved for user with user_id %s", userID)
+        <span class="cov8" title="1">log.Printf("address successfully saved for user with user_id %s", userID)
 
         return nil</span>
 }
@@ -2831,7 +2831,7 @@ func (u *userUserCase) UpdateAddress(ctx echo.Context, addressBody request.EditA
 func (u *userUserCase) FindAddresses(ctx echo.Context, userID string) (addresses []response.Address, err error) <span class="cov8" title="1">{
         addresses, err = u.userRepo.FindAllAddressByUserID(ctx, userID)
         if err != nil </span><span class="cov8" title="1">{
-                return nil, fmt.Errorf("failed to find addresses: %w", err)
+                return nil, fmt.Errorf("unable to find addresses: %w", err)
         }</span>
 
         <span class="cov8" title="1">return addresses, nil</span>
@@ -2840,7 +2840,7 @@ func (u *userUserCase) FindAddresses(ctx echo.Context, userID string) (addresses
 func (u *userUserCase) FindAddress(ctx echo.Context, userID string, addressID uint) (domain.Address, error) <span class="cov8" title="1">{
         user, err := u.userRepo.FindAddressByUserIDAndAddressID(ctx, userID, addressID)
         if err != nil </span><span class="cov8" title="1">{
-                return domain.Address{}, fmt.Errorf("failed to find user details: %w", err)
+                return domain.Address{}, fmt.Errorf("unable to find user details: %w", err)
         }</span>
 
         <span class="cov8" title="1">return user, nil</span>
@@ -2849,7 +2849,7 @@ func (u *userUserCase) FindAddress(ctx echo.Context, userID string, addressID ui
 func (u *userUserCase) FindPaymentMethods(ctx echo.Context, userID string) (paymentMethods []response.PaymentMethod, err error) <span class="cov8" title="1">{
         paymentMethods, err = u.userRepo.FindAllPaymentMethodsByUserID(ctx, userID)
         if err != nil </span><span class="cov8" title="1">{
-                return nil, fmt.Errorf("failed to find payment method: %w", err)
+                return nil, fmt.Errorf("unable to find payment method: %w", err)
         }</span>
 
         <span class="cov8" title="1">for i, method := range paymentMethods </span><span class="cov8" title="1">{
@@ -2872,7 +2872,7 @@ func (u *userUserCase) SavePaymentMethod(ctx echo.Context, userID string, paymen
                 CardCompany: utils.GetCardIssuer(paymentMethod.Number),
         })
         if err != nil </span><span class="cov8" title="1">{
-                return fmt.Errorf("failed to save product: %w", err)
+                return fmt.Errorf("unable to save product: %w", err)
         }</span>
 
         <span class="cov8" title="1">return nil</span>
@@ -2880,7 +2880,7 @@ func (u *userUserCase) SavePaymentMethod(ctx echo.Context, userID string, paymen
 
 func (u *userUserCase) UpdatePaymentMethod(ctx echo.Context, userID string, paymentMethodBody request.UpdatePaymentMethod) error <span class="cov0" title="0">{
         if exist, err := u.userRepo.IsPaymentMethodIDExist(ctx, paymentMethodBody.ID); err != nil </span><span class="cov0" title="0">{
-                return fmt.Errorf("failed to check payment method ID existence: %w", err)
+                return fmt.Errorf("unable to check payment method ID existence: %w", err)
         }</span> else<span class="cov0" title="0"> if !exist </span><span class="cov0" title="0">{
                 return errors.New("invalid payment method id")
         }</span>
@@ -2894,10 +2894,10 @@ func (u *userUserCase) UpdatePaymentMethod(ctx echo.Context, userID string, paym
         }
 
         if err := u.userRepo.UpdatePaymentMethod(ctx, paymentMethod); err != nil </span><span class="cov0" title="0">{
-                return fmt.Errorf("failed to update address: %w", err)
+                return fmt.Errorf("unable to update address: %w", err)
         }</span>
 
-        <span class="cov0" title="0">log.Printf("successfully payment method updated for user with user_id %s", userID)
+        <span class="cov0" title="0">log.Printf("payment method successfully updated for user with user_id %s", userID)
 
         return nil</span>
 }

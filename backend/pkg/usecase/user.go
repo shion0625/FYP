@@ -37,7 +37,7 @@ func NewUserUseCase(cfg *config.Config, userRepo interfaces.UserRepository) serv
 func (u *userUserCase) FindProfile(ctx echo.Context, userID string) (domain.User, error) {
 	user, err := u.userRepo.FindUserByUserID(ctx, userID)
 	if err != nil {
-		return domain.User{}, fmt.Errorf("failed to find user details: %w", err)
+		return domain.User{}, fmt.Errorf("unable to retrieve user details: %w", err)
 	}
 
 	return user, nil
@@ -47,12 +47,12 @@ func (u *userUserCase) UpdateProfile(ctx echo.Context, user domain.User) error {
 	// first check any other user exist with this entered unique fields
 	checkUser, err := u.userRepo.FindUserByUserNameEmailOrPhone(ctx, user)
 	if err != nil {
-		return fmt.Errorf("failed to find user: %w", err)
+		return fmt.Errorf("unable to find user: %w", err)
 	}
 
 	if checkUser.ID != "" { // if there is an user exist with given details then make it as error
 		if err := utils.CompareUserExistingDetails(user, checkUser); err == nil {
-			return fmt.Errorf("failed to compare user details: %w", err)
+			return fmt.Errorf("unable to compare user details: %w", err)
 		}
 	}
 
@@ -60,7 +60,7 @@ func (u *userUserCase) UpdateProfile(ctx echo.Context, user domain.User) error {
 	if user.Password != "" {
 		hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcryptCost)
 		if err != nil {
-			return fmt.Errorf("failed to generate hash password for user: %w", err)
+			return fmt.Errorf("unable to generate hash password for user: %w", err)
 		}
 
 		user.Password = string(hash)
@@ -69,7 +69,7 @@ func (u *userUserCase) UpdateProfile(ctx echo.Context, user domain.User) error {
 	err = u.userRepo.UpdateUser(ctx, user)
 
 	if err != nil {
-		return fmt.Errorf("failed to update user: %w", err)
+		return fmt.Errorf("unable to update user: %w", err)
 	}
 
 	return nil
@@ -79,17 +79,17 @@ func (u *userUserCase) UpdateProfile(ctx echo.Context, user domain.User) error {
 func (u *userUserCase) SaveAddress(ctx echo.Context, userID string, address domain.Address, isDefault bool) error {
 	exist, err := u.userRepo.IsAddressAlreadyExistForUser(ctx, address, userID)
 	if err != nil {
-		return fmt.Errorf("failed to check address already exist \nerror:%v", err.Error())
+		return fmt.Errorf("unable to check if address already exists \nerror:%v", err.Error())
 	}
 
 	if exist {
-		return fmt.Errorf("given address already exist for user")
+		return fmt.Errorf("the provided address already exists for this user")
 	}
 
 	// save the address on database
 	addressID, err := u.userRepo.SaveAddress(ctx, address)
 	if err != nil {
-		return fmt.Errorf("failed to save address: %w", err)
+		return fmt.Errorf("unable to save address: %w", err)
 	}
 
 	userAddress := domain.UserAddress{
@@ -102,7 +102,7 @@ func (u *userUserCase) SaveAddress(ctx echo.Context, userID string, address doma
 	err = u.userRepo.SaveUserAddress(ctx, userAddress)
 
 	if err != nil {
-		return fmt.Errorf("failed to save user address: %w", err)
+		return fmt.Errorf("unable to save user address: %w", err)
 	}
 
 	return nil
@@ -110,18 +110,18 @@ func (u *userUserCase) SaveAddress(ctx echo.Context, userID string, address doma
 
 func (u *userUserCase) UpdateAddress(ctx echo.Context, addressBody request.EditAddress, userID string) error {
 	if exist, err := u.userRepo.IsAddressIDExist(ctx, addressBody.ID); err != nil {
-		return fmt.Errorf("failed to check address ID existence: %w", err)
+		return fmt.Errorf("unable to check address ID existence: %w", err)
 	} else if !exist {
 		return errors.New("invalid address id")
 	}
 
 	var address domain.Address
 	if err := copier.Copy(&address, &addressBody); err != nil {
-		return fmt.Errorf("failed to copy address: %w", err)
+		return fmt.Errorf("unable to copy address: %w", err)
 	}
 
 	if err := u.userRepo.UpdateAddress(ctx, address); err != nil {
-		return fmt.Errorf("failed to update address: %w", err)
+		return fmt.Errorf("unable to update address: %w", err)
 	}
 
 	// check the user address need to set default or not if it need then set it as default
@@ -134,11 +134,11 @@ func (u *userUserCase) UpdateAddress(ctx echo.Context, addressBody request.EditA
 
 		err := u.userRepo.UpdateUserAddress(ctx, userAddress)
 		if err != nil {
-			return fmt.Errorf("failed to update user address: %w", err)
+			return fmt.Errorf("unable to update user address: %w", err)
 		}
 	}
 
-	log.Printf("successfully address saved for user with user_id %s", userID)
+	log.Printf("address successfully saved for user with user_id %s", userID)
 
 	return nil
 }
@@ -147,7 +147,7 @@ func (u *userUserCase) UpdateAddress(ctx echo.Context, addressBody request.EditA
 func (u *userUserCase) FindAddresses(ctx echo.Context, userID string) (addresses []response.Address, err error) {
 	addresses, err = u.userRepo.FindAllAddressByUserID(ctx, userID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to find addresses: %w", err)
+		return nil, fmt.Errorf("unable to find addresses: %w", err)
 	}
 
 	return addresses, nil
@@ -156,7 +156,7 @@ func (u *userUserCase) FindAddresses(ctx echo.Context, userID string) (addresses
 func (u *userUserCase) FindAddress(ctx echo.Context, userID string, addressID uint) (domain.Address, error) {
 	user, err := u.userRepo.FindAddressByUserIDAndAddressID(ctx, userID, addressID)
 	if err != nil {
-		return domain.Address{}, fmt.Errorf("failed to find user details: %w", err)
+		return domain.Address{}, fmt.Errorf("unable to find user details: %w", err)
 	}
 
 	return user, nil
@@ -165,7 +165,7 @@ func (u *userUserCase) FindAddress(ctx echo.Context, userID string, addressID ui
 func (u *userUserCase) FindPaymentMethods(ctx echo.Context, userID string) (paymentMethods []response.PaymentMethod, err error) {
 	paymentMethods, err = u.userRepo.FindAllPaymentMethodsByUserID(ctx, userID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to find payment method: %w", err)
+		return nil, fmt.Errorf("unable to find payment method: %w", err)
 	}
 
 	for i, method := range paymentMethods {
@@ -188,7 +188,7 @@ func (u *userUserCase) SavePaymentMethod(ctx echo.Context, userID string, paymen
 		CardCompany: utils.GetCardIssuer(paymentMethod.Number),
 	})
 	if err != nil {
-		return fmt.Errorf("failed to save product: %w", err)
+		return fmt.Errorf("unable to save product: %w", err)
 	}
 
 	return nil
@@ -196,7 +196,7 @@ func (u *userUserCase) SavePaymentMethod(ctx echo.Context, userID string, paymen
 
 func (u *userUserCase) UpdatePaymentMethod(ctx echo.Context, userID string, paymentMethodBody request.UpdatePaymentMethod) error {
 	if exist, err := u.userRepo.IsPaymentMethodIDExist(ctx, paymentMethodBody.ID); err != nil {
-		return fmt.Errorf("failed to check payment method ID existence: %w", err)
+		return fmt.Errorf("unable to check payment method ID existence: %w", err)
 	} else if !exist {
 		return errors.New("invalid payment method id")
 	}
@@ -210,10 +210,10 @@ func (u *userUserCase) UpdatePaymentMethod(ctx echo.Context, userID string, paym
 	}
 
 	if err := u.userRepo.UpdatePaymentMethod(ctx, paymentMethod); err != nil {
-		return fmt.Errorf("failed to update address: %w", err)
+		return fmt.Errorf("unable to update address: %w", err)
 	}
 
-	log.Printf("successfully payment method updated for user with user_id %s", userID)
+	log.Printf("payment method successfully updated for user with user_id %s", userID)
 
 	return nil
 }
