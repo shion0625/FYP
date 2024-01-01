@@ -2005,7 +2005,7 @@ func (a *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (stri
         }
 
         <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
-                return "", fmt.Errorf("failed to find user from database: %w", err)
+                return "", fmt.Errorf("unable to find user in database: %w", err)
         }</span>
 
         <span class="cov8" title="1">if user.ID == "" </span><span class="cov8" title="1">{
@@ -2026,12 +2026,12 @@ func (a *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (stri
 func (a *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (string, error) <span class="cov8" title="1">{
         existUser, err := a.userRepo.FindUserByUserNameEmailOrPhone(ctx, signUpDetails)
         if err != nil </span><span class="cov8" title="1">{
-                return "", fmt.Errorf("failed to check user %w", err)
+                return "", fmt.Errorf("unable to check user: %w", err)
         }</span>
 
         <span class="cov8" title="1">if existUser != (domain.User{}) </span><span class="cov8" title="1">{
-                // 一致しているプロパティをエラー内容として返す
-                errorMsg := "failed to check user details already exist:"
+                // Return matching properties as error details
+                errorMsg := "user details already exist:"
                 if signUpDetails.UserName == existUser.UserName </span><span class="cov8" title="1">{
                         errorMsg += "\rUserName already exists"
                 }</span>
@@ -2059,14 +2059,14 @@ func (a *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (s
         if userID == "" </span><span class="cov8" title="1">{ // if user not exist then save user on database
                 hashPass, err := utils.GenerateHashFromPassword(signUpDetails.Password)
                 if err != nil </span><span class="cov0" title="0">{
-                        return "", fmt.Errorf("failed to hash the password: %w", err)
+                        return "", fmt.Errorf("unable to hash the password: %w", err)
                 }</span>
 
                 <span class="cov8" title="1">signUpDetails.Password = hashPass
                 _, err = a.userRepo.SaveUser(ctx, signUpDetails)
 
                 if err != nil </span><span class="cov8" title="1">{
-                        return "", fmt.Errorf("failed to save user details: %w", err)
+                        return "", fmt.Errorf("unable to save user details: %w", err)
                 }</span>
         }
 
@@ -2082,7 +2082,7 @@ func (a *authUseCase) GenerateAccessToken(ctx echo.Context, tokenParams interfac
 
         tokenRes, err := a.tokenService.GenerateToken(tokenReq)
         if err != nil </span><span class="cov8" title="1">{
-                return "", fmt.Errorf("failed to generate access token: %w", err)
+                return "", fmt.Errorf("unable to generate access token: %w", err)
         }</span>
 
         <span class="cov8" title="1">return tokenRes.TokenString, nil</span>
@@ -2098,7 +2098,7 @@ func (a *authUseCase) GenerateRefreshToken(ctx echo.Context, tokenParams interfa
 
         tokenRes, err := a.tokenService.GenerateToken(tokenReq)
         if err != nil </span><span class="cov8" title="1">{
-                return "", fmt.Errorf("failed to generate refresh token: %w", err)
+                return "", fmt.Errorf("unable to generate refresh token: %w", err)
         }</span>
 
         <span class="cov8" title="1">err = a.authRepo.SaveRefreshSession(ctx, domain.RefreshSession{
@@ -2109,7 +2109,7 @@ func (a *authUseCase) GenerateRefreshToken(ctx echo.Context, tokenParams interfa
         })
 
         if err != nil </span><span class="cov8" title="1">{
-                return "", fmt.Errorf("failed to save refresh session: %w", err)
+                return "", fmt.Errorf("unable to save refresh session: %w", err)
         }</span>
 
         <span class="cov8" title="1">log.Printf("successfully refresh token created and refresh session stored in database")
@@ -2125,12 +2125,12 @@ func (c *authUseCase) VerifyAndGetRefreshTokenSession(ctx echo.Context, refreshT
 
         verifyRes, err := c.tokenService.VerifyToken(verifyReq)
         if err != nil </span><span class="cov8" title="1">{
-                return domain.RefreshSession{}, fmt.Errorf("failed to save refresh session: %w", err)
+                return domain.RefreshSession{}, fmt.Errorf("unable to save refresh session: %w", err)
         }</span>
 
         <span class="cov8" title="1">refreshSession, err := c.authRepo.FindRefreshSessionByTokenID(ctx, verifyRes.TokenID)
         if err != nil </span><span class="cov8" title="1">{
-                return refreshSession, fmt.Errorf("failed to find refresh session by token ID: %w", err)
+                return refreshSession, fmt.Errorf("unable to find refresh session by token ID: %w", err)
         }</span>
 
         <span class="cov8" title="1">if refreshSession.TokenID == "" </span><span class="cov8" title="1">{

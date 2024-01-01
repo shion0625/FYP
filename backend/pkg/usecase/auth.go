@@ -60,7 +60,7 @@ func (a *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (stri
 	}
 
 	if err != nil {
-		return "", fmt.Errorf("failed to find user from database: %w", err)
+		return "", fmt.Errorf("unable to find user in database: %w", err)
 	}
 
 	if user.ID == "" {
@@ -81,12 +81,12 @@ func (a *authUseCase) UserLogin(ctx echo.Context, loginInfo request.Login) (stri
 func (a *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (string, error) {
 	existUser, err := a.userRepo.FindUserByUserNameEmailOrPhone(ctx, signUpDetails)
 	if err != nil {
-		return "", fmt.Errorf("failed to check user %w", err)
+		return "", fmt.Errorf("unable to check user: %w", err)
 	}
 
 	if existUser != (domain.User{}) {
-		// 一致しているプロパティをエラー内容として返す
-		errorMsg := "failed to check user details already exist:"
+		// Return matching properties as error details
+		errorMsg := "user details already exist:"
 		if signUpDetails.UserName == existUser.UserName {
 			errorMsg += "\rUserName already exists"
 		}
@@ -114,14 +114,14 @@ func (a *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (s
 	if userID == "" { // if user not exist then save user on database
 		hashPass, err := utils.GenerateHashFromPassword(signUpDetails.Password)
 		if err != nil {
-			return "", fmt.Errorf("failed to hash the password: %w", err)
+			return "", fmt.Errorf("unable to hash the password: %w", err)
 		}
 
 		signUpDetails.Password = hashPass
 		_, err = a.userRepo.SaveUser(ctx, signUpDetails)
 
 		if err != nil {
-			return "", fmt.Errorf("failed to save user details: %w", err)
+			return "", fmt.Errorf("unable to save user details: %w", err)
 		}
 	}
 
@@ -137,7 +137,7 @@ func (a *authUseCase) GenerateAccessToken(ctx echo.Context, tokenParams interfac
 
 	tokenRes, err := a.tokenService.GenerateToken(tokenReq)
 	if err != nil {
-		return "", fmt.Errorf("failed to generate access token: %w", err)
+		return "", fmt.Errorf("unable to generate access token: %w", err)
 	}
 
 	return tokenRes.TokenString, nil
@@ -153,7 +153,7 @@ func (a *authUseCase) GenerateRefreshToken(ctx echo.Context, tokenParams interfa
 
 	tokenRes, err := a.tokenService.GenerateToken(tokenReq)
 	if err != nil {
-		return "", fmt.Errorf("failed to generate refresh token: %w", err)
+		return "", fmt.Errorf("unable to generate refresh token: %w", err)
 	}
 
 	err = a.authRepo.SaveRefreshSession(ctx, domain.RefreshSession{
@@ -164,7 +164,7 @@ func (a *authUseCase) GenerateRefreshToken(ctx echo.Context, tokenParams interfa
 	})
 
 	if err != nil {
-		return "", fmt.Errorf("failed to save refresh session: %w", err)
+		return "", fmt.Errorf("unable to save refresh session: %w", err)
 	}
 
 	log.Printf("successfully refresh token created and refresh session stored in database")
@@ -180,12 +180,12 @@ func (c *authUseCase) VerifyAndGetRefreshTokenSession(ctx echo.Context, refreshT
 
 	verifyRes, err := c.tokenService.VerifyToken(verifyReq)
 	if err != nil {
-		return domain.RefreshSession{}, fmt.Errorf("failed to save refresh session: %w", err)
+		return domain.RefreshSession{}, fmt.Errorf("unable to save refresh session: %w", err)
 	}
 
 	refreshSession, err := c.authRepo.FindRefreshSessionByTokenID(ctx, verifyRes.TokenID)
 	if err != nil {
-		return refreshSession, fmt.Errorf("failed to find refresh session by token ID: %w", err)
+		return refreshSession, fmt.Errorf("unable to find refresh session by token ID: %w", err)
 	}
 
 	if refreshSession.TokenID == "" {

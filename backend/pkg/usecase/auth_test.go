@@ -95,7 +95,7 @@ func TestAuthUseCase_UserLogin(t *testing.T) {
 			func(mu *authMock.MockUserRepository) {
 				mu.EXPECT().FindUserByEmail(gomock.Any(), gomock.Any()).Return(domain.User{}, errors.New("error"))
 			},
-			output{fmt.Errorf("failed to find user from database: error")},
+			output{fmt.Errorf("unable to find user in database: error")},
 		},
 		"Abnormal Case: UserLogin with Email - Wrong password": {
 			input{loginInfo},
@@ -161,7 +161,7 @@ func TestAuthUseCase_UserSignUp(t *testing.T) {
 			func(mu *authMock.MockUserRepository) {
 				mu.EXPECT().FindUserByUserNameEmailOrPhone(gomock.Any(), gomock.Any()).Return(domain.User{}, errors.New("error"))
 			},
-			output{fmt.Errorf("failed to check user error")},
+			output{fmt.Errorf("unable to check user: error")},
 		},
 		"Abnormal Case: UserSignUp": {
 			input{signUpDetails},
@@ -169,7 +169,7 @@ func TestAuthUseCase_UserSignUp(t *testing.T) {
 				mu.EXPECT().FindUserByUserNameEmailOrPhone(gomock.Any(), gomock.Any()).Return(domain.User{}, nil)
 				mu.EXPECT().SaveUser(gomock.Any(), gomock.Any()).Return("", errors.New("error"))
 			},
-			output{fmt.Errorf("failed to save user details: error")},
+			output{fmt.Errorf("unable to save user details: error")},
 		},
 		"Abnormal Case: UserSignUp - UserName already exists": {
 			input{signUpDetails},
@@ -177,7 +177,7 @@ func TestAuthUseCase_UserSignUp(t *testing.T) {
 				existingUser := domain.User{UserName: "testUser"}
 				mu.EXPECT().FindUserByUserNameEmailOrPhone(gomock.Any(), gomock.Any()).Return(existingUser, nil)
 			},
-			output{fmt.Errorf("failed to check user details already exist:\rUserName already exists\rEmail already exists\rPhone already exists.")},
+			output{fmt.Errorf("user details already exist:\rUserName already exists\rEmail already exists\rPhone already exists.")},
 		},
 	}
 
@@ -235,7 +235,7 @@ func TestAuthUseCase_GenerateAccessToken(t *testing.T) {
 			func(mt *tokenMock.MockTokenService) {
 				mt.EXPECT().GenerateToken(gomock.Any()).Return(token.GenerateTokenResponse{}, errors.New("error"))
 			},
-			output{fmt.Errorf("failed to generate access token: error")},
+			output{fmt.Errorf("unable to generate access token: error")},
 		},
 	}
 
@@ -294,7 +294,7 @@ func TestAuthUseCase_GenerateRefreshToken(t *testing.T) {
 			func(mt *tokenMock.MockTokenService, ma *authMock.MockAuthRepository) {
 				mt.EXPECT().GenerateToken(gomock.Any()).Return(token.GenerateTokenResponse{}, errors.New("error"))
 			},
-			output{fmt.Errorf("failed to generate refresh token: error")},
+			output{fmt.Errorf("unable to generate refresh token: error")},
 		},
 		"Abnormal Case: GenerateRefreshToken - Failed to save refresh session": {
 			input{tokenParams},
@@ -302,7 +302,7 @@ func TestAuthUseCase_GenerateRefreshToken(t *testing.T) {
 				mt.EXPECT().GenerateToken(gomock.Any()).Return(token.GenerateTokenResponse{TokenString: "tokenString"}, nil)
 				ma.EXPECT().SaveRefreshSession(gomock.Any(), gomock.Any()).Return(errors.New("error"))
 			},
-			output{fmt.Errorf("failed to save refresh session: error")},
+			output{fmt.Errorf("unable to save refresh session: error")},
 		},
 	}
 
@@ -366,7 +366,7 @@ func TestAuthUseCase_VerifyAndGetRefreshTokenSession(t *testing.T) {
 			func(mt *tokenMock.MockTokenService, ma *authMock.MockAuthRepository) {
 				mt.EXPECT().VerifyToken(gomock.Any()).Return(token.VerifyTokenResponse{}, errors.New("error"))
 			},
-			output{fmt.Errorf("failed to save refresh session: error")},
+			output{fmt.Errorf("unable to save refresh session: error")},
 		},
 		"Abnormal Case: VerifyAndGetRefreshTokenSession - Failed to find refresh session": {
 			inputOption,
@@ -374,7 +374,7 @@ func TestAuthUseCase_VerifyAndGetRefreshTokenSession(t *testing.T) {
 				mt.EXPECT().VerifyToken(gomock.Any()).Return(token.VerifyTokenResponse{TokenID: "tokenID"}, nil)
 				ma.EXPECT().FindRefreshSessionByTokenID(gomock.Any(), gomock.Any()).Return(domain.RefreshSession{}, errors.New("error"))
 			},
-			output{fmt.Errorf("failed to find refresh session by token ID: error")},
+			output{fmt.Errorf("unable to find refresh session by token ID: error")},
 		},
 		"Abnormal Case: VerifyAndGetRefreshTokenSession - Refresh session not exist": {
 			inputOption,
