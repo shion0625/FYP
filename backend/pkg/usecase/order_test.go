@@ -8,6 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/request"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/response"
+	"github.com/shion0625/FYP/backend/pkg/config"
 	repoInterfaces "github.com/shion0625/FYP/backend/pkg/repository/interfaces"
 	orderMock "github.com/shion0625/FYP/backend/pkg/repository/mock"
 	"github.com/shion0625/FYP/backend/pkg/usecase"
@@ -20,8 +21,9 @@ func TestOrderUseCase_PayOrder(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockOrderRepo := orderMock.NewMockOrderRepository(ctrl)
+	cfg, _ := config.LoadConfig()
 
-	order := usecase.NewOrderUseCase(mockOrderRepo)
+	order := usecase.NewOrderUseCase(cfg, mockOrderRepo)
 
 	ctx := echo.New().NewContext(nil, nil)
 	userID := "1"
@@ -90,8 +92,9 @@ func TestOrderUseCase_updateStockAndPayOrder(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockOrderRepo := orderMock.NewMockOrderRepository(ctrl)
+	cfg, _ := config.LoadConfig()
 
-	order := usecase.NewOrderUseCase(mockOrderRepo)
+	order := usecase.NewOrderUseCase(cfg, mockOrderRepo)
 
 	ctx := echo.New().NewContext(nil, nil)
 	userID := "1"
@@ -234,8 +237,9 @@ func TestOrderUseCase_GetAllShopOrders(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockOrderRepo := orderMock.NewMockOrderRepository(ctrl)
+	cfg, _ := config.LoadConfig()
 
-	order := usecase.NewOrderUseCase(mockOrderRepo)
+	order := usecase.NewOrderUseCase(cfg, mockOrderRepo)
 
 	ctx := echo.New().NewContext(nil, nil)
 	userID := "1"

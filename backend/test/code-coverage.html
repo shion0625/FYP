@@ -61,7 +61,7 @@
 				
 				<option value="file2">github.com/shion0625/FYP/backend/pkg/api/handler/product.go (70.0%)</option>
 				
-				<option value="file3">github.com/shion0625/FYP/backend/pkg/api/handler/user.go (66.2%)</option>
+				<option value="file3">github.com/shion0625/FYP/backend/pkg/api/handler/user.go (58.9%)</option>
 				
 				<option value="file4">github.com/shion0625/FYP/backend/pkg/repository/auth.go (85.7%)</option>
 				
@@ -69,15 +69,15 @@
 				
 				<option value="file6">github.com/shion0625/FYP/backend/pkg/repository/product.go (95.1%)</option>
 				
-				<option value="file7">github.com/shion0625/FYP/backend/pkg/repository/user.go (69.1%)</option>
+				<option value="file7">github.com/shion0625/FYP/backend/pkg/repository/user.go (61.8%)</option>
 				
 				<option value="file8">github.com/shion0625/FYP/backend/pkg/usecase/auth.go (98.5%)</option>
 				
-				<option value="file9">github.com/shion0625/FYP/backend/pkg/usecase/order.go (100.0%)</option>
+				<option value="file9">github.com/shion0625/FYP/backend/pkg/usecase/order.go (86.4%)</option>
 				
 				<option value="file10">github.com/shion0625/FYP/backend/pkg/usecase/product.go (88.7%)</option>
 				
-				<option value="file11">github.com/shion0625/FYP/backend/pkg/usecase/user.go (94.2%)</option>
+				<option value="file11">github.com/shion0625/FYP/backend/pkg/usecase/user.go (83.3%)</option>
 				
 				<option value="file12">github.com/shion0625/FYP/backend/pkg/utils/compare.go (100.0%)</option>
 				
@@ -1124,6 +1124,39 @@ func (u *UserHandler) SavePaymentMethod(ctx echo.Context) error <span class="cov
 
         return nil</span>
 }
+
+func (u *UserHandler) UpdatePaymentMethods(ctx echo.Context) error <span class="cov0" title="0">{
+        userID, err := utils.GetUserIdFromContext(ctx)
+        if err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve user details", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">var body request.UpdatePaymentMethod
+
+        if err := ctx.Bind(&amp;body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, BindJsonFailMessage, err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">if err := ctx.Validate(body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">if err := u.userUseCase.UpdatePaymentMethod(ctx, userID, body); err != nil </span><span class="cov0" title="0">{
+                response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to update user address", err, nil)
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">response.SuccessResponse(ctx, http.StatusOK, "successfully paymentMethod updated", body)
+
+        return nil</span>
+}
 </pre>
 		
 		<pre class="file" id="file4" style="display: none">package repository
@@ -1881,6 +1914,34 @@ func (c *userDatabase) SavePaymentMethod(ctx echo.Context, paymentMethod domain.
 
         <span class="cov8" title="1">return paymentMethod.ID, nil</span>
 }
+
+func (c *userDatabase) IsPaymentMethodIDExist(ctx echo.Context, paymentMethodID uint) (exist bool, err error) <span class="cov0" title="0">{
+        var paymentMethodModel domain.PaymentMethod
+        err = c.DB.Model(&amp;paymentMethodModel).
+                Select("id").
+                Where("id = ?", paymentMethodID).
+                First(&amp;paymentMethodModel).Error
+
+        if errors.Is(err, gorm.ErrRecordNotFound) </span><span class="cov0" title="0">{
+                return false, nil
+        }</span>
+
+        <span class="cov0" title="0">return true, err</span>
+}
+
+func (c *userDatabase) UpdatePaymentMethod(ctx echo.Context, paymentMethod domain.PaymentMethod) error <span class="cov0" title="0">{
+        if err := c.DB.Model(&amp;paymentMethod).Where("id = ?", paymentMethod.ID).Updates(map[string]interface{}{
+                "number":       paymentMethod.Number,
+                "expiry":       paymentMethod.Expiry,
+                "cvc":          paymentMethod.Cvc,
+                "card_company": paymentMethod.CardCompany,
+                "updated_at":   time.Now(),
+        }).Error; err != nil </span><span class="cov0" title="0">{
+                return errors.New("failed to update the address for edit address")
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
 </pre>
 		
 		<pre class="file" id="file8" style="display: none">package usecase
@@ -2097,19 +2158,24 @@ import (
         "github.com/labstack/echo/v4"
         "github.com/shion0625/FYP/backend/pkg/api/handler/request"
         "github.com/shion0625/FYP/backend/pkg/api/handler/response"
+        "github.com/shion0625/FYP/backend/pkg/config"
         repoInterfaces "github.com/shion0625/FYP/backend/pkg/repository/interfaces"
         "github.com/shion0625/FYP/backend/pkg/usecase/interfaces"
+        "github.com/shion0625/FYP/backend/pkg/utils"
 )
 
 type orderUseCase struct {
-        orderRepo repoInterfaces.OrderRepository
+        orderRepo     repoInterfaces.OrderRepository
+        creditCardKey string
 }
 
 func NewOrderUseCase(
+        cfg *config.Config,
         orderRepo repoInterfaces.OrderRepository,
 ) interfaces.OrderUseCase <span class="cov8" title="1">{
         return &amp;orderUseCase{
-                orderRepo: orderRepo,
+                orderRepo:     orderRepo,
+                creditCardKey: cfg.CreditCardKey,
         }
 }</span>
 
@@ -2144,7 +2210,15 @@ func (o *orderUseCase) updateStockAndPayOrder(ctx echo.Context, userID string, p
 
 func (o *orderUseCase) GetAllShopOrders(ctx echo.Context, userID string, pagination request.Pagination) (orderHistory []response.Order, err error) <span class="cov8" title="1">{
         orderHistory, err = o.orderRepo.GetShopOrders(ctx, userID, pagination)
-        if err != nil </span><span class="cov8" title="1">{
+
+        for i, order := range orderHistory </span><span class="cov0" title="0">{
+                creditNumberDecrypted := utils.Decrypt(order.PaymentMethod.Number, userID+o.creditCardKey)
+                if len(creditNumberDecrypted) &gt;= MinCreditNumberLength </span><span class="cov0" title="0">{
+                        orderHistory[i].PaymentMethod.Number = creditNumberDecrypted[len(creditNumberDecrypted)-4:]
+                }</span>
+        }
+
+        <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
                 return nil, fmt.Errorf("failed to find addresses: %w", err)
         }</span>
 
@@ -2803,6 +2877,30 @@ func (u *userUserCase) SavePaymentMethod(ctx echo.Context, userID string, paymen
         }</span>
 
         <span class="cov8" title="1">return nil</span>
+}
+
+func (u *userUserCase) UpdatePaymentMethod(ctx echo.Context, userID string, paymentMethodBody request.UpdatePaymentMethod) error <span class="cov0" title="0">{
+        if exist, err := u.userRepo.IsPaymentMethodIDExist(ctx, paymentMethodBody.ID); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to check payment method ID existence: %w", err)
+        }</span> else<span class="cov0" title="0"> if !exist </span><span class="cov0" title="0">{
+                return errors.New("invalid payment method id")
+        }</span>
+
+        <span class="cov0" title="0">paymentMethod := domain.PaymentMethod{
+                ID:          paymentMethodBody.ID,
+                Number:      utils.Encrypt(paymentMethodBody.Number, userID+u.creditCardKey),
+                Expiry:      paymentMethodBody.Expiry,
+                Cvc:         paymentMethodBody.Cvc,
+                CardCompany: utils.GetCardIssuer(paymentMethodBody.Number),
+        }
+
+        if err := u.userRepo.UpdatePaymentMethod(ctx, paymentMethod); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to update address: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">log.Printf("successfully payment method updated for user with user_id %s", userID)
+
+        return nil</span>
 }
 </pre>
 		
