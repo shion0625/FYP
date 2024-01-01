@@ -30,18 +30,18 @@ func (p *ProductHandler) GetAllCategories(ctx echo.Context) error {
 
 	categories, err := p.productUseCase.FindAllCategories(ctx, pagination)
 	if err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to retrieve categories", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to retrieve categories", err, nil)
 
 		return nil
 	}
 
 	if len(categories) == 0 {
-		response.SuccessResponse(ctx, http.StatusOK, "No categories found", nil)
+		response.SuccessResponse(ctx, http.StatusOK, "No categories available", nil)
 
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all categories", categories)
+	response.SuccessResponse(ctx, http.StatusOK, "Categories retrieved successfully", categories)
 
 	return nil
 }
@@ -56,7 +56,7 @@ func (p *ProductHandler) SaveCategory(ctx echo.Context) error {
 	}
 
 	if err := ctx.Validate(body); err != nil {
-		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Request data is invalid", err, nil)
 
 		return nil
 	}
@@ -68,12 +68,12 @@ func (p *ProductHandler) SaveCategory(ctx echo.Context) error {
 			statusCode = http.StatusConflict
 		}
 
-		response.ErrorResponse(ctx, statusCode, "Failed to add category", err, nil)
+		response.ErrorResponse(ctx, statusCode, "Unable to add category", err, nil)
 
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusCreated, "Successfully added category", nil)
+	response.SuccessResponse(ctx, http.StatusCreated, "Category added successfully", nil)
 
 	return nil
 }
@@ -97,7 +97,7 @@ func (p *ProductHandler) SaveVariation(ctx echo.Context) error {
 	}
 
 	if err := ctx.Validate(body); err != nil {
-		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Request data is invalid", err, nil)
 
 		return nil
 	}
@@ -110,12 +110,12 @@ func (p *ProductHandler) SaveVariation(ctx echo.Context) error {
 			statusCode = http.StatusConflict
 		}
 
-		response.ErrorResponse(ctx, statusCode, "Failed to add variation", err, nil)
+		response.ErrorResponse(ctx, statusCode, "Unable to add variation", err, nil)
 
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusCreated, "Successfully added variations", nil)
+	response.SuccessResponse(ctx, http.StatusCreated, "Variations added successfully", nil)
 
 	return nil
 }
@@ -139,7 +139,7 @@ func (p *ProductHandler) SaveVariationOption(ctx echo.Context) error {
 	}
 
 	if err := ctx.Validate(body); err != nil {
-		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Request data is invalid", err, nil)
 
 		return nil
 	}
@@ -151,12 +151,12 @@ func (p *ProductHandler) SaveVariationOption(ctx echo.Context) error {
 			statusCode = http.StatusConflict
 		}
 
-		response.ErrorResponse(ctx, statusCode, "Failed to add variation options", err, nil)
+		response.ErrorResponse(ctx, statusCode, "Unable to add variation options", err, nil)
 
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusCreated, "Successfully added variation options", nil)
+	response.SuccessResponse(ctx, http.StatusCreated, "Variation options added successfully", nil)
 
 	return nil
 }
@@ -173,18 +173,18 @@ func (c *ProductHandler) GetAllVariations(ctx echo.Context) error {
 
 	variations, err := c.productUseCase.FindAllVariationsAndItsValues(ctx, categoryID)
 	if err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to Get variations and its values", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to retrieve variations and its values", err, nil)
 
 		return nil
 	}
 
 	if len(variations) == 0 {
-		response.SuccessResponse(ctx, http.StatusOK, "No variations found", nil)
+		response.SuccessResponse(ctx, http.StatusOK, "No variations available", nil)
 
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusOK, "Successfully retrieved all variations and its values", variations)
+	response.SuccessResponse(ctx, http.StatusOK, "Variations and its values retrieved successfully", variations)
 
 	return nil
 }
@@ -199,7 +199,7 @@ func (p *ProductHandler) SaveProduct(ctx echo.Context) error {
 	}
 
 	if err := ctx.Validate(body); err != nil {
-		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Request data is invalid", err, nil)
 
 		return nil
 	}
@@ -211,12 +211,12 @@ func (p *ProductHandler) SaveProduct(ctx echo.Context) error {
 			statusCode = http.StatusConflict
 		}
 
-		response.ErrorResponse(ctx, statusCode, "Failed to add product", err, nil)
+		response.ErrorResponse(ctx, statusCode, "Unable to add product", err, nil)
 
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusCreated, "Successfully product added", nil)
+	response.SuccessResponse(ctx, http.StatusCreated, "Product added successfully", nil)
 
 	return nil
 }
@@ -250,18 +250,18 @@ func (p *ProductHandler) getAllProducts() func(ctx echo.Context) error {
 
 		products, err := p.productUseCase.FindAllProducts(ctx, pagination, categoryID, brandID)
 		if err != nil {
-			response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to Get all products", err, nil)
+			response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to retrieve all products", err, nil)
 
 			return nil
 		}
 
 		if len(products) == 0 {
-			response.SuccessResponse(ctx, http.StatusOK, "No products found", nil)
+			response.SuccessResponse(ctx, http.StatusOK, "No products available", nil)
 
 			return nil
 		}
 
-		response.SuccessResponse(ctx, http.StatusOK, "Successfully found all products", products)
+		response.SuccessResponse(ctx, http.StatusOK, "Products retrieved successfully", products)
 
 		return nil
 	}
@@ -279,12 +279,12 @@ func (p *ProductHandler) GetProduct(ctx echo.Context) error {
 
 	products, err := p.productUseCase.GetProduct(ctx, productID)
 	if err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to Get all products", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to retrieve all products", err, nil)
 
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusOK, "Successfully found all products", products)
+	response.SuccessResponse(ctx, http.StatusOK, "Products retrieved successfully", products)
 
 	return nil
 }
@@ -299,14 +299,14 @@ func (c *ProductHandler) UpdateProduct(ctx echo.Context) error {
 	}
 
 	if err := ctx.Validate(body); err != nil {
-		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Request data is invalid", err, nil)
 
 		return nil
 	}
 
 	var product domain.Product
 	if err := copier.Copy(&product, &body); err != nil {
-		response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to copy product data", err, nil)
+		response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to copy product data", err, nil)
 
 		return nil
 	}
@@ -317,12 +317,12 @@ func (c *ProductHandler) UpdateProduct(ctx echo.Context) error {
 			statusCode = http.StatusConflict
 		}
 
-		response.ErrorResponse(ctx, statusCode, "Failed to update product", err, nil)
+		response.ErrorResponse(ctx, statusCode, "Unable to update product", err, nil)
 
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusOK, "Successfully product updated", nil)
+	response.SuccessResponse(ctx, http.StatusOK, "Product updated successfully", nil)
 
 	return nil
 }
@@ -346,7 +346,7 @@ func (p *ProductHandler) SaveProductItem(ctx echo.Context) error {
 	}
 
 	if err := ctx.Validate(body); err != nil {
-		response.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request data", err, nil)
+		response.ErrorResponse(ctx, http.StatusBadRequest, "Request data is invalid", err, nil)
 
 		return nil
 	}
@@ -365,12 +365,12 @@ func (p *ProductHandler) SaveProductItem(ctx echo.Context) error {
 			statusCode = http.StatusInternalServerError
 		}
 
-		response.ErrorResponse(ctx, statusCode, "Failed to add product item", err, nil)
+		response.ErrorResponse(ctx, statusCode, "Unable to add product item", err, nil)
 
 		return nil
 	}
 
-	response.SuccessResponse(ctx, http.StatusCreated, "Successfully product item added", nil)
+	response.SuccessResponse(ctx, http.StatusCreated, "Product item added successfully", nil)
 
 	return nil
 }
@@ -397,19 +397,19 @@ func (p *ProductHandler) getAllProductItems() func(ctx echo.Context) error {
 
 		productItems, err := p.productUseCase.FindAllProductItems(ctx, productID)
 		if err != nil {
-			response.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get all product items", err, nil)
+			response.ErrorResponse(ctx, http.StatusInternalServerError, "Unable to retrieve all product items", err, nil)
 
 			return nil
 		}
 
 		// check the product have productItem exist or not
 		if len(productItems) == 0 {
-			response.SuccessResponse(ctx, http.StatusOK, "No product items found", nil)
+			response.SuccessResponse(ctx, http.StatusOK, "No product items available", nil)
 
 			return nil
 		}
 
-		response.SuccessResponse(ctx, http.StatusOK, "Successfully get all product items ", productItems)
+		response.SuccessResponse(ctx, http.StatusOK, "Product items retrieved successfully", productItems)
 
 		return nil
 	}

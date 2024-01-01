@@ -95,13 +95,13 @@ func TestProductHandler_GetAllCategories(t *testing.T) {
 					},
 				}, nil)
 			},
-			output{http.StatusOK, "Successfully retrieved all categories", nil},
+			output{http.StatusOK, "Categories retrieved successfully", nil},
 		},
 		"Abnormal Case: GetAllCategories": {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().FindAllCategories(gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to retrieve categories", nil},
+			output{http.StatusInternalServerError, "Unable to retrieve categories", nil},
 		},
 	}
 
@@ -157,7 +157,7 @@ func TestProductHandler_SaveCategory(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().SaveCategory(gomock.Any(), gomock.Any()).Return(nil)
 			},
-			output{http.StatusCreated, "Successfully added category", nil},
+			output{http.StatusCreated, "Category added successfully", nil},
 		},
 		"Abnormal Case: SaveCategory": {
 			input{
@@ -168,7 +168,7 @@ func TestProductHandler_SaveCategory(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().SaveCategory(gomock.Any(), gomock.Any()).Return(errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to add category", nil},
+			output{http.StatusInternalServerError, "Unable to add category", nil},
 		},
 	}
 
@@ -230,7 +230,7 @@ func TestProductHandler_UpdateProduct(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().UpdateProduct(gomock.Any(), gomock.Any()).Return(nil)
 			},
-			output{http.StatusOK, "Successfully product updated", nil},
+			output{http.StatusOK, "Product updated successfully", nil},
 		},
 		"Abnormal Case: UpdateProduct": {
 			input{
@@ -246,7 +246,7 @@ func TestProductHandler_UpdateProduct(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().UpdateProduct(gomock.Any(), gomock.Any()).Return(errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to update product", nil},
+			output{http.StatusInternalServerError, "Unable to update product", nil},
 		},
 	}
 
@@ -305,7 +305,7 @@ func TestProductHandler_SaveVariation(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().SaveVariation(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
 			},
-			output{http.StatusCreated, "Successfully added variations", nil},
+			output{http.StatusCreated, "Variations added successfully", nil},
 		},
 		"Abnormal Case: SaveVariation": {
 			input{
@@ -317,7 +317,7 @@ func TestProductHandler_SaveVariation(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().SaveVariation(gomock.Any(), gomock.Any(), gomock.Any()).Return(errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to add variation", nil},
+			output{http.StatusInternalServerError, "Unable to add variation", nil},
 		},
 	}
 
@@ -379,7 +379,7 @@ func TestProductHandler_SaveVariationOption(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().SaveVariationOption(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
 			},
-			output{http.StatusCreated, "Successfully added variation options", nil},
+			output{http.StatusCreated, "Variation options added successfully", nil},
 		},
 		"Abnormal Case: SaveVariationOption": {
 			input{
@@ -391,7 +391,7 @@ func TestProductHandler_SaveVariationOption(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().SaveVariationOption(gomock.Any(), gomock.Any(), gomock.Any()).Return(errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to add variation options", nil},
+			output{http.StatusInternalServerError, "Unable to add variation options", nil},
 		},
 	}
 
@@ -454,7 +454,7 @@ func TestProductHandler_GetAllVariations(t *testing.T) {
 					},
 				}, nil)
 			},
-			output{http.StatusOK, "Successfully retrieved all variations and its values", nil},
+			output{http.StatusOK, "Variations and its values retrieved successfully", nil},
 		},
 		"Abnormal Case: GetAllVariations": {
 			input{
@@ -463,7 +463,7 @@ func TestProductHandler_GetAllVariations(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().FindAllVariationsAndItsValues(gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to Get variations and its values", nil},
+			output{http.StatusInternalServerError, "Unable to retrieve variations and its values", nil},
 		},
 	}
 
@@ -528,7 +528,7 @@ func TestProductHandler_SaveProduct(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().SaveProduct(gomock.Any(), gomock.Any()).Return(nil)
 			},
-			output{http.StatusCreated, "Successfully product added", nil},
+			output{http.StatusCreated, "Product added successfully", nil},
 		},
 		"Abnormal Case: SaveProduct": {
 			input{
@@ -544,7 +544,7 @@ func TestProductHandler_SaveProduct(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().SaveProduct(gomock.Any(), gomock.Any()).Return(errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to add product", nil},
+			output{http.StatusInternalServerError, "Unable to add product", nil},
 		},
 	}
 
@@ -610,7 +610,7 @@ func TestProductHandler_GetAllProductsAdmin(t *testing.T) {
 					},
 				}, nil)
 			},
-			output{http.StatusOK, "Successfully found all products", nil},
+			output{http.StatusOK, "Products retrieved successfully", nil},
 		},
 		"Abnormal Case: GetAllProductsAdmin": {
 			input{
@@ -620,7 +620,7 @@ func TestProductHandler_GetAllProductsAdmin(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().FindAllProducts(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to Get all products", nil},
+			output{http.StatusInternalServerError, "Unable to retrieve all products", nil},
 		},
 	}
 
@@ -685,7 +685,7 @@ func TestProductHandler_GetAllProductsUser(t *testing.T) {
 					},
 				}, nil)
 			},
-			output{http.StatusOK, "Successfully found all products", nil},
+			output{http.StatusOK, "Products retrieved successfully", nil},
 		},
 		"Abnormal Case: GetAllProductsUser": {
 			input{
@@ -695,7 +695,7 @@ func TestProductHandler_GetAllProductsUser(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().FindAllProducts(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to Get all products", nil},
+			output{http.StatusInternalServerError, "Unable to retrieve all products", nil},
 		},
 	}
 
@@ -756,7 +756,7 @@ func TestProductHandler_GetProduct(t *testing.T) {
 					Image:       "test_image.jpg",
 				}, nil)
 			},
-			output{http.StatusOK, "Successfully found all products", nil},
+			output{http.StatusOK, "Products retrieved successfully", nil},
 		},
 		"Abnormal Case: GetProduct": {
 			input{
@@ -765,7 +765,7 @@ func TestProductHandler_GetProduct(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().GetProduct(gomock.Any(), gomock.Any()).Return(response.Product{}, errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to Get all products", nil},
+			output{http.StatusInternalServerError, "Unable to retrieve all products", nil},
 		},
 	}
 
@@ -830,7 +830,7 @@ func TestProductHandler_SaveProductItem(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().SaveProductItem(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
 			},
-			output{http.StatusCreated, "Successfully product item added", nil},
+			output{http.StatusCreated, "Product item added successfully", nil},
 		},
 		"Abnormal Case: SaveProductItem": {
 			input{
@@ -846,7 +846,7 @@ func TestProductHandler_SaveProductItem(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().SaveProductItem(gomock.Any(), gomock.Any(), gomock.Any()).Return(errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to add product item", nil},
+			output{http.StatusInternalServerError, "Unable to add product item", nil},
 		},
 	}
 
@@ -931,7 +931,7 @@ func TestProductHandler_GetAllProductItemsAdmin(t *testing.T) {
 					},
 				}, nil)
 			},
-			output{http.StatusOK, "Successfully get all product items", nil},
+			output{http.StatusOK, "Product items retrieved successfully", nil},
 		},
 		"Abnormal Case: GetAllProductItemsAdmin": {
 			input{
@@ -940,7 +940,7 @@ func TestProductHandler_GetAllProductItemsAdmin(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().FindAllProductItems(gomock.Any(), gomock.Any()).Return([]response.ProductItems{}, errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to get all product items", nil},
+			output{http.StatusInternalServerError, "Unable to retrieve all product items", nil},
 		},
 	}
 
@@ -1021,7 +1021,7 @@ func TestProductHandler_GetAllProductItemsUser(t *testing.T) {
 					},
 				}, nil)
 			},
-			output{http.StatusOK, "Successfully get all product items", nil},
+			output{http.StatusOK, "Product items retrieved successfully", nil},
 		},
 		"Abnormal Case: GetAllProductItemsUser": {
 			input{
@@ -1030,7 +1030,7 @@ func TestProductHandler_GetAllProductItemsUser(t *testing.T) {
 			func(m *usecaseMock.MockProductUseCase) {
 				m.EXPECT().FindAllProductItems(gomock.Any(), gomock.Any()).Return([]response.ProductItems{}, errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to get all product items", nil},
+			output{http.StatusInternalServerError, "Unable to retrieve all product items", nil},
 		},
 	}
 
