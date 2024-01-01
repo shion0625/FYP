@@ -40,7 +40,7 @@ const SignUpView = () => {
       toast.success(response.message);
       router.push('/user/login');
     } catch (error: unknown) {
-      toast.error('failed to signUp');
+      toast.error('Failed to signUp');
     }
   };
 

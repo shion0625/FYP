@@ -33,9 +33,9 @@ const AddressView = () => {
   const onSubmit = async (data: ProfileBody) => {
     try {
       await updateUserProfile(data);
-      toast.success('success to edit profile');
+      toast.success('Success to edit profile');
     } catch (error: unknown) {
-      toast.error('failed to edit profile');
+      toast.error('Failed to edit profile');
     }
   };
 

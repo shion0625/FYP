@@ -50,10 +50,10 @@ const EditCreditCardsForm: React.FC<EditCreditCardsFormProps> = ({
   const onSubmit = async (data: UpdatePaymentMethodBody) => {
     try {
       await updatePaymentMethod(data);
-      toast.success('success to update paymentMethod');
+      toast.success('Success to update paymentMethod');
       setIsSubmitted(true);
     } catch (error: unknown) {
-      toast.error('failed to update paymentMethod');
+      toast.error('Failed to update paymentMethod');
     }
   };
   const watchAllFields = watch();

@@ -45,10 +45,10 @@ const CreditCardsForm: React.FC<CreditCardsFormProps> = ({ setIsSubmitted }) => 
   const onSubmit = async (data: PaymentMethodBody) => {
     try {
       await savePaymentMethod(data);
-      toast.success('success to add paymentMethod');
+      toast.success('Success to add paymentMethod');
       setIsSubmitted(true);
     } catch (error: unknown) {
-      toast.error('failed to add paymentMethod');
+      toast.error('Failed to add paymentMethod');
     }
   };
   const watchAllFields = watch();

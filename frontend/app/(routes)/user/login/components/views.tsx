@@ -35,7 +35,7 @@ const LoginView = () => {
       toast.success(response.message);
       router.push('/user');
     } catch (error: unknown) {
-      toast.error('failed to login');
+      toast.error('Failed to login');
     }
   };
 

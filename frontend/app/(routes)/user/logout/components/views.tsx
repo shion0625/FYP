@@ -15,9 +15,9 @@ const LogoutView = () => {
     try {
       logout();
       loginState.onLogout();
-      toast.success('successful logout');
+      toast.success('Successful logout');
     } catch (error: unknown) {
-      toast.error('failed to logout');
+      toast.error('Failed to logout');
     }
     router.push('/');
   }, []);
