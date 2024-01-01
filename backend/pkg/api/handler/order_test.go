@@ -61,7 +61,7 @@ func TestOrderHandler_PayOrder(t *testing.T) {
 			func(m *usecaseMock.MockOrderUseCase) {
 				m.EXPECT().PayOrder(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
 			},
-			output{http.StatusOK, "Successfully purchase order", nil},
+			output{http.StatusOK, "Order purchased successfully", nil},
 		},
 		"Abnormal Case: PayOrder": {
 			input{
@@ -81,7 +81,7 @@ func TestOrderHandler_PayOrder(t *testing.T) {
 			func(m *usecaseMock.MockOrderUseCase) {
 				m.EXPECT().PayOrder(gomock.Any(), gomock.Any(), gomock.Any()).Return(errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to PayOrder", nil},
+			output{http.StatusInternalServerError, "Payment process failed", nil},
 		},
 	}
 
@@ -135,7 +135,7 @@ func TestOrderHandler_GetOrderHistory(t *testing.T) {
 			func(m *usecaseMock.MockOrderUseCase) {
 				m.EXPECT().GetAllShopOrders(gomock.Any(), gomock.Any(), gomock.Any()).Return([]response.Order{}, nil)
 			},
-			output{http.StatusOK, "No shopOrders found", nil},
+			output{http.StatusOK, "No orders found", nil},
 		},
 		"Normal Case: GetOrderHistory with Orders": {
 			input{userId: "testUserId"},
@@ -154,14 +154,14 @@ func TestOrderHandler_GetOrderHistory(t *testing.T) {
 					},
 				}, nil)
 			},
-			output{http.StatusOK, "successfully addresses updated", nil},
+			output{http.StatusOK, "Order history fetched successfully", nil},
 		},
 		"Abnormal Case: GetOrderHistory": {
 			input{userId: "testUserId"},
 			func(m *usecaseMock.MockOrderUseCase) {
 				m.EXPECT().GetAllShopOrders(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
 			},
-			output{http.StatusInternalServerError, "Failed to update user address", nil},
+			output{http.StatusInternalServerError, "Failed to fetch order history", nil},
 		},
 	}
 
