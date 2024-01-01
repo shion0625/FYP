@@ -41,7 +41,7 @@ func InitializeApi(cfg *config.Config) (*api.ServerHTTP, error) {
 	productUseCase := usecase.NewProductUseCase(productRepository, cloudService)
 	productHandler := handler.NewProductHandler(productUseCase)
 	orderRepository := repository.NewOrderRepository(gormDB)
-	orderUseCase := usecase.NewOrderUseCase(orderRepository)
+	orderUseCase := usecase.NewOrderUseCase(cfg, orderRepository)
 	orderHandler := handler.NewOrderHandler(orderUseCase)
 	serverHTTP := api.NewServerHTTP(cfg, middlewareMiddleware, authHandler, userHandler, productHandler, orderHandler)
 	return serverHTTP, nil

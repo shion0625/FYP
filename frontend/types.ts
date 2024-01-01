@@ -88,3 +88,12 @@ export interface PaymentMethod {
   number: string;
   cardCompany: string;
 }
+
+export interface Order {
+  userId: string;
+  shopOrderId: string;
+  productItemInfo: ProductItemInfo[];
+  address: Address;
+  totalFee: number;
+  paymentMethod: PaymentMethod;
+}

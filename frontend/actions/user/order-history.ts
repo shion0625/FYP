@@ -1,9 +1,9 @@
 import qs from 'query-string';
 import useSWR from 'swr';
 import { axiosFetcher } from '@/actions/fetcher';
-import { Response, Address } from '@/types';
+import { Order } from '@/types';
 
-const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/user/address`;
+const URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/order/history`;
 
 interface Query {
   pageNumber?: number;
@@ -11,24 +11,28 @@ interface Query {
 }
 
 interface UseGetOrderHistoryReturn {
-  userAddressList: Response<Address[]> | undefined;
+  getUserOrderHistory: (query: Query) => Promise<Order[]>;
   isError: unknown;
 }
 
-export const useGetOrderHistory = (query: Query): UseGetOrderHistoryReturn => {
-  const url = qs.stringifyUrl({
-    url: URL,
-    query: {
-      pageNumber: query.pageNumber,
-      count: query.count,
-    },
-  });
-  const { data, error } = useSWR<UseGetOrderHistoryReturn['userAddressList']>(url, axiosFetcher, {
-    suspense: true,
-  });
+export const UseGetOrderHistory = (): UseGetOrderHistoryReturn => {
+  const { error, mutate } = useSWR(URL);
+
+  const getUserOrderHistory = async (query: Query): Promise<Order[]> => {
+    const url = qs.stringifyUrl({
+      url: URL,
+      query: {
+        pageNumber: query.pageNumber,
+        count: query.count,
+      },
+    });
+    const response = await axiosFetcher(url);
+    mutate(response, false); // Update the local data immediately, but disable revalidation
+    return response.data;
+  };
 
   return {
-    userAddressList: data,
+    getUserOrderHistory,
     isError: error,
   };
 };

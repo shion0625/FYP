@@ -6,19 +6,24 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/request"
 	"github.com/shion0625/FYP/backend/pkg/api/handler/response"
+	"github.com/shion0625/FYP/backend/pkg/config"
 	repoInterfaces "github.com/shion0625/FYP/backend/pkg/repository/interfaces"
 	"github.com/shion0625/FYP/backend/pkg/usecase/interfaces"
+	"github.com/shion0625/FYP/backend/pkg/utils"
 )
 
 type orderUseCase struct {
-	orderRepo repoInterfaces.OrderRepository
+	orderRepo     repoInterfaces.OrderRepository
+	creditCardKey string
 }
 
 func NewOrderUseCase(
+	cfg *config.Config,
 	orderRepo repoInterfaces.OrderRepository,
 ) interfaces.OrderUseCase {
 	return &orderUseCase{
-		orderRepo: orderRepo,
+		orderRepo:     orderRepo,
+		creditCardKey: cfg.CreditCardKey,
 	}
 }
 
@@ -53,6 +58,14 @@ func (o *orderUseCase) updateStockAndPayOrder(ctx echo.Context, userID string, p
 
 func (o *orderUseCase) GetAllShopOrders(ctx echo.Context, userID string, pagination request.Pagination) (orderHistory []response.Order, err error) {
 	orderHistory, err = o.orderRepo.GetShopOrders(ctx, userID, pagination)
+
+	for i, order := range orderHistory {
+		creditNumberDecrypted := utils.Decrypt(order.PaymentMethod.Number, userID+o.creditCardKey)
+		if len(creditNumberDecrypted) >= MinCreditNumberLength {
+			orderHistory[i].PaymentMethod.Number = creditNumberDecrypted[len(creditNumberDecrypted)-4:]
+		}
+	}
+
 	if err != nil {
 		return nil, fmt.Errorf("failed to find addresses: %w", err)
 	}

@@ -3,17 +3,19 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Modal } from 'flowbite-react';
 import { useRouter } from 'next/navigation';
 import { UseGetMyPage } from '@/app/(routes)/user/hooks/get-mypage';
+import { UseGetOrderHistory } from '@/actions/user/order-history';
 import CreditCardsForm from '@/components/credit-cards-form';
 import EditCreditCardsForm from '@/components/edit-credit-cards-form';
 import BackdropModal from '@/components/ui/backdrop-modal';
 import CardIcon from '@/components/ui/credit-cards';
 import NoResults from '@/components/ui/no-results';
-import { Address, User, PaymentMethod } from '@/types';
+import { Address, User, PaymentMethod, Order } from '@/types';
 
 interface DataState {
   userProfile: User | undefined;
   userAddressList: Address[] | undefined;
   userPaymentMethod: PaymentMethod[] | undefined;
+  userOrderHistory: Order[] | undefined;
 }
 
 const MyUserView = () => {
@@ -22,23 +24,31 @@ const MyUserView = () => {
     userProfile: undefined,
     userAddressList: [],
     userPaymentMethod: [],
+    userOrderHistory: [],
   });
   const [isSubmittedPaymentMethod, setIsSubmitted] = useState(false);
   const [openModal, setOpenModal] = useState<number>(0);
 
   const { getProfile } = UseGetMyPage();
+  const { getUserOrderHistory } = UseGetOrderHistory();
   useEffect(() => {
     const fetchData = async () => {
       const profile = await getProfile();
+      const userOrderHistory = await getUserOrderHistory({
+        pageNumber: 0,
+        count: 30,
+      });
       setData({
         userProfile: profile.userProfile,
         userAddressList: profile.userAddressList,
         userPaymentMethod: profile.userPaymentMethod,
+        userOrderHistory: userOrderHistory,
       });
     };
     fetchData();
   }, [isSubmittedPaymentMethod]);
 
+  console.log(responseData.userOrderHistory);
   return (
     <div className="space-y-10 pb-10">
       {responseData.userProfile && responseData.userProfile ? (
@@ -141,6 +151,26 @@ const MyUserView = () => {
             <EditCreditCardsForm setIsSubmitted={setIsSubmitted} paymentMethodID={openModal} />
           </Modal.Body>
         </Modal>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-center bg-white shadow-lg rounded-lg p-10">
+        {responseData.userOrderHistory &&
+          responseData.userOrderHistory.length > 0 &&
+          responseData.userOrderHistory.map((order) => {
+            return (
+              <Card key={order.shopOrderId}>
+                <p>
+                  <span className="font-bold">Order ID:</span> {order.shopOrderId}
+                </p>
+                <p>
+                  <span className="font-bold">Total Fee:</span> {order.totalFee}
+                </p>
+                <p>
+                  <span className="font-bold">Payment Method:</span>{' '}
+                  {order.paymentMethod.cardCompany} **** **** **** {order.paymentMethod.number}
+                </p>
+              </Card>
+            );
+          })}
       </div>
     </div>
   );
