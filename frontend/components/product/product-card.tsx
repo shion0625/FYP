@@ -2,7 +2,6 @@
 
 import NextImage from 'next/image';
 import { useRouter } from 'next/navigation';
-import Currency from '@/components/ui/currency';
 import { Product } from '@/types';
 
 interface ProductCard {
