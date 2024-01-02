@@ -3,7 +3,6 @@
 import { toast } from 'react-hot-toast';
 import { useGetProductItems } from '@/actions/product';
 import ProductItemList from '@/components/product/product-item-list';
-import Currency from '@/components/ui/currency';
 import NoResults from '@/components/ui/no-results';
 import { Product } from '@/types';
 
@@ -22,11 +21,7 @@ const Info: React.FC<InfoProps> = ({ data }) => {
   return (
     <div>
       <h1 className="text-3xl font-bold text-gray-900">{data.name}</h1>
-      <div className="mt-3 flex items-end justify-between">
-        <div className="text-2xl text-gray-900">
-          <Currency value={data?.price} />
-        </div>
-      </div>
+      <div className="mt-3 flex items-end justify-between"></div>
       <hr className="my-4" />
       <div className="flex flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
         {productItems && productItems.data ? (

@@ -48,7 +48,6 @@ const MyUserView = () => {
     fetchData();
   }, [isSubmittedPaymentMethod]);
 
-  console.log(responseData.userOrderHistory);
   return (
     <div className="space-y-10 pb-10">
       {responseData.userProfile && responseData.userProfile ? (
