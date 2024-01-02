@@ -152,7 +152,7 @@ const AddressView = () => {
               />
             )}
             <div className="flex justify-center mb-3">
-              <Button type="submit">add address</Button>
+              <Button type="submit">edit address</Button>
             </div>
           </form>
         </CardContent>

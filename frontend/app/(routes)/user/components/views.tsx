@@ -145,7 +145,7 @@ const MyUserView = () => {
             setIsSubmitted(false);
           }}
         >
-          <Modal.Header>Edit payment method id:{openModal}</Modal.Header>
+          <Modal.Header>Edit Payment Method id:{openModal}</Modal.Header>
           <Modal.Body>
             <EditCreditCardsForm setIsSubmitted={setIsSubmitted} paymentMethodID={openModal} />
           </Modal.Body>

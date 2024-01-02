@@ -51,6 +51,7 @@ const Summary = () => {
       productItemId: item.id,
       variationValues: item.variationValues,
       count: item.count || 0,
+      name: item.name,
     }));
     try {
       const response = await purchaseOrder({
