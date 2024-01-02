@@ -102,13 +102,6 @@ func (a *authUseCase) UserSignUp(ctx echo.Context, signUpDetails domain.User) (s
 		return "", fmt.Errorf("%s.", errorMsg)
 	}
 
-	// // if user credentials already exist and  verified then return it as errors
-	// if existUser.ID != "" && existUser.Verified {
-	// 	err = utils.CompareUserExistingDetails(existUser, signUpDetails)
-
-	// 	return "", fmt.Errorf("failed to user is not otp verified: %w", err)
-	// }
-
 	userID := existUser.ID
 
 	if userID == "" { // if user not exist then save user on database

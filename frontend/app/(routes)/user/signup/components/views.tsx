@@ -14,7 +14,7 @@ const SignUpView = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    mode: 'onBlur', // バリデーションチェックのトリガー（フォーカスを外した時）
+    mode: 'onBlur', // Trigger for validation check (when focus is removed)
     defaultValues: {
       userName: '',
       firstName: '',
