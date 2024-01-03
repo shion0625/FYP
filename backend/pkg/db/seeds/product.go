@@ -60,29 +60,31 @@ func CreateProductDomain(db *gorm.DB, options ...func(*domain.User)) error {
 	variation := domain.Variation{
 		CategoryID: category.ID,
 		Category:   category,
-		Name:       gofakeit.Color(),
+		Name:       "color",
 	}
 	if err := db.Create(&variation).Error; err != nil {
 		return err
 	}
 
-	variationOption := domain.VariationOption{
-		VariationID: variation.ID,
-		Variation:   variation,
-		Value:       gofakeit.Color(),
-	}
-	if err := db.Create(&variationOption).Error; err != nil {
-		return err
-	}
+	for i := 0; i < 2; i++ {
+		variationOption := domain.VariationOption{
+			VariationID: variation.ID,
+			Variation:   variation,
+			Value:       gofakeit.Color(),
+		}
+		if err := db.Create(&variationOption).Error; err != nil {
+			return err
+		}
 
-	productConfiguration := domain.ProductConfiguration{
-		ProductItemID:     productItem.ID,
-		ProductItem:       productItem,
-		VariationOptionID: variationOption.ID,
-		VariationOption:   variationOption,
-	}
-	if err := db.Create(&productConfiguration).Error; err != nil {
-		return err
+		productConfiguration := domain.ProductConfiguration{
+			ProductItemID:     productItem.ID,
+			ProductItem:       productItem,
+			VariationOptionID: variationOption.ID,
+			VariationOption:   variationOption,
+		}
+		if err := db.Create(&productConfiguration).Error; err != nil {
+			return err
+		}
 	}
 
 	productImage := domain.ProductImage{
