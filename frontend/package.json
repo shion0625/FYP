@@ -22,7 +22,7 @@
     "eslint-plugin-import": "^2.29.0",
     "flowbite": "^2.2.0",
     "flowbite-react": "^0.6.4",
-    "lucide-react": "^0.294.0",
+    "lucide-react": "^0.363.0",
     "next": "latest",
     "next-session": "^4.0.5",
     "nookies": "^2.5.2",
